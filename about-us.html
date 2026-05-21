@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Us — Bioskinetics</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Jost', sans-serif; color: #2c2c2a; background: #fff; }
+
+    /* ── Shared ── */
+    .bio-page-header { background: #fff; text-align: center; padding: 2.5rem 2rem 1rem; margin-bottom: 0.5rem; }
+    .bio-page-header h1 { font-family: 'Playfair Display', serif; font-size: 52px; font-weight: 700; color: #b2a254; margin-bottom: 0.8rem; line-height: 1.1; }
+    .bio-page-header p { font-family: 'Lato', sans-serif; font-size: 22px; font-weight: 300; color: #b0b0b0; margin-bottom: 0.6rem; letter-spacing: 0.03em; }
+    .header-rule { width: 60px; height: 1.5px; background: linear-gradient(to right, transparent, #beadc5 30%, #beadc5 70%, transparent); margin: 0 auto; border: none; }
+    .section-divider { width: 100%; height: 1px; background: linear-gradient(to right, transparent, #e8e3ee 20%, #e8e3ee 80%, transparent); border: none; margin: 0; }
+
+    /* ──────────────────────────────
+       BLOCK 1: About Us
+    ────────────────────────────── */
+    .bio-wrap { max-width: 900px; margin: 0 auto; padding: 2rem 2rem 4rem; }
+    .bio-hero { display: grid; grid-template-columns: 1fr auto; gap: 2rem; border-bottom: 0.5px solid rgba(0,0,0,0.1); margin-bottom: 3rem; align-items: center; padding-bottom: 3rem; }
+    .bio-hero-text { padding: 3rem 2.5rem 3rem 0; display: flex; flex-direction: column; justify-content: center; }
+    .eyebrow { font-size: 13px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #beadc5; margin-bottom: 1rem; }
+    .bio-headline { font-family: 'Cormorant Garamond', serif; font-size: 54px; font-weight: 600; line-height: 1.1; color: #2c2c2a; }
+    .bio-headline em { font-style: italic; color: #fade4b; }
+    .bio-hero-photo { overflow: hidden; border-radius: 16px; width: 340px; height: 340px; justify-self: center; align-self: center; flex-shrink: 0; }
+    .bio-hero-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .section-label { font-size: 13px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #beadc5; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 12px; }
+    .section-label::after { content: ''; flex: 1; height: 0.5px; background: rgba(0,0,0,0.1); }
+    .bio-intro { font-family: 'Cormorant Garamond', serif; font-size: 23px; font-weight: 400; line-height: 1.6; color: #2c2c2a; margin-bottom: 2rem; }
+    .bio-intro em { font-style: italic; color: #c9b830; }
+    .bio-body-text { font-size: 17px; font-weight: 300; line-height: 1.8; color: #5f5e5a; margin-bottom: 1.5rem; }
+    .bio-body-text strong { font-weight: 500; color: #2c2c2a; }
+    .bio-quote { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-style: italic; font-weight: 400; line-height: 1.65; color: #3a3835; border-left: 2px solid #beadc5; padding: 0.25rem 0 0.25rem 1.5rem; margin-bottom: 2rem; }
+    .bio-quote p { margin-bottom: 1.2rem; }
+    .bio-quote p:last-child { margin-bottom: 0; }
+    .bio-closing { font-size: 17px; font-weight: 400; line-height: 1.8; color: #2c2c2a; background: #fdfbe8; border-left: 2px solid #fade4b; padding: 1rem 1.25rem; margin-bottom: 2rem; border-radius: 0 8px 8px 0; }
+    .bio-tag-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 2rem; padding-top: 1.5rem; border-top: 0.5px solid rgba(0,0,0,0.1); }
+    .bio-tag { font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 16px; border-radius: 999px; border: 0.5px solid #beadc5; color: #9a88a3; }
+    @media (max-width: 640px) { .bio-hero { grid-template-columns: 1fr; } .bio-hero-text { padding: 2rem 0 1.5rem; } .bio-headline { font-size: 40px; } .bio-hero-photo { width: 100%; height: 280px; border-radius: 16px; } }
+
+    /* ──────────────────────────────
+       BLOCK 2: About Bioskinetics
+    ────────────────────────────── */
+    .bio-section { max-width: 960px; margin: 0 auto; padding: 4rem 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; border-bottom: 0.5px solid rgba(0,0,0,0.07); }
+    .bio-section:last-of-type { border-bottom: none; }
+    .bio-section.reverse { direction: rtl; }
+    .bio-section.reverse > * { direction: ltr; }
+    .bio-img-wrap { width: 100%; aspect-ratio: 5 / 6; border-radius: 16px; overflow: hidden; background: #f0edf2; position: relative; }
+    .bio-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .bio-img-wrap::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(to right, #beadc5, #fade4b); }
+    .bio-section-text { display: flex; flex-direction: column; gap: 1rem; }
+    .section-eyebrow { font-size: 13px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #beadc5; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: 42px; font-weight: 600; line-height: 1.15; color: #2c2c2a; }
+    .section-title em { font-style: italic; color: #fade4b; }
+    .section-hr { width: 40px; height: 1.5px; background: linear-gradient(to right, #beadc5, transparent); border: none; }
+    .section-body { font-size: 18px; font-weight: 300; line-height: 1.85; color: #5f5e5a; }
+    .bio-btn { display: inline-block; background: #fade4b; color: #2c2c2a; font-family: 'Jost', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; border: none; border-radius: 4px; padding: 14px 30px; cursor: pointer; text-decoration: none; transition: background 0.15s, transform 0.1s; align-self: flex-start; margin-top: 0.5rem; }
+    .bio-btn:hover { background: #f5d535; }
+    .bio-btn:active { transform: scale(0.98); }
+    @media (max-width: 660px) { .bio-section { grid-template-columns: 1fr; gap: 2rem; } .bio-section.reverse { direction: ltr; } }
+
+    /* ──────────────────────────────
+       BLOCK 3: Connect
+    ────────────────────────────── */
+    .connect-wrap { background: #ffffff; padding: 64px 24px 72px; text-align: center; }
+    .connect-title { font-family: 'Playfair Display', Georgia, serif; font-size: 3.2rem; font-weight: 700; color: rgb(172, 155, 71); letter-spacing: 0.02em; margin-bottom: 10px; }
+    .connect-subtitle { font-family: 'Lato', sans-serif; font-size: 1.38rem; color: #999; font-weight: 300; letter-spacing: 0.08em; margin-bottom: 10px; }
+    .connect-divider { width: 48px; height: 1.5px; background: linear-gradient(90deg, transparent, #beadc5, transparent); margin: 0 auto 40px; }
+    .social-grid { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+    .social-link { display: flex; flex-direction: column; align-items: center; gap: 10px; text-decoration: none; }
+    .social-icon-wrap { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #e8e0eb; background: #faf8fb; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; position: relative; overflow: hidden; }
+    .social-icon-wrap::before { content: ''; position: absolute; inset: 0; border-radius: 50%; background: var(--hover-color); opacity: 0; transition: opacity 0.2s; }
+    .social-link:hover .social-icon-wrap { transform: translateY(-4px); border-color: transparent; box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+    .social-link:hover .social-icon-wrap::before { opacity: 1; }
+    .social-link:hover .social-icon-wrap svg { filter: brightness(10); }
+    .social-icon-wrap svg { width: 28px; height: 28px; position: relative; z-index: 1; transition: filter 0.2s; }
+    .social-label { font-family: 'Lato', sans-serif; font-size: 1.08rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #999; transition: color 0.2s; }
+    .social-link:hover .social-label { color: rgb(172, 155, 71); }
+    .connect-tagline { margin-top: 44px; font-family: 'Lato', sans-serif; font-size: 1.23rem; color: #bbb; font-weight: 300; letter-spacing: 0.06em; }
+    .connect-tagline strong { color: #beadc5; font-weight: 700; }
+  </style>
+</head>
+<body>
+
+  <!-- ── BLOCK 1: About Us ── -->
+  <div class="bio-page-header">
+    <h1>About Us</h1>
+    <p>There's a story behind everything</p>
+    <div class="header-rule"></div>
+  </div>
+  <div class="bio-wrap">
+    <div class="bio-hero">
+      <div class="bio-hero-text">
+        <p class="eyebrow">Behind Bioskinetics</p>
+        <h2 class="bio-headline">Built for<br>skin that's a little<br><em>more complicated.</em></h2>
+      </div>
+      <div class="bio-hero-photo">
+        <img src="https://img1.wsimg.com/isteam/ip/95132f5f-297d-4ebe-83e1-b80588ea46de/ChatGPT%20Image%20May%2015%2C%202026%2C%2005_47_47%20PM.png" alt="Tai Price — Founder of Bioskinetics" />
+      </div>
+    </div>
+    <p class="section-label">Our Founder</p>
+    <p class="bio-intro">Products around the world are designed for manufacturing convenience, cheap processing, and <em>'average' skin</em>. That's just it — you don't have 'average' skin. You have <em>your</em> skin.</p>
+    <p class="bio-body-text"><strong>Tai Price</strong>, the founder and owner of Bioskinetics, is not without his own set of obstacles. From an early age, he struggled with Eczema, sensitive skin, and allergies.</p>
+    <div class="bio-quote">
+      <p>"I've spent years complaining about the lack of products that fit my guidelines. If it doesn't have one of my allergies, it has the other. If it doesn't have that allergy, it has another. And unfortunately, when I find a product that is safe for me, it comes in bland, boring, containers that don't feel me."</p>
+      <p>"You know that feeling when you walk into the personal care section and see the hundreds of colorful bottles that contain all of your allergies so you have to settle for the same boring white bottle every time? Products for curly hair, thin hair, thick hair, wavy hair, frizzy hair, thinning hair, etc. It really makes you realize how left out of the system you are."</p>
+      <p>"So I created this company for people to realize that they matter. Just because your skin is a little bit more complicated, doesn't mean you don't deserve the same care and effort put into your products as everyone else. So instead of waiting for someone to make an accessible system, I created it myself."</p>
+    </div>
+    <div class="bio-closing"><strong>Bioskinetics</strong> is a company built on customizable cosmetic line-ups — allowing for self expression and, most importantly, allergy-safe products.</div>
+    <div class="bio-tag-row">
+      <span class="bio-tag">Eczema-friendly</span>
+      <span class="bio-tag">Sensitive skin</span>
+      <span class="bio-tag">Allergy-conscious</span>
+      <span class="bio-tag">Founded in Colorado</span>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- ── BLOCK 2: About Bioskinetics ── -->
+  <div class="bio-page-header">
+    <h1>About Bioskinetics</h1>
+    <p>Who we are &amp; what we stand for</p>
+    <div class="header-rule"></div>
+  </div>
+
+  <div class="bio-section">
+    <div class="bio-img-wrap">
+      <img src="https://images.unsplash.com/photo-1581132692174-a390c759b42c?w=600&auto=format&fit=crop&q=60" alt="Bioskinetics — Our Story" />
+    </div>
+    <div class="bio-section-text">
+      <span class="section-eyebrow">Our Story</span>
+      <h2 class="section-title">Beauty that's built for <em>everyone.</em></h2>
+      <hr class="section-hr" />
+      <p class="section-body">At Bioskinetics, we believe that beauty should be accessible to everyone. This belief sparked our journey and continues to guide everything we do today. We saw a need for products that not only enhance natural beauty but also make people feel confident in their own skin, without barriers or limitations. Our goal has always been to create a brand that supports self-expression and confidence, offering cosmetics that help you show up as your best self every day.</p>
+      <a href="https://bioskinetics.com/about-us" class="bio-btn" target="_top">Learn More</a>
+    </div>
+  </div>
+
+  <div class="bio-section reverse">
+    <div class="bio-img-wrap">
+      <img src="https://plus.unsplash.com/premium_photo-1679046947934-d9c13d67fae8?w=600&auto=format&fit=crop&q=60" alt="Bioskinetics — Our Ingredients" />
+    </div>
+    <div class="bio-section-text">
+      <span class="section-eyebrow">Our Ingredients</span>
+      <h2 class="section-title">Formulated with <em>intention.</em></h2>
+      <hr class="section-hr" />
+      <p class="section-body">At our company, we take pride in offering high-quality, thoughtfully selected ingredients that prioritize both performance and safety. All of our formulations are fully customizable, allowing you to tailor each product to your unique needs and preferences. We understand how important it is to avoid allergens, which is why any ingredient in our products can be easily swapped for a safe alternative.</p>
+      <a href="https://bioskinetics.com/product-line" class="bio-btn" target="_top">Shop Now</a>
+    </div>
+  </div>
+
+  <div class="bio-section">
+    <div class="bio-img-wrap">
+      <img src="https://images.unsplash.com/photo-1594051843839-c96c81ae011a?w=600&auto=format&fit=crop&q=60" alt="Bioskinetics — Our Mission" />
+    </div>
+    <div class="bio-section-text">
+      <span class="section-eyebrow">Our Mission</span>
+      <h2 class="section-title">Removing barriers in <em>beauty.</em></h2>
+      <hr class="section-hr" />
+      <p class="section-body">Our mission is to empower people to feel confident and beautiful in their own skin. We believe that everyone deserves to feel good about themselves, no matter their age, gender, skin type, or sensitivities. That's why we are deeply committed to creating allergy-friendly cosmetics that prioritize both safety and performance.</p>
+      <a href="https://bioskinetics.com#bs-4" class="bio-btn" target="_top">Join Us</a>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- ── BLOCK 3: Connect ── -->
+  <div class="connect-wrap">
+    <h2 class="connect-title">Connect</h2>
+    <p class="connect-subtitle">Follow along &amp; stay in touch</p>
+    <div class="connect-divider"></div>
+    <div class="social-grid">
+      <a href="https://www.facebook.com/profile.php?id=61589037974670" target="_blank" rel="noopener" class="social-link">
+        <div class="social-icon-wrap" style="--hover-color: #1877F2;">
+          <svg viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+        </div>
+        <span class="social-label">Facebook</span>
+      </a>
+      <a href="https://www.instagram.com/bioskinetics.26/" target="_blank" rel="noopener" class="social-link">
+        <div class="social-icon-wrap" style="--hover-color: #E1306C;">
+          <svg viewBox="0 0 24 24" fill="url(#ig-grad)">
+            <defs><linearGradient id="ig-grad" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f09433"/><stop offset="25%" stop-color="#e6683c"/><stop offset="50%" stop-color="#dc2743"/><stop offset="75%" stop-color="#cc2366"/><stop offset="100%" stop-color="#bc1888"/></linearGradient></defs>
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+          </svg>
+        </div>
+        <span class="social-label">Instagram</span>
+      </a>
+      <a href="https://www.tiktok.com/@bioskinetics.26" target="_blank" rel="noopener" class="social-link">
+        <div class="social-icon-wrap" style="--hover-color: #010101;">
+          <svg viewBox="0 0 24 24" fill="#010101"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"/></svg>
+        </div>
+        <span class="social-label">TikTok</span>
+      </a>
+      <a href="https://www.linkedin.com/in/bioskinetics" target="_blank" rel="noopener" class="social-link">
+        <div class="social-icon-wrap" style="--hover-color: #0A66C2;">
+          <svg viewBox="0 0 24 24" fill="#0A66C2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </div>
+        <span class="social-label">LinkedIn</span>
+      </a>
+      <a href="https://www.pinterest.com/Bioskinetics26/" target="_blank" rel="noopener" class="social-link">
+        <div class="social-icon-wrap" style="--hover-color: #E60023;">
+          <svg viewBox="0 0 24 24" fill="#E60023"><path d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+        </div>
+        <span class="social-label">Pinterest</span>
+      </a>
+    </div>
+    <p class="connect-tagline">Stay connected with <strong>Bioskinetics</strong></p>
+  </div>
+
+</body>
+</html>
