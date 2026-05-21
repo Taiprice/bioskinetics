@@ -6,6 +6,66 @@
   <title>About Us — Bioskinetics</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
   <style>
+
+  /* ── Navigation ── */
+  #bio-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #000;
+    padding: 0 2rem;
+    height: 64px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .bio-nav-logo img {
+    height: 44px;
+    width: 44px;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+  }
+  .bio-nav-links {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+  }
+  .bio-nav-links a {
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .bio-nav-links a:hover { color: #fade4b; }
+  .bio-nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+  .bio-nav-icon {
+    color: #fff;
+    display: flex;
+    align-items: center;
+    transition: color 0.15s;
+  }
+  .bio-nav-icon:hover { color: #fade4b; }
+  .bio-nav-icon svg { width: 22px; height: 22px; }
+  @media (max-width: 768px) {
+    .bio-nav-links { gap: 1rem; }
+    .bio-nav-links a { font-size: 11px; letter-spacing: 0.08em; }
+  }
+  @media (max-width: 560px) {
+    #bio-nav { padding: 0 1rem; }
+    .bio-nav-links { display: none; }
+  }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Jost', sans-serif; color: #2c2c2a; background: #fff; }
 
@@ -84,6 +144,29 @@
   </style>
 </head>
 <body>
+  <!-- ── Navigation ── -->
+  <nav id="bio-nav">
+    <a href="/index.html" class="bio-nav-logo">
+      <img src="/Bioskinetics.png" alt="Bioskinetics" />
+    </a>
+    <ul class="bio-nav-links">
+      <li><a href="/index.html">Home</a></li>
+      <li><a href="/about-us.html">About Us</a></li>
+      <li><a href="/how-it-works.html">How It Works</a></li>
+      <li><a href="/my-allergens.html">My Allergens</a></li>
+      <li><a href="/product-line.html">Product Line</a></li>
+      <li><a href="/my-account.html">My Account</a></li>
+    </ul>
+    <div class="bio-nav-icons">
+      <a href="#" class="bio-nav-icon" title="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      </a>
+      <a href="/my-account.html" class="bio-nav-icon" title="Account">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </a>
+    </div>
+  </nav>
+
 
   <!-- ── BLOCK 1: About Us ── -->
   <div class="bio-page-header">
@@ -136,7 +219,7 @@
       <h2 class="section-title">Beauty that's built for <em>everyone.</em></h2>
       <hr class="section-hr" />
       <p class="section-body">At Bioskinetics, we believe that beauty should be accessible to everyone. This belief sparked our journey and continues to guide everything we do today. We saw a need for products that not only enhance natural beauty but also make people feel confident in their own skin, without barriers or limitations. Our goal has always been to create a brand that supports self-expression and confidence, offering cosmetics that help you show up as your best self every day.</p>
-      <a href="https://bioskinetics.com/about-us" class="bio-btn" target="_top">Learn More</a>
+      <a href="/about-us.html" class="bio-btn" target="_top">Learn More</a>
     </div>
   </div>
 
@@ -149,7 +232,7 @@
       <h2 class="section-title">Formulated with <em>intention.</em></h2>
       <hr class="section-hr" />
       <p class="section-body">At our company, we take pride in offering high-quality, thoughtfully selected ingredients that prioritize both performance and safety. All of our formulations are fully customizable, allowing you to tailor each product to your unique needs and preferences. We understand how important it is to avoid allergens, which is why any ingredient in our products can be easily swapped for a safe alternative.</p>
-      <a href="https://bioskinetics.com/product-line" class="bio-btn" target="_top">Shop Now</a>
+      <a href="/product-line.html" class="bio-btn" target="_top">Shop Now</a>
     </div>
   </div>
 
@@ -162,7 +245,7 @@
       <h2 class="section-title">Removing barriers in <em>beauty.</em></h2>
       <hr class="section-hr" />
       <p class="section-body">Our mission is to empower people to feel confident and beautiful in their own skin. We believe that everyone deserves to feel good about themselves, no matter their age, gender, skin type, or sensitivities. That's why we are deeply committed to creating allergy-friendly cosmetics that prioritize both safety and performance.</p>
-      <a href="https://bioskinetics.com#bs-4" class="bio-btn" target="_top">Join Us</a>
+      <a href="/about-us.html" class="bio-btn" target="_top">Join Us</a>
     </div>
   </div>
 
