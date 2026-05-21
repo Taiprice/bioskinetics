@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Allergens — Bioskinetics</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500&family=Lato:wght@300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Jost', sans-serif; color: #2c2c2a; background: #fff; }
+    .bio-page-header { background: #fff; text-align: center; padding: 2.5rem 2rem 0.5rem; margin-bottom: 0rem; }
+    .bio-page-header h1 { font-family: 'Playfair Display', serif; font-size: 52px; font-weight: 700; color: #b2a254; margin-bottom: 0.7rem; line-height: 1.1; }
+    .bio-page-header p { font-family: 'Lato', sans-serif; font-size: 22px; font-weight: 300; color: #b0b0b0; margin-bottom: 0.4rem; letter-spacing: 0.03em; }
+    .header-rule { width: 60px; height: 1.5px; background: linear-gradient(to right, transparent, #beadc5 30%, #beadc5 70%, transparent); margin: 0 auto; border: none; }
+    .allergen-wrap { max-width: 1100px; margin: 0 auto; padding: 3rem 3rem 4rem; display: grid; grid-template-columns: 1fr 320px; gap: 4rem; align-items: start; }
+    .allergen-main { display: flex; flex-direction: column; gap: 1.25rem; }
+    .allergen-eyebrow { font-size: 15px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #beadc5; }
+    .allergen-intro { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 400; line-height: 1.6; color: #2c2c2a; }
+    .allergen-intro em { font-style: italic; font-weight: 600; color: #fade4b; }
+    .allergen-divider { width: 40px; height: 1.5px; background: linear-gradient(to right, #beadc5, transparent); border: none; }
+    .allergen-sidebar { display: flex; flex-direction: column; gap: 16px; padding-top: 0.25rem; }
+    .info-card { background: #faf9f7; border: 0.5px solid rgba(190,173,197,0.35); border-radius: 12px; padding: 1.25rem; }
+    .info-card-title { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; color: #2c2c2a; margin-bottom: 0.5rem; }
+    .info-card-body { font-size: 17px; }
+    .info-card-tip { display: flex; align-items: flex-start; gap: 8px; margin-top: 0.75rem; font-size: 15px; line-height: 1.5; }
+    .tip-dot { width: 7px; height: 7px; border-radius: 50%; background: #beadc5; flex-shrink: 0; margin-top: 4px; }
+    #shop-now-banner { opacity: 0; transform: translateY(12px); pointer-events: none; transition: opacity 0.5s ease, transform 0.5s ease; margin-top: 0.5rem; }
+    #shop-now-banner.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .shop-now-inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; background: #fff; border: 1px solid rgba(190,173,197,0.4); border-radius: 16px; padding: 1rem 1.4rem; }
+    .shop-now-text { display: flex; flex-direction: column; gap: 2px; }
+    .shop-now-label { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: #2c2c2a; line-height: 1.3; }
+    .shop-now-sub { font-size: 14px; font-weight: 300; color: #9a9895; letter-spacing: 0.02em; }
+    .shop-now-btn { font-family: 'Cormorant Garamond', serif; font-size: 17px; font-weight: 600; letter-spacing: 0.06em; color: #2c2c2a; background: #c8c8c6; border: none; border-radius: 999px; padding: 9px 24px; cursor: pointer; white-space: nowrap; flex-shrink: 0; transition: background 0.15s, transform 0.15s, box-shadow 0.15s; box-shadow: 0 2px 10px rgba(0,0,0,0.12); }
+    .shop-now-btn:hover { background: #b0b0ae; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,0,0,0.18); }
+    @media (max-width: 720px) { .allergen-wrap { grid-template-columns: 1fr; gap: 2rem; } .shop-now-inner { flex-direction: column; align-items: flex-start; } }
+    #hl-widget-wrap { font-family: Georgia, serif; max-width: 480px; }
+    #hl-profile-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; align-items: center; }
+    .hl-profile-tab { font-family: Georgia, serif; font-size: 0.92rem; background: none; color: #888; cursor: pointer; transition: all .15s; }
+    .hl-profile-tab.active { border-color: #beadc5; color: #beadc5; background: #f8f5f9; }
+    .hl-profile-tab:hover { border-color: #beadc5; color: #beadc5; }
+    #hl-new-profile-wrap { display: none; align-items: center; gap: 6px; margin-bottom: 14px; }
+    #hl-new-profile-wrap.show { display: flex; }
+    #hl-new-profile-input { flex: 1; border: none; border-bottom: 1.5px solid #beadc5; outline: none; background: transparent; font-family: Georgia, serif; font-size: 1rem; }
+    #hl-new-profile-input::placeholder { color: #ccc; font-style: italic; }
+    #hl-new-profile-confirm { background: #beadc5; color: #fff; border: none; border-radius: 999px; padding: 5px 14px; font-family: Georgia, serif; font-size: 0.92rem; cursor: pointer; }
+    #hl-new-profile-cancel { background: none; border: none; color: #ccc; font-size: 14px; cursor: pointer; padding: 0 4px; }
+    .hl-profile-tab-wrap { display: inline-flex; align-items: center; border: 1.5px solid #e0e0e0; border-radius: 999px; overflow: hidden; transition: border-color .15s; }
+    .hl-profile-tab-wrap:has(.hl-profile-tab.active) { border-color: #beadc5; background: #f8f5f9; }
+    .hl-profile-tab-wrap .hl-profile-tab { border: none; border-radius: 0; background: none; padding: 5px 10px 5px 16px; }
+    .hl-profile-delete { background: none; border: none; cursor: pointer; color: #ccc; font-size: 11px; padding: 0 10px 0 2px; line-height: 1; }
+    .hl-profile-delete:hover { color: #e02020; }
+    .hl-add-profile-btn { font-family: Georgia, serif; font-size: 0.92rem; padding: 5px 16px; border-radius: 999px; border: 1.5px dashed #ddd; background: none; color: #bbb; cursor: pointer; }
+    .hl-add-profile-btn:hover { border-color: #beadc5; color: #beadc5; }
+    #hl-input-wrap { position: relative; }
+    #hl-add-bar { display: flex; align-items: center; background: #fff; border: 1.5px solid #d4d0c8; border-radius: 999px; box-shadow: 0 4px 24px rgba(0,0,0,.10); transition: border-color .2s; position: relative; z-index: 10; overflow: hidden; }
+    #hl-add-bar:focus-within { border-color: #beadc5; }
+    #hl-add-bar span { padding: 10px 12px 10px 16px; color: #b0a89a; font-size: 14px; pointer-events: none; flex-shrink: 0; }
+    #hl-term-input { flex: 1; border: none; outline: none; background: transparent; font-family: Georgia, serif; font-size: 1rem; color: #1a1a1a; padding: 10px 4px 10px 0; min-width: 0; }
+    #hl-term-input::placeholder { color: #c4bfb5; font-style: italic; }
+    #hl-add-btn { background: #beadc5; color: #fff; border: none; border-radius: 0 999px 999px 0; padding: 10px 18px; font-family: Georgia, serif; font-size: 1.1rem; cursor: pointer; flex-shrink: 0; }
+    #hl-add-btn:hover { background: #a897b0; }
+    #hl-dropdown { display: none; position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: #fff; border: 1.5px solid #e0d8e8; border-radius: 16px; box-shadow: 0 8px 32px rgba(190,173,197,.22); max-height: 220px; overflow-y: auto; z-index: 100; padding: 6px 0; }
+    #hl-dropdown.open { display: block; }
+    .hl-dropdown-item { padding: 8px 18px; font-family: Georgia, serif; font-size: 0.95rem; color: #3a3a3a; cursor: pointer; }
+    .hl-dropdown-item:hover, .hl-dropdown-item.selected { background: #f3eef7; color: #beadc5; }
+    .hl-dropdown-item mark { background: none; color: #beadc5; font-weight: bold; }
+    .hl-dropdown-empty { padding: 10px 18px; font-family: Georgia, serif; font-size: 0.92rem; color: #bbb; font-style: italic; }
+    #hl-tag-list { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    .hl-tag { display: inline-flex; align-items: center; gap: 8px; background: #fade4b; border: 1.5px solid #fade4b; border-radius: 999px; padding: 5px 14px 5px 18px; font-family: Georgia, serif; font-size: 1rem; color: #1a1a1a; }
+    .hl-tag button { background: none; border: none; cursor: pointer; color: rgba(0,0,0,0.35); font-size: 18px; line-height: 1; padding: 0; }
+    .hl-tag button:hover { color: #1a1a1a; }
+    #hl-saved-msg { font-size: .9rem; opacity: 0; transition: opacity .3s; min-height: 1em; }
+    #hl-saved-msg.show { opacity: 1; }
+  
+    /* Connect */
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Lato', Georgia, sans-serif; background: #ffffff; min-height: 100vh; }
+  .connect-wrap { background: #ffffff; padding: 64px 24px 72px; text-align: center; }
+  .connect-title { font-family: 'Playfair Display', Georgia, serif; font-size: 3.2rem; font-weight: 700; color: rgb(172, 155, 71); letter-spacing: 0.02em; margin-bottom: 10px; }
+  .connect-subtitle { font-family: 'Lato', sans-serif; font-size: 1.38rem; color: #999; font-weight: 300; letter-spacing: 0.08em; margin-bottom: 10px; }
+  .connect-divider { width: 48px; height: 1.5px; background: linear-gradient(90deg, transparent, #beadc5, transparent); margin: 0 auto 40px; }
+  .social-grid { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+  .social-link { display: flex; flex-direction: column; align-items: center; gap: 10px; text-decoration: none; }
+  .social-icon-wrap { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1.5px solid #e8e0eb; background: #faf8fb; transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s; position: relative; overflow: hidden; }
+  .social-icon-wrap::before { content: ''; position: absolute; inset: 0; border-radius: 50%; background: var(--hover-color); opacity: 0; transition: opacity 0.2s; }
+  .social-link:hover .social-icon-wrap { transform: translateY(-4px); border-color: transparent; box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+  .social-link:hover .social-icon-wrap::before { opacity: 1; }
+  .social-link:hover .social-icon-wrap svg { filter: brightness(10); }
+  .social-icon-wrap svg { width: 28px; height: 28px; position: relative; z-index: 1; transition: filter 0.2s; }
+  .social-label { font-family: 'Lato', sans-serif; font-size: 1.08rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #999; transition: color 0.2s; }
+  .social-link:hover .social-label { color: rgb(172, 155, 71); }
+  .connect-tagline { margin-top: 44px; font-family: 'Lato', sans-serif; font-size: 1.23rem; color: #bbb; font-weight: 300; letter-spacing: 0.06em; }
+  .connect-tagline strong { color: #beadc5; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <div class="bio-page-header">
+    <h1>My Allergens</h1>
+    <p>Your personal safety profile</p>
+    <div class="header-rule"></div>
+  </div>
+  <div class="allergen-wrap">
+    <div class="allergen-main">
+      <span class="allergen-eyebrow">Your Profile</span>
+      <p class="allergen-intro">Add your allergens and ingredient preferences below. We'll flag anything that <em>doesn't work for you</em> across every product.</p>
+      <hr class="allergen-divider" />
+      <div id="hl-widget-wrap">
+        <div id="hl-profile-tabs"></div>
+        <div id="hl-new-profile-wrap">
+          <input id="hl-new-profile-input" type="text" placeholder="Profile name (e.g. My Child)..." autocomplete="off" />
+          <button id="hl-new-profile-confirm">Add</button>
+          <button id="hl-new-profile-cancel">&#x2715;</button>
+        </div>
+        <div id="hl-input-wrap">
+          <div id="hl-add-bar">
+            <span>&#9906;</span>
+            <input id="hl-term-input" type="text" placeholder="Add Allergens Here..." autocomplete="off" spellcheck="false" />
+            <button id="hl-add-btn" title="Add">+</button>
+          </div>
+          <div id="hl-dropdown"></div>
+        </div>
+        <div id="hl-tag-list"></div>
+        <div id="hl-saved-msg">&#10003; Saved</div>
+        <div id="hl-empty-msg" style="font-family:'Jost',sans-serif;font-size:13px;font-weight:300;color:#ccc;font-style:italic;margin-top:14px;">No allergens added yet — search above to get started.</div>
+      </div>
+      <div id="shop-now-banner" aria-live="polite" aria-atomic="true">
+        <div class="shop-now-inner">
+          <div class="shop-now-text">
+            <span class="shop-now-label">Your profile is ready</span>
+            <span class="shop-now-sub">Products will be checked against your allergens</span>
+          </div>
+          <button class="shop-now-btn" onclick="window.top.location.href='https://bioskinetics.com/product-line'">Shop Now &#8594;</button>
+        </div>
+      </div>
+    </div>
+    <div class="allergen-sidebar">
+      <div class="info-card">
+        <p class="info-card-title">How it works</p>
+        <p class="info-card-body">Once you add your allergens here, any product ingredients that conflict will be highlighted in red — so you can swap them out for something safe.</p>
+        <div class="info-card-tip"><span class="tip-dot"></span><span>Any ingredient can be replaced with a safe alternative</span></div>
+        <div class="info-card-tip"><span class="tip-dot"></span><span>Your allergens are saved to your profile automatically</span></div>
+      </div>
+      <div class="info-card">
+        <p class="info-card-title">Multiple Profiles</p>
+        <p class="info-card-body">Shopping for someone else? Use the "+ Add Profile" tab to create separate allergen lists for family members or different routines.</p>
+      </div>
+      <div class="info-card">
+        <p class="info-card-title">Not just allergens!</p>
+        <p class="info-card-body">You can also add ingredients you simply prefer to avoid — even if you're not allergic. If you don't like it, we'll flag it!</p>
+      </div>
+    </div>
+  </div>
+  <script>
+  (function () {
+    var ALLERGEN_LIST = ["1,3-Diphenylguanidine","2-Bromo-2-nitropropane-1,3-diol","2-Hydroxyethyl methacrylate","2-Mercaptobenzothiazole (MBT)","2-n-Octyl-4-isothiazolin-3-one","3-(Dimethylamino)-1-propylamine","4-tert-Butylphenolformaldehyde resin (PTBP)","Amerchol L-101","Amidoamine","Ammonium persulfate","Bacitracin","Benzalkonium chloride","Benzisothiazolinone","Benzocaine","Benzophenone-4","Benzyl alcohol","Benzyl salicylate","Black rubber mix","Budesonide","Caine mix III","Carba mix","Chlorhexidine digluconate","Chloroxylenol (PCMX)","Cinnamal","Clobetasol-17-propionate","Cobalt(II)chloride hexahydrate","Cocamide DEA","Cocamidopropyl betaine","Colophonium","Compositae mix II","Decyl glucoside","Diazolidinyl urea","DMDM Hydantoin","Epoxy resin, Bisphenol A","Ethyl acrylate","Ethylenediamine dihydrochloride","Formaldehyde","Fragrance mix I","Fragrance mix II","Hydroperoxides of limonene","Hydroperoxides of linalool","Hydroxyisohexyl 3-cyclohexene carboxaldehyde","Imidazolidinyl urea","Iodopropynyl butylcarbamate","Lanolin alcohol","Lauryl polyglucose","Lidocaine","Mercapto mix","Methyl methacrylate","Methyldibromo glutaronitrile","Methylisothiazolinone","Methylisothiazolinone + Methylchloroisothiazolinone","Mixed dialkyl thiourea","N-Isopropyl-N-phenyl-4-phenylenediamine (IPPD)","Neomycin sulfate","Nickel(II)sulfate hexahydrate","Oleamidopropyl dimethylamine","p-Phenylenediamine (PPD)","Paraben mix","Peru balsam","Polymyxin B sulfate","Potassium dichromate","Pramoxine hydrochloride","Propolis","Propyl gallate","Propylene glycol","Quaternium-15","Sesquiterpene lactone mix","Sodium benzoate","Sodium metabisulfite","Sorbitan oleate","Sorbitan sesquioleate","Tea tree oil oxidized","Textile dye mix II","Thiuram mix","Tixocortol-21-pivalate","Tocopherol","Toluenesulfonamide formaldehyde resin","Toluene-2,5-diamine sulfate","Ylang ylang oil"];
+    var PROFILES_KEY='ac_allergen_profiles', HL_KEY='hl_sitewide_terms', DISPLAY_KEY='bio_allergen_display', activeProfile='Me', msgTimer=null, selectedIdx=-1, currentMatches=[], dropdownOpen=false;
+    var inp=document.getElementById('hl-term-input'), addBtn=document.getElementById('hl-add-btn'), tagList=document.getElementById('hl-tag-list'), savedMsg=document.getElementById('hl-saved-msg'), tabsEl=document.getElementById('hl-profile-tabs'), newProfileWrap=document.getElementById('hl-new-profile-wrap'), newProfileInput=document.getElementById('hl-new-profile-input'), newProfileConfirm=document.getElementById('hl-new-profile-confirm'), newProfileCancel=document.getElementById('hl-new-profile-cancel'), dropdown=document.getElementById('hl-dropdown'), shopNowBanner=document.getElementById('shop-now-banner');
+    function loadProfiles(){try{return JSON.parse(localStorage.getItem(PROFILES_KEY))||{'Me':[]};}catch(e){return{'Me':[]};}}
+    function saveProfiles(profiles){
+      var displayNames = profiles[activeProfile] || [];
+      _origSetItem(DISPLAY_KEY, JSON.stringify(displayNames));
+      localStorage.setItem(PROFILES_KEY, JSON.stringify(profiles));
+      localStorage.setItem(HL_KEY, JSON.stringify(displayNames));
+      flash();
+    }
+    function flash(){savedMsg.classList.add('show');clearTimeout(msgTimer);msgTimer=setTimeout(function(){savedMsg.classList.remove('show');},2000);}
+    function updateShopNowBanner(){var profiles=loadProfiles();var hasAny=Object.keys(profiles).some(function(k){return profiles[k]&&profiles[k].length>0;});if(hasAny){shopNowBanner.classList.add('visible');}else{shopNowBanner.classList.remove('visible');}}
+    function escHtml(str){return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+    function getMatches(query){if(!query)return ALLERGEN_LIST.slice();var q=query.toLowerCase(),starts=[],contains=[];ALLERGEN_LIST.forEach(function(s){var sl=s.toLowerCase();if(sl.startsWith(q))starts.push(s);else if(sl.includes(q))contains.push(s);});return starts.concat(contains);}
+    function highlightMatch(text,query){if(!query)return escHtml(text);var idx=text.toLowerCase().indexOf(query.toLowerCase());if(idx===-1)return escHtml(text);return escHtml(text.slice(0,idx))+'<mark>'+escHtml(text.slice(idx,idx+query.length))+'</mark>'+escHtml(text.slice(idx+query.length));}
+    function openDropdown(query){currentMatches=getMatches(query);selectedIdx=-1;dropdown.innerHTML='';if(currentMatches.length===0){var el=document.createElement('div');el.className='hl-dropdown-empty';el.textContent='No matches — press + to add custom';dropdown.appendChild(el);}else{currentMatches.forEach(function(match){var el=document.createElement('div');el.className='hl-dropdown-item';el.innerHTML=highlightMatch(match,query);el.addEventListener('mousedown',function(e){e.preventDefault();inp.value=match;addTermFromDropdown(match);});dropdown.appendChild(el);});}dropdown.classList.add('open');dropdownOpen=true;}
+    function closeDropdown(){dropdown.classList.remove('open');dropdownOpen=false;selectedIdx=-1;currentMatches=[];}
+    function updateSelection(){var items=dropdown.querySelectorAll('.hl-dropdown-item');items.forEach(function(el,i){el.classList.toggle('selected',i===selectedIdx);});if(selectedIdx>=0&&items[selectedIdx])items[selectedIdx].scrollIntoView({block:'nearest'});}
+    function addTermFromDropdown(val){if(!val)return;var profiles=loadProfiles();if(!profiles[activeProfile])profiles[activeProfile]=[];if(profiles[activeProfile].indexOf(val)===-1){profiles[activeProfile].push(val);saveProfiles(profiles);renderTags();updateShopNowBanner();}inp.value='';inp.blur();closeDropdown();}
+    inp.addEventListener('input',function(){openDropdown(inp.value.trim());});
+    inp.addEventListener('focus',function(){openDropdown(inp.value.trim());});
+    inp.addEventListener('blur',function(){setTimeout(closeDropdown,100);});
+    inp.addEventListener('keydown',function(e){if(!dropdown.classList.contains('open')){if(e.key==='Enter')addTerm();return;}if(e.key==='ArrowDown'){e.preventDefault();selectedIdx=Math.min(selectedIdx+1,currentMatches.length-1);updateSelection();}else if(e.key==='ArrowUp'){e.preventDefault();selectedIdx=Math.max(selectedIdx-1,-1);updateSelection();}else if(e.key==='Enter'){e.preventDefault();if(selectedIdx>=0&&currentMatches[selectedIdx]){addTermFromDropdown(currentMatches[selectedIdx]);}else{closeDropdown();addTerm();}}else if(e.key==='Escape'){closeDropdown();}});
+    function renderTabs(){var profiles=loadProfiles();tabsEl.innerHTML='';Object.keys(profiles).forEach(function(name){var wrap=document.createElement('div');wrap.className='hl-profile-tab-wrap';var btn=document.createElement('button');btn.className='hl-profile-tab'+(name===activeProfile?' active':'');btn.textContent=name;btn.addEventListener('click',function(){activeProfile=name;var p=loadProfiles();var t=p[name]||[];_origSetItem(DISPLAY_KEY,JSON.stringify(t));localStorage.setItem(HL_KEY,JSON.stringify(t));renderTabs();renderTags();});wrap.appendChild(btn);if(name!=='Me'){var del=document.createElement('button');del.className='hl-profile-delete';del.title='Delete profile';del.innerHTML='&#x2715;';del.addEventListener('click',function(e){e.stopPropagation();var p=loadProfiles();delete p[name];if(activeProfile===name)activeProfile='Me';saveProfiles(p);renderTabs();renderTags();updateShopNowBanner();});wrap.appendChild(del);}tabsEl.appendChild(wrap);});var addProfileBtn=document.createElement('button');addProfileBtn.className='hl-add-profile-btn';addProfileBtn.textContent='+ Add Profile';addProfileBtn.addEventListener('click',function(){newProfileWrap.classList.add('show');newProfileInput.focus();});tabsEl.appendChild(addProfileBtn);}
+    function confirmNewProfile(){var name=newProfileInput.value.trim();if(!name)return;var profiles=loadProfiles();if(!profiles[name])profiles[name]=[];saveProfiles(profiles);activeProfile=name;newProfileInput.value='';newProfileWrap.classList.remove('show');renderTabs();renderTags();}
+    newProfileConfirm.addEventListener('click',confirmNewProfile);
+    newProfileInput.addEventListener('keydown',function(e){if(e.key==='Enter')confirmNewProfile();if(e.key==='Escape'){newProfileWrap.classList.remove('show');newProfileInput.value='';}});
+    newProfileCancel.addEventListener('click',function(){newProfileWrap.classList.remove('show');newProfileInput.value='';});
+    function renderTags(){var profiles=loadProfiles();var terms=profiles[activeProfile]||[];tagList.innerHTML='';var emptyMsg=document.getElementById('hl-empty-msg');if(terms.length===0){emptyMsg.style.display='block';}else{emptyMsg.style.display='none';terms.forEach(function(term){var tag=document.createElement('div');tag.className='hl-tag';tag.innerHTML='<span>'+escHtml(term)+'</span><button title="Remove">&#x2715;</button>';tag.querySelector('button').addEventListener('click',function(){removeTerm(term);});tagList.appendChild(tag);});}}
+    function addTerm(){var val=inp.value.trim();if(!val)return;var profiles=loadProfiles();if(!profiles[activeProfile])profiles[activeProfile]=[];if(profiles[activeProfile].indexOf(val)===-1){profiles[activeProfile].push(val);saveProfiles(profiles);renderTags();updateShopNowBanner();}inp.value='';inp.focus();}
+    function removeTerm(term){var profiles=loadProfiles();profiles[activeProfile]=(profiles[activeProfile]||[]).filter(function(t){return t!==term;});saveProfiles(profiles);renderTags();updateShopNowBanner();}
+    addBtn.addEventListener('click',function(){closeDropdown();addTerm();});
+    renderTabs();renderTags();updateShopNowBanner();
+    var ALLERGEN_SYNONYMS={
+      "cocamidopropyl betaine":["capb","cocoamidopropyl betaine","coconut oil amidopropyl betaine","tego-betaine c","amphosol","rewoteric amb 15","cocamidopropyl dimethylamine","amidoamine","dmapa","methylisothiazolinone","mi","mit","2-methyl-4-isothiazolin-3-one","neolone 950","kathon","isothiazolinone","benzisothiazolinone","octylisothiazolinone","chloromethylisothiazolinone"],
+      "amidoamine":["stearamidopropyl dimethylamine","cocamidopropyl dimethylamine","oleamidopropyl dimethylamine"],
+      "methylisothiazolinone":["mi","mit","2-methyl-4-isothiazolin-3-one","neolone 950","kathon"],
+      "methylisothiazolinone + methylchloroisothiazolinone":["mci/mi","kathon cg","methylchloroisothiazolinone","chloromethylisothiazolinone","cmit","isothiazolinone"],
+      "benzisothiazolinone":["bit","proxel","proxel gxl"],
+      "black rubber mix":["ippd","cppd","dppd","n-isopropyl-n-phenyl-4-phenylenediamine"],
+      "caine mix iii":["benzocaine","tetracaine","dibucaine"],
+      "carba mix":["zinc dibutyldithiocarbamate","zinc diethyldithiocarbamate","dipentamethylenethiuram disulfide","carbamates"],
+      "cocamide dea":["cocamide diethanolamine","coconut diethanolamide","cda","lauramide dea"],
+      "compositae mix ii":["sesquiterpene lactone","asteraceae","chrysanthemum","pyrethrum","chamomile","arnica","feverfew","ragweed"],
+      "ethylenediamine dihydrochloride":["ethylenediamine","eda"],
+      "fragrance mix i":["oak moss","eugenol","isoeugenol","cinnamal","cinnamic alcohol","geraniol","hydroxycitronellal","lyral"],
+      "fragrance mix ii":["lyral","citral","farnesol","coumarin","citronellol","alpha-hexyl cinnamal","hicc"],
+      "imidazolidinyl urea":["germall 115","imidurea"],
+      "mercapto mix":["mercaptobenzothiazole","mbt","cbs","dibenzothiazyl disulfide","mbts"],
+      "mixed dialkyl thiourea":["diethylthiourea","dibutylthiourea","diphenylthiourea","thiourea","detu","dbtu"],
+      "p-phenylenediamine (ppd)":["ppd","para-phenylenediamine","4-aminoaniline","black hair dye","black henna","temporary tattoo dye"],
+      "paraben mix":["methylparaben","ethylparaben","propylparaben","butylparaben","isobutylparaben","parabens","4-hydroxybenzoate","e218","e214","e216"],
+      "thiuram mix":["thiuram","tetramethylthiuram disulfide","tmtd","thiram","tmtm","tetd","dptt","latex allergy","glove allergy","condom allergy"],
+      "lanolin alcohol":["wool alcohol","wool wax alcohol","lanolin","adeps lanae","wool fat","woolgrease","acetylated lanolin","wool wax","cholesterol esters","lanosterol"],
+      "propolis":["bee glue","propolis wax","bee propolis","propolis resin","propolis extract","cinnamic acid","caffeic acid","bee product"],
+      "peru balsam":["myroxylon pereirae","balsam of peru","balsam peru","benzyl benzoate","benzyl cinnamate"],
+      "formaldehyde":["formalin","methanal","formic aldehyde","methylene oxide","formol"],
+      "benzocaine":["ethyl aminobenzoate","ethyl p-aminobenzoate","americaine","anbesol","orajel","paba","aminobenzoate"],
+      "neomycin sulfate":["neomycin","neosporin","neo-fradin","gentamicin","tobramycin","kanamycin","framycetin"],
+      "potassium dichromate":["chromate","hexavalent chromium","chromium vi","chrome","chromium","bichromate"],
+      "sorbitan oleate":["span 80","sorbitan monooleate"],
+      "sorbitan sesquioleate":["arlacel 83"],
+      "hydroperoxides of limonene":["oxidized limonene","limonene hydroperoxide","d-limonene","limonene","citrus terpene","orange oil","lemon oil"],
+      "ylang ylang oil":["cananga odorata","ylang ylang","cananga oil","ylang ylang flower oil","ylang ylang extract"],
+      "benzyl alcohol":["phenylmethanol","phenylcarbinol","alpha-hydroxytoluene"],
+      "dmdm hydantoin":["dmdm","glydant"],
+      "hydroperoxides of linalool":["oxidized linalool","linalool hydroperoxide","lavender","bergamot","linalool"]
+    };
+    var CROSS={
+      "propolis":["cinnamic acid","caffeic acid","benzyl benzoate","benzyl cinnamate","eugenol","vanillin","benzoic acid","ferulic acid"],
+      "peru balsam":["cinnamic acid","caffeic acid","benzyl benzoate","benzyl cinnamate","eugenol","vanillin","benzoic acid","cinnamyl alcohol","cinnamal","isoeugenol"],
+      "fragrance mix i":["eugenol","isoeugenol","cinnamal","cinnamic alcohol","geraniol","hydroxycitronellal","lyral","oak moss"],
+      "formaldehyde":["dmdm hydantoin","imidazolidinyl urea","diazolidinyl urea","quaternium-15","bronopol"],
+      "thiuram mix":["thiram","ziram","disulfiram","zinc carbamate","dithiocarbamate"],
+      "p-phenylenediamine (ppd)":["para-phenylenediamine","black rubber mix"],
+      "cocamidopropyl betaine":["capb","cocamidopropyl dimethylamine","amidoamine","dmapa"],
+      "methylisothiazolinone":["isothiazolinone","benzisothiazolinone","octylisothiazolinone","chloromethylisothiazolinone"],
+      "lanolin alcohol":["wool wax","lanolin","wool fat","cholesterol esters","lanosterol"],
+      "hydroperoxides of limonene":["d-limonene","limonene","citrus terpene","orange oil","lemon oil"],
+      "hydroperoxides of linalool":["linalool","lavender","bergamot"],
+      "potassium dichromate":["chromium","hexavalent chromium","chromate","bichromate"]
+    };
+    var _origSetItem=localStorage.setItem.bind(localStorage);
+    localStorage.setItem=function(key,value){
+      if(key===HL_KEY){try{var base=JSON.parse(value).map(function(t){return t.toLowerCase().trim();});var expanded=[];base.forEach(function(a){expanded.push(a);var k=a.toLowerCase().trim();if(ALLERGEN_SYNONYMS[k])ALLERGEN_SYNONYMS[k].forEach(function(s){expanded.push(s.toLowerCase());});Object.keys(ALLERGEN_SYNONYMS).forEach(function(sk){if(sk!==k&&(sk.includes(k)||k.includes(sk)))ALLERGEN_SYNONYMS[sk].forEach(function(s){expanded.push(s.toLowerCase());});});if(CROSS[k])CROSS[k].forEach(function(c){expanded.push(c.toLowerCase());});Object.keys(CROSS).forEach(function(ck){if(ck!==k&&(ck.includes(k)||k.includes(ck)))CROSS[ck].forEach(function(c){expanded.push(c.toLowerCase());});});Object.keys(CROSS).forEach(function(parent){var comps=CROSS[parent].map(function(c){return c.toLowerCase();});if(comps.some(function(c){return c.includes(k)||k.includes(c);})){if(ALLERGEN_SYNONYMS[parent])ALLERGEN_SYNONYMS[parent].forEach(function(s){expanded.push(s.toLowerCase());});CROSS[parent].forEach(function(c){expanded.push(c.toLowerCase());});}});});var unique=expanded.filter(function(v,i,arr){return arr.indexOf(v)===i;});value=JSON.stringify(unique);}catch(e){}}
+      _origSetItem(key,value);
+    };
+    (function(){
+      try{
+        var p=loadProfiles();
+        var terms=p[activeProfile]||[];
+        localStorage.setItem(HL_KEY,JSON.stringify(terms));
+        _origSetItem(DISPLAY_KEY,JSON.stringify(terms));
+      }catch(e){}
+    })();
+    if(!localStorage.getItem(DISPLAY_KEY)){
+      try{
+        var p=loadProfiles();
+        var names=p[activeProfile]||[];
+        if(names.length) _origSetItem(DISPLAY_KEY, JSON.stringify(names));
+      }catch(e){}
+    }
+  })();
+  </script>
+
+<hr style="width:100%;height:1px;background:linear-gradient(to right,transparent,#e8e3ee 20%,#e8e3ee 80%,transparent);border:none;margin:0;" />
+
+<div class="connect-wrap">
+  <h2 class="connect-title">Connect</h2>
+  <p class="connect-subtitle">Follow along &amp; stay in touch</p>
+  <div class="connect-divider"></div>
+  <div class="social-grid">
+
+    <a href="https://www.facebook.com/profile.php?id=61589037974670" target="_blank" rel="noopener" class="social-link">
+      <div class="social-icon-wrap" style="--hover-color: #1877F2;">
+        <svg viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+      </div>
+      <span class="social-label">Facebook</span>
+    </a>
+
+    <a href="https://www.instagram.com/bioskinetics.26/" target="_blank" rel="noopener" class="social-link">
+      <div class="social-icon-wrap" style="--hover-color: #E1306C;">
+        <svg viewBox="0 0 24 24" fill="url(#ig-grad)">
+          <defs><linearGradient id="ig-grad" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f09433"/><stop offset="25%" stop-color="#e6683c"/><stop offset="50%" stop-color="#dc2743"/><stop offset="75%" stop-color="#cc2366"/><stop offset="100%" stop-color="#bc1888"/></linearGradient></defs>
+          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+        </svg>
+      </div>
+      <span class="social-label">Instagram</span>
+    </a>
+
+    <a href="https://www.tiktok.com/@bioskinetics.26" target="_blank" rel="noopener" class="social-link">
+      <div class="social-icon-wrap" style="--hover-color: #010101;">
+        <svg viewBox="0 0 24 24" fill="#010101"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"/></svg>
+      </div>
+      <span class="social-label">TikTok</span>
+    </a>
+
+    <a href="https://www.linkedin.com/in/bioskinetics" target="_blank" rel="noopener" class="social-link">
+      <div class="social-icon-wrap" style="--hover-color: #0A66C2;">
+        <svg viewBox="0 0 24 24" fill="#0A66C2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      </div>
+      <span class="social-label">LinkedIn</span>
+    </a>
+
+    <a href="https://www.pinterest.com/Bioskinetics26/" target="_blank" rel="noopener" class="social-link">
+      <div class="social-icon-wrap" style="--hover-color: #E60023;">
+        <svg viewBox="0 0 24 24" fill="#E60023"><path d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+      </div>
+      <span class="social-label">Pinterest</span>
+    </a>
+
+  </div>
+  <p class="connect-tagline">Stay connected with <strong>Bioskinetics</strong></p>
+</div>
+</body>
+</html>
