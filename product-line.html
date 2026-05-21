@@ -6,6 +6,64 @@
   <title>Product Line — Bioskinetics</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
   <style>
+
+  /* ── Navigation ── */
+  #bio-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #000;
+    padding: 0 2rem;
+    height: 64px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .bio-nav-logo img {
+    height: 52px;
+    width: auto;
+    display: block;
+  }
+  .bio-nav-links {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin: 0;
+    padding: 0;
+  }
+  .bio-nav-links a {
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .bio-nav-links a:hover { color: #fade4b; }
+  .bio-nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+  .bio-nav-icon {
+    color: #fff;
+    display: flex;
+    align-items: center;
+    transition: color 0.15s;
+  }
+  .bio-nav-icon:hover { color: #fade4b; }
+  .bio-nav-icon svg { width: 22px; height: 22px; }
+  @media (max-width: 768px) {
+    .bio-nav-links { gap: 1rem; }
+    .bio-nav-links a { font-size: 11px; letter-spacing: 0.08em; }
+  }
+  @media (max-width: 560px) {
+    #bio-nav { padding: 0 1rem; }
+    .bio-nav-links { display: none; }
+  }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Jost', sans-serif; color: #2c2c2a; background: #fff; }
     .section-divider { width: 100%; height: 1px; background: linear-gradient(to right, transparent, #e8e3ee 20%, #e8e3ee 80%, transparent); border: none; margin: 0; }
@@ -42,6 +100,29 @@
   </style>
 </head>
 <body>
+  <!-- ── Navigation ── -->
+  <nav id="bio-nav">
+    <a href="/index.html" class="bio-nav-logo">
+      <img src="/Bioskinetics.png" alt="Bioskinetics" />
+    </a>
+    <ul class="bio-nav-links">
+      <li><a href="/index.html">Home</a></li>
+      <li><a href="/about-us.html">About Us</a></li>
+      <li><a href="/how-it-works.html">How It Works</a></li>
+      <li><a href="/my-allergens.html">My Allergens</a></li>
+      <li><a href="/product-line.html">Product Line</a></li>
+      <li><a href="/my-account.html">My Account</a></li>
+    </ul>
+    <div class="bio-nav-icons">
+      <a href="#" class="bio-nav-icon" title="Cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      </a>
+      <a href="/my-account.html" class="bio-nav-icon" title="Account">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </a>
+    </div>
+  </nav>
+
 
 <!-- INVISIBLE: Survey Data (5a) -->
 <div id="survey-wrap-b2a" style="display:none;background:rgba(0,0,0,0.45);padding:2rem 1rem;overflow:visible;"><div id="survey-panel-b2a" style="background:#fff;border-radius:20px;width:100%;max-width:680px;margin:0 auto;box-shadow:0 8px 32px rgba(0,0,0,0.18);overflow:hidden;"><div style="padding:1.25rem 1.5rem 0;display:flex;justify-content:space-between;align-items:center;"><span id="sv-badge-b2a" style="font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:#beadc5;background:#f5f0f6;border-radius:999px;padding:4px 12px;"></span><button onclick="window.closeSurvey_b2a()" style="background:none;border:none;font-size:22px;color:#bbb;cursor:pointer;">x</button></div><div style="padding:0.75rem 1.5rem 0;display:flex;gap:6px;align-items:center;"><div id="sv-pip-2-b2a" style="width:26px;height:26px;border-radius:50%;border:1.5px solid #beadc5;background:#f5f0f6;display:flex;align-items:center;justify-content:center;font-size:13px;color:#beadc5;flex-shrink:0;">1</div><div id="sv-line-2-b2a" style="flex:1;height:1.5px;background:#e0e0e0;"></div><div id="sv-pip-3-b2a" style="width:26px;height:26px;border-radius:50%;border:1.5px solid #e0e0e0;display:flex;align-items:center;justify-content:center;font-size:13px;color:#ccc;flex-shrink:0;">2</div><div id="sv-line-3-b2a" style="flex:1;height:1.5px;background:#e0e0e0;"></div><div id="sv-pip-4-b2a" style="width:26px;height:26px;border-radius:50%;border:1.5px solid #e0e0e0;display:flex;align-items:center;justify-content:center;font-size:13px;color:#ccc;flex-shrink:0;">3</div></div><div style="padding:0.5rem 1.5rem 0;display:flex;justify-content:space-between;"><span style="font-size:10px;color:#beadc5;width:26px;text-align:center;">Base</span><span style="flex:1;"></span><span style="font-size:10px;color:#ccc;width:26px;text-align:center;">Extras</span><span style="flex:1;"></span><span style="font-size:10px;color:#ccc;width:26px;text-align:center;">Finish</span></div><div style="padding:1.25rem 1.5rem 1.5rem;overflow-y:visible;"><div id="sv-step-2-b2a" style="display:none;"><p style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#beadc5;margin-bottom:6px;">Step 1 - Base</p><p style="font-size:24px;font-weight:600;color:#2c2c2a;margin-bottom:0.4rem;">Your base formula</p><p style="font-size:14px;color:#aaa;margin-bottom:1rem;">Click Swap on any flagged ingredient.</p><p style="font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:#beadc5;margin-bottom:8px;">Required</p><p id="sv-autoswap-summary-b2a" style="display:none;padding:10px 12px;background:#fdfbe8;border-left:2px solid #fade4b;border-radius:0 8px 8px 0;font-size:13px;color:#5f5e5a;margin-bottom:8px;"></p><div id="sv-required-list-b2a" style="display:flex;flex-direction:column;gap:5px;margin-bottom:1rem;"></div><p id="sv-base-warn-b2a" style="display:none;font-size:13px;color:#c0392b;background:#fff5f5;border:1px solid #f09595;border-radius:6px;padding:8px 12px;margin-bottom:8px;">Please swap all flagged ingredients before continuing.</p><div style="display:flex;justify-content:space-between;padding-top:1rem;border-top:0.5px solid #f0edf2;"><button onclick="window.closeSurvey_b2a()" style="font-size:14px;color:#bbb;background:none;border:none;cursor:pointer;">Cancel</button><button onclick="window.svNextStep1_b2a()" style="font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#2c2c2a;background:#fade4b;border:none;border-radius:6px;padding:9px 20px;cursor:pointer;">Next</button></div></div><div id="sv-step-3-b2a" style="display:none;"><p style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#beadc5;margin-bottom:6px;">Step 2 - Extras</p><p style="font-size:24px;font-weight:600;color:#2c2c2a;margin-bottom:0.4rem;">Customize your formula</p><p style="font-size:14px;color:#aaa;margin-bottom:1rem;">Add as many as you like.</p><div id="sv-optional-cats-b2a"></div><div style="display:flex;justify-content:space-between;padding-top:1rem;border-top:0.5px solid #f0edf2;margin-top:1rem;"><button onclick="window.svGoTo_b2a(2)" style="font-size:14px;color:#bbb;background:none;border:none;cursor:pointer;">Back</button><button onclick="window.svNextFromOptional_b2a()" style="font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#2c2c2a;background:#fade4b;border:none;border-radius:6px;padding:9px 20px;cursor:pointer;">Next</button></div></div><div id="sv-step-fragrance-b2a" style="display:none;"><p style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#beadc5;margin-bottom:6px;">Step 3 - Fragrance</p><p style="font-size:24px;font-weight:600;color:#2c2c2a;margin-bottom:0.4rem;">Choose your scent</p><p style="font-size:14px;color:#aaa;margin-bottom:1rem;">Select one scent.</p><div id="sv-scent-grid-b2a" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem;"></div><div style="display:flex;justify-content:space-between;padding-top:1rem;border-top:0.5px solid #f0edf2;"><button onclick="window.svGoTo_b2a(3)" style="font-size:14px;color:#bbb;background:none;border:none;cursor:pointer;">Back</button><button onclick="buildContainer_b2a();window.svGoToNamed_b2a('container')" style="font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#2c2c2a;background:#fade4b;border:none;border-radius:6px;padding:9px 20px;cursor:pointer;">Next</button></div></div><div id="sv-step-container-b2a" style="display:none;"><p style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#beadc5;margin-bottom:6px;">Final Step</p><p style="font-size:24px;font-weight:600;color:#2c2c2a;margin-bottom:0.4rem;">Choose your container</p><p style="font-size:14px;color:#aaa;margin-bottom:0.75rem;">Pick a size and color.</p><p style="font-size:12px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:#beadc5;margin-bottom:8px;">Size</p><div id="sv-size-grid-b2a" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1rem;"></div><div id="sv-color-grid-b2a" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1rem;"></div><div style="display:flex;justify-content:space-between;padding-top:1rem;border-top:0.5px solid #f0edf2;"><button onclick="window.svContainerBack_b2a()" style="font-size:14px;color:#bbb;background:none;border:none;cursor:pointer;">Back</button><button onclick="window.closeSurvey_b2a()" style="font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#2c2c2a;background:#fade4b;border:none;border-radius:6px;padding:9px 20px;cursor:pointer;">Add to Cart</button></div></div></div></div><div id="sv-swap-modal-wrap-b2a" style="display:none;position:absolute;inset:0;background:rgba(0,0,0,0.3);align-items:center;justify-content:center;z-index:10;"><div style="background:#fff;border-radius:16px;padding:1.5rem;width:260px;box-shadow:0 8px 24px rgba(0,0,0,0.15);"><p id="sv-swap-title-b2a" style="font-size:18px;font-weight:600;color:#2c2c2a;margin-bottom:3px;"></p><p id="sv-swap-role-b2a" style="font-size:13px;color:#aaa;font-style:italic;margin-bottom:1rem;"></p><p style="font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:#beadc5;margin-bottom:8px;">Replace with</p><div id="sv-swap-opts-b2a" style="display:flex;flex-direction:column;gap:5px;margin-bottom:1rem;"></div><div onclick="window.closeSwapModal_b2a()" style="font-size:14px;color:#aaa;text-align:center;cursor:pointer;padding-top:8px;border-top:0.5px solid #f0edf2;">Keep original</div></div></div></div><div id="sv-contact-modal-b2a" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:100;align-items:center;justify-content:center;padding:1rem;"><div style="background:#fff;border-radius:16px;padding:1.5rem;width:100%;max-width:620px;max-height:85vh;overflow-y:auto;"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;"><p style="font-size:22px;font-weight:600;color:#2c2c2a;margin:0;font-family:Georgia,serif;">Message Owner</p><button onclick="document.getElementById('sv-contact-modal-b2a').style.display='none'" style="background:none;border:none;font-size:22px;color:#bbb;cursor:pointer;">x</button></div><p style="font-size:15px;color:#aaa;margin-bottom:1.25rem;font-style:italic;font-family:Georgia,serif;">No safe substitute was found. Send us a message.</p><div style="display:flex;flex-direction:column;gap:10px;"><div><label style="font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:#beadc5;display:block;margin-bottom:5px;font-weight:600;">Name</label><input id="sv-cm-name-b2a" type="text" placeholder="" style="width:100%;padding:9px 12px;border:1px solid #444;border-radius:7px;font-family:Georgia,serif;font-size:15px;box-sizing:border-box;background:#2c2c2a;color:#f0ede8;" /></div><div><label style="font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:#beadc5;display:block;margin-bottom:5px;font-weight:600;">Email</label><input id="sv-cm-email-b2a" type="email" placeholder="your@email.com" style="width:100%;padding:9px 12px;border:1px solid #444;border-radius:7px;font-family:Georgia,serif;font-size:15px;box-sizing:border-box;background:#2c2c2a;color:#f0ede8;" /></div><div><label style="font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:#beadc5;display:block;margin-bottom:5px;font-weight:600;">Product</label><input id="sv-cm-product-b2a" type="text" readonly style="width:100%;padding:9px 12px;border:1px solid #3a3835;border-radius:7px;font-family:Georgia,serif;font-size:15px;box-sizing:border-box;background:#232320;color:#888;" /></div><div><label style="font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:#beadc5;display:block;margin-bottom:5px;font-weight:600;">Your Allergens</label><input id="sv-cm-allergens-b2a" type="text" readonly style="width:100%;padding:9px 12px;border:1px solid #3a3835;border-radius:7px;font-family:Georgia,serif;font-size:15px;box-sizing:border-box;background:#232320;color:#888;" /></div><div><label style="font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:#beadc5;display:block;margin-bottom:5px;font-weight:600;">Message</label><textarea id="sv-cm-message-b2a" rows="3" placeholder="Anything else..." style="width:100%;padding:9px 12px;border:1px solid #444;border-radius:7px;font-family:Georgia,serif;font-size:15px;box-sizing:border-box;resize:vertical;background:#2c2c2a;color:#f0ede8;"></textarea></div></div><div style="margin-top:1rem;display:flex;justify-content:space-between;padding-top:1rem;border-top:0.5px solid #f0edf2;"><button onclick="document.getElementById('sv-contact-modal-b2a').style.display='none'" style="font-size:14px;color:#bbb;background:none;border:none;cursor:pointer;">Cancel</button><button onclick="submitContact_b2a()" style="font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#2c2c2a;background:#fade4b;border:none;border-radius:6px;padding:9px 20px;cursor:pointer;">Send Message</button></div></div></div>
@@ -931,10 +1012,10 @@ function bioAddToCart(productUrl){
     try{
       var doc=iframe.contentDocument||iframe.contentWindow.document;
       var btn=doc.querySelector('[data-ux="CommerceAddToCart"] button')||doc.querySelector('button[data-ux*="AddToCart"]')||doc.querySelector('[data-aid*="ADD_TO_CART"] button')||Array.from(doc.querySelectorAll('button')).find(function(b){return b.textContent.trim().toUpperCase()==='ADD TO CART';});
-      if(btn){btn.click();setTimeout(function(){if(loading.parentNode)loading.parentNode.removeChild(loading);if(iframe.parentNode)iframe.parentNode.removeChild(iframe);window.top.location.href='/shop/ols/cart';},800);return;}
+      if(btn){btn.click();setTimeout(function(){if(loading.parentNode)loading.parentNode.removeChild(loading);if(iframe.parentNode)iframe.parentNode.removeChild(iframe);window.top.location.href='/';},800);return;}
     }catch(e){}
     if(attempts<20){setTimeout(tryClick,300);}
-    else{if(loading.parentNode)loading.parentNode.removeChild(loading);if(iframe.parentNode)iframe.parentNode.removeChild(iframe);window.top.location.href=productUrl;}
+    else{if(loading.parentNode)loading.parentNode.removeChild(loading);if(iframe.parentNode)iframe.parentNode.removeChild(iframe);window.top.location.href='/';}
   }
   iframe.onload=function(){setTimeout(tryClick,500);};
   setTimeout(tryClick,2000);
