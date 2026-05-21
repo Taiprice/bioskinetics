@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>How It Works — Bioskinetics</title>
+  <title>About Us — Bioskinetics</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Jost:wght@300;400;500&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
   <style>
 
@@ -14,7 +14,7 @@
     justify-content: space-between;
     background: #000;
     padding: 0 2rem;
-    height: 64px;
+    height: 80px;
     width: 100%;
     box-sizing: border-box;
   }
@@ -54,7 +54,7 @@
     transition: color 0.15s;
   }
   .bio-nav-icon:hover { color: #fade4b; }
-  .bio-nav-icon svg { width: 22px; height: 22px; }
+  .bio-nav-icon svg { width: 24px; height: 24px; }
   @media (max-width: 768px) {
     .bio-nav-links { gap: 1rem; }
     .bio-nav-links a { font-size: 11px; letter-spacing: 0.08em; }
@@ -66,30 +66,63 @@
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Jost', sans-serif; color: #2c2c2a; background: #fff; }
-    .bio-page-header { background: #fff; text-align: center; padding: 2.5rem 2rem 0; margin-bottom: 0; }
-    .bio-page-header h1 { font-family: 'Playfair Display', serif; font-size: 58px; font-weight: 700; color: #b2a254; margin-bottom: 1.6rem; line-height: 1.1; }
-    .bio-page-header p { font-family: 'Lato', sans-serif; font-size: 24px; font-weight: 300; color: #b0b0b0; margin-bottom: 0; letter-spacing: 0.03em; }
-    .header-rule { width: 60px; height: 1.5px; background: linear-gradient(to right, transparent, #beadc5 30%, #beadc5 70%, transparent); margin: 1rem auto 0; border: none; }
+
+    /* ── Shared ── */
+    .bio-page-header { background: #fff; text-align: center; padding: 2.5rem 2rem 1rem; margin-bottom: 0.5rem; }
+    .bio-page-header h1 { font-family: 'Playfair Display', serif; font-size: 52px; font-weight: 700; color: #b2a254; margin-bottom: 0.8rem; line-height: 1.1; }
+    .bio-page-header p { font-family: 'Lato', sans-serif; font-size: 22px; font-weight: 300; color: #b0b0b0; margin-bottom: 0.6rem; letter-spacing: 0.03em; }
+    .header-rule { width: 60px; height: 1.5px; background: linear-gradient(to right, transparent, #beadc5 30%, #beadc5 70%, transparent); margin: 0 auto; border: none; }
     .section-divider { width: 100%; height: 1px; background: linear-gradient(to right, transparent, #e8e3ee 20%, #e8e3ee 80%, transparent); border: none; margin: 0; }
-    /* Steps */
-    .steps-wrap { max-width: 1100px; margin: 0 auto; padding: 3rem 3rem 4rem; display: flex; flex-direction: column; gap: 0; }
-    .step { display: grid; grid-template-columns: 80px 1fr; gap: 2rem; padding: 2.5rem 0; border-bottom: 0.5px solid rgba(0,0,0,0.07); align-items: start; }
-    .step:last-child { border-bottom: none; }
-    .step-number { display: flex; flex-direction: column; align-items: center; gap: 12px; padding-top: 4px; }
-    .step-num-circle { width: 48px; height: 48px; border-radius: 50%; background: #fade4b; display: flex; align-items: center; justify-content: center; font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 600; color: #2c2c2a; flex-shrink: 0; }
-    .step-connector { width: 1.5px; flex: 1; min-height: 40px; background: linear-gradient(to bottom, #beadc5, transparent); }
-    .step:last-child .step-connector { display: none; }
-    .step-content { display: flex; flex-direction: column; gap: 0.75rem; }
-    .step-eyebrow { font-size: 13px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #beadc5; }
-    .step-title { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 600; line-height: 1.2; color: #2c2c2a; }
-    .step-divider { width: 32px; height: 1.5px; background: linear-gradient(to right, #beadc5, transparent); border: none; }
-    .step-body { font-size: 18px; font-weight: 300; line-height: 1.85; color: #5f5e5a; max-width: 680px; }
-    .step-body strong { font-weight: 500; color: #2c2c2a; }
-    .step-link { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #fade4b; text-decoration: underline; text-underline-offset: 3px; margin-top: 0.25rem; transition: opacity 0.15s; cursor: pointer; }
-    .step-link:hover { opacity: 0.7; }
-    .step-link::after { content: '▶'; font-size: 9px; }
-    @media (max-width: 600px) { .steps-wrap { padding: 2rem 1.5rem 3rem; } .step { grid-template-columns: 56px 1fr; gap: 1.25rem; } .step-num-circle { width: 40px; height: 40px; font-size: 18px; } .step-title { font-size: 24px; } }
-    /* Connect */
+
+    /* ──────────────────────────────
+       BLOCK 1: About Us
+    ────────────────────────────── */
+    .bio-wrap { max-width: 900px; margin: 0 auto; padding: 2rem 2rem 4rem; }
+    .bio-hero { display: grid; grid-template-columns: 1fr auto; gap: 2rem; border-bottom: 0.5px solid rgba(0,0,0,0.1); margin-bottom: 3rem; align-items: center; padding-bottom: 3rem; }
+    .bio-hero-text { padding: 3rem 2.5rem 3rem 0; display: flex; flex-direction: column; justify-content: center; }
+    .eyebrow { font-size: 13px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #beadc5; margin-bottom: 1rem; }
+    .bio-headline { font-family: 'Cormorant Garamond', serif; font-size: 54px; font-weight: 600; line-height: 1.1; color: #2c2c2a; }
+    .bio-headline em { font-style: italic; color: #fade4b; }
+    .bio-hero-photo { overflow: hidden; border-radius: 16px; width: 340px; height: 340px; justify-self: center; align-self: center; flex-shrink: 0; }
+    .bio-hero-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .section-label { font-size: 13px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #beadc5; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 12px; }
+    .section-label::after { content: ''; flex: 1; height: 0.5px; background: rgba(0,0,0,0.1); }
+    .bio-intro { font-family: 'Cormorant Garamond', serif; font-size: 23px; font-weight: 400; line-height: 1.6; color: #2c2c2a; margin-bottom: 2rem; }
+    .bio-intro em { font-style: italic; color: #c9b830; }
+    .bio-body-text { font-size: 17px; font-weight: 300; line-height: 1.8; color: #5f5e5a; margin-bottom: 1.5rem; }
+    .bio-body-text strong { font-weight: 500; color: #2c2c2a; }
+    .bio-quote { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-style: italic; font-weight: 400; line-height: 1.65; color: #3a3835; border-left: 2px solid #beadc5; padding: 0.25rem 0 0.25rem 1.5rem; margin-bottom: 2rem; }
+    .bio-quote p { margin-bottom: 1.2rem; }
+    .bio-quote p:last-child { margin-bottom: 0; }
+    .bio-closing { font-size: 17px; font-weight: 400; line-height: 1.8; color: #2c2c2a; background: #fdfbe8; border-left: 2px solid #fade4b; padding: 1rem 1.25rem; margin-bottom: 2rem; border-radius: 0 8px 8px 0; }
+    .bio-tag-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 2rem; padding-top: 1.5rem; border-top: 0.5px solid rgba(0,0,0,0.1); }
+    .bio-tag { font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 16px; border-radius: 999px; border: 0.5px solid #beadc5; color: #9a88a3; }
+    @media (max-width: 640px) { .bio-hero { grid-template-columns: 1fr; } .bio-hero-text { padding: 2rem 0 1.5rem; } .bio-headline { font-size: 40px; } .bio-hero-photo { width: 100%; height: 280px; border-radius: 16px; } }
+
+    /* ──────────────────────────────
+       BLOCK 2: About Bioskinetics
+    ────────────────────────────── */
+    .bio-section { max-width: 960px; margin: 0 auto; padding: 4rem 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; border-bottom: 0.5px solid rgba(0,0,0,0.07); }
+    .bio-section:last-of-type { border-bottom: none; }
+    .bio-section.reverse { direction: rtl; }
+    .bio-section.reverse > * { direction: ltr; }
+    .bio-img-wrap { width: 100%; aspect-ratio: 5 / 6; border-radius: 16px; overflow: hidden; background: #f0edf2; position: relative; }
+    .bio-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .bio-img-wrap::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(to right, #beadc5, #fade4b); }
+    .bio-section-text { display: flex; flex-direction: column; gap: 1rem; }
+    .section-eyebrow { font-size: 13px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #beadc5; }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: 42px; font-weight: 600; line-height: 1.15; color: #2c2c2a; }
+    .section-title em { font-style: italic; color: #fade4b; }
+    .section-hr { width: 40px; height: 1.5px; background: linear-gradient(to right, #beadc5, transparent); border: none; }
+    .section-body { font-size: 18px; font-weight: 300; line-height: 1.85; color: #5f5e5a; }
+    .bio-btn { display: inline-block; background: #fade4b; color: #2c2c2a; font-family: 'Jost', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; border: none; border-radius: 4px; padding: 14px 30px; cursor: pointer; text-decoration: none; transition: background 0.15s, transform 0.1s; align-self: flex-start; margin-top: 0.5rem; }
+    .bio-btn:hover { background: #f5d535; }
+    .bio-btn:active { transform: scale(0.98); }
+    @media (max-width: 660px) { .bio-section { grid-template-columns: 1fr; gap: 2rem; } .bio-section.reverse { direction: ltr; } }
+
+    /* ──────────────────────────────
+       BLOCK 3: Connect
+    ────────────────────────────── */
     .connect-wrap { background: #ffffff; padding: 64px 24px 72px; text-align: center; }
     .connect-title { font-family: 'Playfair Display', Georgia, serif; font-size: 3.2rem; font-weight: 700; color: rgb(172, 155, 71); letter-spacing: 0.02em; margin-bottom: 10px; }
     .connect-subtitle { font-family: 'Lato', sans-serif; font-size: 1.38rem; color: #999; font-weight: 300; letter-spacing: 0.08em; margin-bottom: 10px; }
@@ -112,7 +145,7 @@
   <!-- ── Navigation ── -->
   <nav id="bio-nav">
     <a href="/index.html" class="bio-nav-logo">
-      <img src="/Bioskinetics.png" alt="Bioskinetics" />
+      <img src="data:image/png;base64,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" alt="Bioskinetics" />
     </a>
     <ul class="bio-nav-links">
       <li><a href="/index.html">Home</a></li>
@@ -124,7 +157,7 @@
     </ul>
     <div class="bio-nav-icons">
       <a href="#" class="bio-nav-icon" title="Cart">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61h9.72a2 2 0 001.99-1.61L23 6H6"/></svg>
       </a>
       <a href="/my-account.html" class="bio-nav-icon" title="Account">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -133,57 +166,128 @@
   </nav>
 
 
-  <!-- BLOCK 1: 3 Simple Steps -->
+  <!-- ── BLOCK 1: About Us ── -->
   <div class="bio-page-header">
-    <h1>3 Simple Steps</h1>
-    <p>Getting started is easier than you think</p>
+    <h1>About Us</h1>
+    <p>There's a story behind everything</p>
     <div class="header-rule"></div>
   </div>
-  <div class="steps-wrap">
-    <div class="step">
-      <div class="step-number"><div class="step-num-circle">1</div><div class="step-connector"></div></div>
-      <div class="step-content">
-        <span class="step-eyebrow">Step One</span>
-        <h2 class="step-title">Add Your Allergens &amp; Sensitivities</h2>
-        <hr class="step-divider" />
-        <p class="step-body">Head to the <strong>My Allergens</strong> tab and enter any ingredients you're allergic to, sensitive to, or simply prefer to avoid. Once saved, our system will automatically flag those ingredients across every product — so you never have to read a label twice. You can update your list anytime.</p>
-        <a href="my-allergens.html" class="step-link">Go to My Allergens</a>
+  <div class="bio-wrap">
+    <div class="bio-hero">
+      <div class="bio-hero-text">
+        <p class="eyebrow">Behind Bioskinetics</p>
+        <h2 class="bio-headline">Built for<br>skin that's a little<br><em>more complicated.</em></h2>
+      </div>
+      <div class="bio-hero-photo">
+        <img src="https://img1.wsimg.com/isteam/ip/95132f5f-297d-4ebe-83e1-b80588ea46de/ChatGPT%20Image%20May%2015%2C%202026%2C%2005_47_47%20PM.png" alt="Tai Price — Founder of Bioskinetics" />
       </div>
     </div>
-    <div class="step">
-      <div class="step-number"><div class="step-num-circle">2</div><div class="step-connector"></div></div>
-      <div class="step-content">
-        <span class="step-eyebrow">Step Two</span>
-        <h2 class="step-title">Customize Your Formula</h2>
-        <hr class="step-divider" />
-        <p class="step-body">Browse the <strong>Product Line</strong> and click <strong>Customize Now</strong> on any product. You'll see your base formula with all required ingredients listed. Any ingredient that conflicts with your allergen list will be highlighted — simply click <strong>Swap</strong> on that ingredient to choose a safe alternative. Then move on to Step 2 to add optional extras like moisture boosters, protein treatments, frizz control, or a custom scent.</p>
-        <a href="product-line.html" class="step-link">Browse Products</a>
-      </div>
+    <p class="section-label">Our Founder</p>
+    <p class="bio-intro">Products around the world are designed for manufacturing convenience, cheap processing, and <em>'average' skin</em>. That's just it — you don't have 'average' skin. You have <em>your</em> skin.</p>
+    <p class="bio-body-text"><strong>Tai Price</strong>, the founder and owner of Bioskinetics, is not without his own set of obstacles. From an early age, he struggled with Eczema, sensitive skin, and allergies.</p>
+    <div class="bio-quote">
+      <p>"I've spent years complaining about the lack of products that fit my guidelines. If it doesn't have one of my allergies, it has the other. If it doesn't have that allergy, it has another. And unfortunately, when I find a product that is safe for me, it comes in bland, boring, containers that don't feel me."</p>
+      <p>"You know that feeling when you walk into the personal care section and see the hundreds of colorful bottles that contain all of your allergies so you have to settle for the same boring white bottle every time? Products for curly hair, thin hair, thick hair, wavy hair, frizzy hair, thinning hair, etc. It really makes you realize how left out of the system you are."</p>
+      <p>"So I created this company for people to realize that they matter. Just because your skin is a little bit more complicated, doesn't mean you don't deserve the same care and effort put into your products as everyone else. So instead of waiting for someone to make an accessible system, I created it myself."</p>
     </div>
-    <div class="step">
-      <div class="step-number"><div class="step-num-circle">3</div><div class="step-connector"></div></div>
-      <div class="step-content">
-        <span class="step-eyebrow">Step Three</span>
-        <h2 class="step-title">Pick Your Container &amp; Add to Cart</h2>
-        <hr class="step-divider" />
-        <p class="step-body">Once your formula is set, choose your preferred <strong>size and color</strong> for the container. When you're happy with everything, hit <strong>Add to Cart</strong> — and your personalized product is on its way to being made just for you.</p>
-      </div>
+    <div class="bio-closing"><strong>Bioskinetics</strong> is a company built on customizable cosmetic line-ups — allowing for self expression and, most importantly, allergy-safe products.</div>
+    <div class="bio-tag-row">
+      <span class="bio-tag">Eczema-friendly</span>
+      <span class="bio-tag">Sensitive skin</span>
+      <span class="bio-tag">Allergy-conscious</span>
+      <span class="bio-tag">Founded in Colorado</span>
     </div>
   </div>
 
   <hr class="section-divider" />
 
-  <!-- BLOCK 2: Connect -->
+  <!-- ── BLOCK 2: About Bioskinetics ── -->
+  <div class="bio-page-header">
+    <h1>About Bioskinetics</h1>
+    <p>Who we are &amp; what we stand for</p>
+    <div class="header-rule"></div>
+  </div>
+
+  <div class="bio-section">
+    <div class="bio-img-wrap">
+      <img src="https://images.unsplash.com/photo-1581132692174-a390c759b42c?w=600&auto=format&fit=crop&q=60" alt="Bioskinetics — Our Story" />
+    </div>
+    <div class="bio-section-text">
+      <span class="section-eyebrow">Our Story</span>
+      <h2 class="section-title">Beauty that's built for <em>everyone.</em></h2>
+      <hr class="section-hr" />
+      <p class="section-body">At Bioskinetics, we believe that beauty should be accessible to everyone. This belief sparked our journey and continues to guide everything we do today. We saw a need for products that not only enhance natural beauty but also make people feel confident in their own skin, without barriers or limitations. Our goal has always been to create a brand that supports self-expression and confidence, offering cosmetics that help you show up as your best self every day.</p>
+      <a href="/about-us.html" class="bio-btn" target="_top">Learn More</a>
+    </div>
+  </div>
+
+  <div class="bio-section reverse">
+    <div class="bio-img-wrap">
+      <img src="https://plus.unsplash.com/premium_photo-1679046947934-d9c13d67fae8?w=600&auto=format&fit=crop&q=60" alt="Bioskinetics — Our Ingredients" />
+    </div>
+    <div class="bio-section-text">
+      <span class="section-eyebrow">Our Ingredients</span>
+      <h2 class="section-title">Formulated with <em>intention.</em></h2>
+      <hr class="section-hr" />
+      <p class="section-body">At our company, we take pride in offering high-quality, thoughtfully selected ingredients that prioritize both performance and safety. All of our formulations are fully customizable, allowing you to tailor each product to your unique needs and preferences. We understand how important it is to avoid allergens, which is why any ingredient in our products can be easily swapped for a safe alternative.</p>
+      <a href="/product-line.html" class="bio-btn" target="_top">Shop Now</a>
+    </div>
+  </div>
+
+  <div class="bio-section">
+    <div class="bio-img-wrap">
+      <img src="https://images.unsplash.com/photo-1594051843839-c96c81ae011a?w=600&auto=format&fit=crop&q=60" alt="Bioskinetics — Our Mission" />
+    </div>
+    <div class="bio-section-text">
+      <span class="section-eyebrow">Our Mission</span>
+      <h2 class="section-title">Removing barriers in <em>beauty.</em></h2>
+      <hr class="section-hr" />
+      <p class="section-body">Our mission is to empower people to feel confident and beautiful in their own skin. We believe that everyone deserves to feel good about themselves, no matter their age, gender, skin type, or sensitivities. That's why we are deeply committed to creating allergy-friendly cosmetics that prioritize both safety and performance.</p>
+      <a href="/about-us.html" class="bio-btn" target="_top">Join Us</a>
+    </div>
+  </div>
+
+  <hr class="section-divider" />
+
+  <!-- ── BLOCK 3: Connect ── -->
   <div class="connect-wrap">
     <h2 class="connect-title">Connect</h2>
     <p class="connect-subtitle">Follow along &amp; stay in touch</p>
     <div class="connect-divider"></div>
     <div class="social-grid">
-      <a href="https://www.facebook.com/profile.php?id=61589037974670" target="_blank" rel="noopener" class="social-link"><div class="social-icon-wrap" style="--hover-color:#1877F2;"><svg viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg></div><span class="social-label">Facebook</span></a>
-      <a href="https://www.instagram.com/bioskinetics.26/" target="_blank" rel="noopener" class="social-link"><div class="social-icon-wrap" style="--hover-color:#E1306C;"><svg viewBox="0 0 24 24" fill="url(#ig-grad2)"><defs><linearGradient id="ig-grad2" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f09433"/><stop offset="25%" stop-color="#e6683c"/><stop offset="50%" stop-color="#dc2743"/><stop offset="75%" stop-color="#cc2366"/><stop offset="100%" stop-color="#bc1888"/></linearGradient></defs><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></div><span class="social-label">Instagram</span></a>
-      <a href="https://www.tiktok.com/@bioskinetics.26" target="_blank" rel="noopener" class="social-link"><div class="social-icon-wrap" style="--hover-color:#010101;"><svg viewBox="0 0 24 24" fill="#010101"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"/></svg></div><span class="social-label">TikTok</span></a>
-      <a href="https://www.linkedin.com/in/bioskinetics" target="_blank" rel="noopener" class="social-link"><div class="social-icon-wrap" style="--hover-color:#0A66C2;"><svg viewBox="0 0 24 24" fill="#0A66C2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></div><span class="social-label">LinkedIn</span></a>
-      <a href="https://www.pinterest.com/Bioskinetics26/" target="_blank" rel="noopener" class="social-link"><div class="social-icon-wrap" style="--hover-color:#E60023;"><svg viewBox="0 0 24 24" fill="#E60023"><path d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg></div><span class="social-label">Pinterest</span></a>
+      <a href="https://www.facebook.com/profile.php?id=61589037974670" target="_blank" rel="noopener" class="social-link">
+        <div class="social-icon-wrap" style="--hover-color: #1877F2;">
+          <svg viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+        </div>
+        <span class="social-label">Facebook</span>
+      </a>
+      <a href="https://www.instagram.com/bioskinetics.26/" target="_blank" rel="noopener" class="social-link">
+        <div class="social-icon-wrap" style="--hover-color: #E1306C;">
+          <svg viewBox="0 0 24 24" fill="url(#ig-grad)">
+            <defs><linearGradient id="ig-grad" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#f09433"/><stop offset="25%" stop-color="#e6683c"/><stop offset="50%" stop-color="#dc2743"/><stop offset="75%" stop-color="#cc2366"/><stop offset="100%" stop-color="#bc1888"/></linearGradient></defs>
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+          </svg>
+        </div>
+        <span class="social-label">Instagram</span>
+      </a>
+      <a href="https://www.tiktok.com/@bioskinetics.26" target="_blank" rel="noopener" class="social-link">
+        <div class="social-icon-wrap" style="--hover-color: #010101;">
+          <svg viewBox="0 0 24 24" fill="#010101"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"/></svg>
+        </div>
+        <span class="social-label">TikTok</span>
+      </a>
+      <a href="https://www.linkedin.com/in/bioskinetics" target="_blank" rel="noopener" class="social-link">
+        <div class="social-icon-wrap" style="--hover-color: #0A66C2;">
+          <svg viewBox="0 0 24 24" fill="#0A66C2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </div>
+        <span class="social-label">LinkedIn</span>
+      </a>
+      <a href="https://www.pinterest.com/Bioskinetics26/" target="_blank" rel="noopener" class="social-link">
+        <div class="social-icon-wrap" style="--hover-color: #E60023;">
+          <svg viewBox="0 0 24 24" fill="#E60023"><path d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z"/></svg>
+        </div>
+        <span class="social-label">Pinterest</span>
+      </a>
     </div>
     <p class="connect-tagline">Stay connected with <strong>Bioskinetics</strong></p>
   </div>
