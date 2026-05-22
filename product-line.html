@@ -2213,33 +2213,14 @@ async function bioGuestCheckout(){
   });
   if(scents.length) ingredients.push('Scent: '+scents.join(', '));
 
-  try {
-    var res=await fetch('/api/checkout',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        amount:price,
-        productName:bioCurProduct,
-        variant:bioCurVariant,
-        ingredients:ingredients.join(', ')
-      })
-    });
-    var data=await res.json();
-    if(data.clientSecret){
-      document.getElementById('bio-checkout-step1').style.display='none';
-      document.getElementById('bio-checkout-step2').style.display='flex';
-      var checkout=await bioStripe.initEmbeddedCheckout({ clientSecret: data.clientSecret });
-      checkout.mount('#bio-stripe-container');
-    } else {
-      alert('Checkout error: '+(data.error||'Unknown error'));
-      btn.textContent='Continue as Guest';
-      btn.disabled=false;
-    }
-  } catch(e){
-    alert('Something went wrong. Please try again.');
-    btn.textContent='Continue as Guest';
-    btn.disabled=false;
-  }
+  // Save order to sessionStorage and go to checkout page
+  sessionStorage.setItem('bioOrder', JSON.stringify({
+    amount: price,
+    productName: bioCurProduct,
+    variant: bioCurVariant,
+    ingredients: ingredients.join(', ')
+  }));
+  window.location.href = '/checkout.html';
 }
 </script>
 </body>
