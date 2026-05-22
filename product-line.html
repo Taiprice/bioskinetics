@@ -825,9 +825,10 @@ function bioBuildStep3(){
     var desc=DESCS[cat.cat]||'';
     var safePick=null;
     for(var i=0;i<cat.opts.length;i++){if(!cat.opts[i].sub||!bioUnsafe(cat.opts[i].sub)){safePick=cat.opts[i];break;}}
-    var fragUnsafe=isFrag&&cat.opts.some(function(o){return o.name==='Fragrance (Custom)'&&bioUnsafe(o.sub);});if(fragUnsafe){card.dataset.chosen='0';}
+    var fragUnsafe=isFrag&&cat.opts.some(function(o){return o.name==='Fragrance (Custom)'&&bioUnsafe(o.sub);});
     var allUnsafe=(!safePick)||fragUnsafe;
     var card=document.createElement('div');
+    if(fragUnsafe){card.dataset.chosen='0';}
     card.style.cssText='padding:14px 16px;border:1.5px solid '+(allUnsafe?'#f09595':'#e0dcea')+';border-radius:12px;background:'+(allUnsafe?'#fff5f5':'#faf9f7')+';position:relative;cursor:'+(allUnsafe?'default':'pointer')+';transition:all 0.15s;min-height:90px;';
     card.dataset.cat=cat.cat;card.dataset.chosen='0';card.dataset.safeName=safePick?safePick.name:'';card.dataset.safeSub=safePick?safePick.sub:'';
     var emojiEl=document.createElement('div');emojiEl.style.cssText='font-size:22px;margin-bottom:6px;';emojiEl.textContent=emoji;
