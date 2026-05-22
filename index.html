@@ -465,6 +465,12 @@
           document.getElementById('success-msg').classList.add('show');
           btn.textContent = 'Sent!';
           btn.style.background = '#beadc5';
+          document.getElementById('fname').value = '';
+          document.getElementById('lname').value = '';
+          document.getElementById('email').value = '';
+          document.getElementById('phone').value = '';
+          document.getElementById('message').value = '';
+          document.getElementById('attach-count').textContent = 'Attachments (0)';
         } else {
           alert('Something went wrong: ' + (data.error || 'Please try again.'));
           btn.textContent = 'Send Message';
