@@ -2274,13 +2274,13 @@ async function bioGuestCheckout(){
   bioCloseCheckout();
   bioSaveOrderAndRedirect();
 }
+  function bioOpenLightbox(src) {
+  document.getElementById('bio-lightbox-img').src = src;
+  document.getElementById('bio-lightbox').classList.add('open');
+}
+
+function bioCloseLightbox() {
+  document.getElementById('bio-lightbox').classList.remove('open');
+  document.getElementById('bio-lightbox-img').src = '';
+}
 </script>
-
-<!-- Lightbox -->
-<div id="bio-lightbox" onclick="bioCloseLightbox()">
-  <button id="bio-lightbox-close" onclick="bioCloseLightbox()">×</button>
-  <img id="bio-lightbox-img" src="" alt="Product preview" onclick="event.stopPropagation()" />
-</div>
-
-</body>
-</html>
