@@ -262,23 +262,26 @@
     <div class="sub-form-wrap">
       <p class="sub-form-title">Sign Up</p>
       <p class="sub-form-sub">Takes less than a minute</p>
+      <div id="sub-error" style="display:none;font-size:13px;color:#c0392b;background:#fdf0ee;border:1px solid #f5c6c0;border-radius:6px;padding:10px 14px;margin-bottom:12px;"></div>
+      <div id="sub-success" style="display:none;font-size:13px;color:#2c7a4b;background:#edf7f1;border:1px solid #a8dfc0;border-radius:6px;padding:10px 14px;margin-bottom:12px;"></div>
       <div class="form-row">
-        <div class="form-group"><label>First Name</label><input type="text" /></div>
-        <div class="form-group"><label>Last Name</label><input type="text" /></div>
+        <div class="form-group"><label>First Name</label><input type="text" id="sub-fname" /></div>
+        <div class="form-group"><label>Last Name</label><input type="text" id="sub-lname" /></div>
       </div>
-      <div class="form-group"><label>Email Address</label><input type="email" placeholder="jane@example.com" /></div>
+      <div class="form-group"><label>Email Address</label><input type="email" id="sub-email" placeholder="jane@example.com" /></div>
       <div class="form-group">
         <label>Phone Number <span style="font-size:10px;color:#ccc;text-transform:none;letter-spacing:0;">(optional)</span></label>
-        <input type="tel" placeholder="(720) 000-0000" />
+        <input type="tel" id="sub-phone" placeholder="(720) 000-0000" />
       </div>
+      <div class="form-group"><label>Password</label><input type="password" id="sub-password" placeholder="Min. 6 characters" /></div>
       <div style="margin-bottom: 1.5rem;">
         <span class="pref-label">I want to hear about</span>
         <div class="pref-options">
-          <label class="pref-option"><input type="checkbox" checked /><span>New product launches</span></label>
-          <label class="pref-option"><input type="checkbox" checked /><span>Promotions &amp; discounts</span></label>
+          <label class="pref-option"><input type="checkbox" id="sub-pref-launches" checked /><span>New product launches</span></label>
+          <label class="pref-option"><input type="checkbox" id="sub-pref-promos" checked /><span>Promotions &amp; discounts</span></label>
         </div>
       </div>
-      <button class="sub-btn">Sign Up</button>
+      <button class="sub-btn" id="sub-btn" onclick="handleSubSignUp()">Sign Up</button>
       <p class="sub-fine">We respect your privacy. Unsubscribe anytime.</p>
     </div>
   </div>
@@ -390,7 +393,53 @@
       var count = this.files.length;
       document.getElementById('attach-count').textContent = 'Attachments (' + count + ')';
     });
-    function handleSubmit() {
+    // Supabase Sign Up from Subscribe form
+  const SUPABASE_URL = 'https://huojeekaztmuarwtnyib.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1b2plZWthenRtdWFyd3RueWliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzODA3OTQsImV4cCI6MjA5NDk1Njc5NH0.XKQnhHYQ0E8pjfgrUFOiIqNo7gakJvpYb0HKMtiP4eQ';
+
+  async function handleSubSignUp() {
+    const fname = document.getElementById('sub-fname').value.trim();
+    const lname = document.getElementById('sub-lname').value.trim();
+    const email = document.getElementById('sub-email').value.trim();
+    const phone = document.getElementById('sub-phone').value.trim();
+    const password = document.getElementById('sub-password').value;
+    const prefLaunches = document.getElementById('sub-pref-launches').checked;
+    const prefPromos = document.getElementById('sub-pref-promos').checked;
+    const errEl = document.getElementById('sub-error');
+    const sucEl = document.getElementById('sub-success');
+    errEl.style.display = 'none';
+    sucEl.style.display = 'none';
+    if (!fname || !lname || !email || !password) {
+      errEl.textContent = 'Please fill in your name, email, and password.';
+      errEl.style.display = 'block'; return;
+    }
+    if (password.length < 6) {
+      errEl.textContent = 'Password must be at least 6 characters.';
+      errEl.style.display = 'block'; return;
+    }
+    const btn = document.getElementById('sub-btn');
+    btn.textContent = 'Creating account...';
+    btn.disabled = true;
+    const { createClient } = supabase;
+    const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const { data, error } = await sb.auth.signUp({
+      email, password,
+      options: { data: { first_name: fname, last_name: lname, phone, pref_launches: prefLaunches, pref_promos: prefPromos } }
+    });
+    if (error) {
+      errEl.textContent = error.message;
+      errEl.style.display = 'block';
+      btn.textContent = 'Sign Up';
+      btn.disabled = false;
+    } else {
+      sucEl.textContent = '✓ Account created! Check your email to confirm, then sign in at My Account.';
+      sucEl.style.display = 'block';
+      btn.textContent = 'Done!';
+      btn.style.background = '#beadc5';
+    }
+  }
+
+  function handleSubmit() {
       var fname = document.getElementById('fname').value.trim();
       var lname = document.getElementById('lname').value.trim();
       var email = document.getElementById('email').value.trim();
@@ -407,5 +456,6 @@
     }
   </script>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </body>
 </html>
