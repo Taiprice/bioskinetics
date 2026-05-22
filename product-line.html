@@ -102,6 +102,7 @@
   #bio-survey-wrap { position:fixed !important; inset:0 !important; overflow-y:auto !important; z-index:1000 !important; display:none; background:rgba(0,0,0,0.45); padding:2rem 1rem; }
   #bio-survey-panel { background:#fff; border-radius:20px; width:100%; max-width:680px; margin:0 auto; box-shadow:0 8px 32px rgba(0,0,0,0.18); overflow:visible !important; }
   </style>
+  <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
   <!-- ── Navigation ── -->
@@ -2138,62 +2139,96 @@ document.addEventListener('DOMContentLoaded',function(){var modal=$b('sv-modal-b
 </div>
 
 <!-- Checkout Modal -->
-<div id="bio-checkout-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:2000;align-items:center;justify-content:center;padding:1rem;">
-  <div style="background:#fff;border-radius:20px;width:100%;max-width:480px;padding:2.5rem;box-shadow:0 8px 32px rgba(0,0,0,0.18);">
-    <div style="text-align:center;margin-bottom:2rem;">
-      <p style="font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:#beadc5;margin-bottom:0.5rem;">Almost There</p>
-      <p style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:#b2a254;margin-bottom:0.5rem;">How would you like to continue?</p>
-      <p style="font-size:14px;color:#aaa;font-weight:300;">Sign in to save your order history, or continue as a guest.</p>
+<div id="bio-checkout-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:2000;align-items:center;justify-content:center;padding:1rem;overflow-y:auto;">
+  <div style="background:#fff;border-radius:20px;width:100%;max-width:560px;padding:2rem;box-shadow:0 8px 32px rgba(0,0,0,0.18);position:relative;">
+    <button onclick="bioCloseCheckout()" style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:22px;color:#bbb;cursor:pointer;line-height:1;">×</button>
+
+    <!-- Step 1: Guest or Sign In -->
+    <div id="bio-checkout-step1">
+      <div style="text-align:center;margin-bottom:2rem;">
+        <p style="font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:#beadc5;margin-bottom:0.5rem;">Almost There</p>
+        <p style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:#b2a254;margin-bottom:0.5rem;">How would you like to continue?</p>
+        <p style="font-size:14px;color:#aaa;font-weight:300;">Sign in to save your order history, or continue as a guest.</p>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <button id="bio-guest-btn" onclick="bioGuestCheckout()" style="width:100%;background:#fade4b;color:#2c2c2a;font-family:'Jost',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;border:none;border-radius:6px;padding:16px 24px;cursor:pointer;">Continue as Guest</button>
+        <a href="/my-account.html" style="width:100%;display:block;text-align:center;background:none;color:#2c2c2a;font-family:'Jost',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;border:1.5px solid #e0dbe5;border-radius:6px;padding:15px 24px;text-decoration:none;">Sign In / Create Account</a>
+        <button onclick="bioCloseCheckout()" style="background:none;border:none;font-size:13px;color:#bbb;cursor:pointer;padding:8px;font-family:'Jost',sans-serif;">Cancel</button>
+      </div>
     </div>
-    <div style="display:flex;flex-direction:column;gap:12px;">
-      <button onclick="bioGuestCheckout()" style="width:100%;background:#fade4b;color:#2c2c2a;font-family:'Jost',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;border:none;border-radius:6px;padding:16px 24px;cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='#f5d535'" onmouseout="this.style.background='#fade4b'">Continue as Guest</button>
-      <a href="/my-account.html" style="width:100%;display:block;text-align:center;background:none;color:#2c2c2a;font-family:'Jost',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;border:1.5px solid #e0dbe5;border-radius:6px;padding:15px 24px;cursor:pointer;text-decoration:none;transition:border-color 0.15s;" onmouseover="this.style.borderColor='#beadc5'" onmouseout="this.style.borderColor='#e0dbe5'">Sign In / Create Account</a>
-      <button onclick="document.getElementById('bio-checkout-modal').style.display='none'" style="background:none;border:none;font-size:13px;color:#bbb;cursor:pointer;padding:8px;font-family:'Jost',sans-serif;">Cancel</button>
+
+    <!-- Step 2: Embedded Stripe Checkout -->
+    <div id="bio-checkout-step2" style="display:none;">
+      <p style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#b2a254;margin-bottom:1.5rem;text-align:center;">Complete Your Order</p>
+      <div id="bio-stripe-container"></div>
     </div>
+
   </div>
 </div>
 
 <script>
+var bioStripe;
+document.addEventListener('DOMContentLoaded', function(){
+  bioStripe = Stripe('pk_test_51TZcUfRyb3PIbuNPU5IqwnGjX6frosXS3E8o8pcYOl3UckGlL10KIvcXCl4SQVqMbjA2oPVUjxGKeY2CEt68TJKm00t12hvFTH');
+});
+
 function bioShowCheckoutModal(){
   document.getElementById('bio-checkout-modal').style.display='flex';
+  document.getElementById('bio-checkout-step1').style.display='block';
+  document.getElementById('bio-checkout-step2').style.display='none';
+  document.getElementById('bio-stripe-container').innerHTML='';
+  var btn=document.getElementById('bio-guest-btn');
+  btn.textContent='Continue as Guest';
+  btn.disabled=false;
+}
+
+function bioCloseCheckout(){
+  document.getElementById('bio-checkout-modal').style.display='none';
 }
 
 async function bioGuestCheckout(){
-  var btn = document.querySelector('#bio-checkout-modal button');
-  btn.textContent = 'Redirecting...';
-  btn.disabled = true;
+  var btn=document.getElementById('bio-guest-btn');
+  btn.textContent='Loading...';
+  btn.disabled=true;
 
-  // Collect order details
-  var price = bioCalcPrice();
-  var ingredients = [];
+  var price=bioCalcPrice();
+  var ingredients=[];
   document.querySelectorAll('#bio-required-list > div').forEach(function(row){
-    var span = row.querySelector('span:first-child');
+    var span=row.querySelector('span:first-child');
     if(span) ingredients.push(span.textContent.replace(/^•\s*/,'').replace(/\s*✓$/,'').trim());
   });
   document.querySelectorAll('#bio-optional-cats div[data-cat]').forEach(function(card){
     if(card.dataset.chosen==='1') ingredients.push(card.dataset.safeName);
   });
-  var scents = [];
+  var scents=[];
   document.querySelectorAll('#bio-scent-grid button').forEach(function(b){
     if(b.dataset.selected==='1') scents.push(b.textContent);
   });
   if(scents.length) ingredients.push('Scent: '+scents.join(', '));
 
   try {
-    var res = await fetch('/api/checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        amount: price,
-        productName: bioCurProduct,
-        variant: bioCurVariant,
-        ingredients: ingredients.join(', ')
+    var res=await fetch('/api/checkout',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        amount:price,
+        productName:bioCurProduct,
+        variant:bioCurVariant,
+        ingredients:ingredients.join(', ')
       })
     });
-    var data = await res.json();
-    if(data.url){ window.location.href = data.url; }
-    else { alert('Checkout error: ' + (data.error || 'Unknown error')); btn.textContent='Continue as Guest'; btn.disabled=false; }
-  } catch(e) {
+    var data=await res.json();
+    if(data.clientSecret){
+      document.getElementById('bio-checkout-step1').style.display='none';
+      document.getElementById('bio-checkout-step2').style.display='block';
+      var checkout=await bioStripe.initEmbeddedCheckout({ clientSecret: data.clientSecret });
+      checkout.mount('#bio-stripe-container');
+    } else {
+      alert('Checkout error: '+(data.error||'Unknown error'));
+      btn.textContent='Continue as Guest';
+      btn.disabled=false;
+    }
+  } catch(e){
     alert('Something went wrong. Please try again.');
     btn.textContent='Continue as Guest';
     btn.disabled=false;
