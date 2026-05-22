@@ -30,11 +30,11 @@ module.exports = async function handler(req, res) {
         quantity: 1,
       }],
       mode: 'payment',
-      success_url: `${req.headers.origin}/thank-you.html?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${req.headers.origin}/product-line.html`,
+      ui_mode: 'embedded',
+      return_url: `${req.headers.origin}/thank-you.html?session_id={CHECKOUT_SESSION_ID}`,
     });
 
-    return res.status(200).json({ url: session.url });
+    return res.status(200).json({ clientSecret: session.client_secret });
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
