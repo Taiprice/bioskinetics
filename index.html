@@ -102,9 +102,9 @@
     .sub-eyebrow { font-size: 12px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #beadc5; margin-bottom: 1rem; }
     .sub-headline { font-family: 'Cormorant Garamond', serif; font-size: 46px; font-weight: 600; line-height: 1.2; color: #2c2c2a; margin-bottom: 1.25rem; }
     .sub-headline em { font-style: italic; color: #fade4b; }
-    .sub-body { font-size: 17px; font-weight: 300; line-height: 1.8; color: #5f5e5a; margin-bottom: 2rem; }
+    .sub-body { font-size: 17px; font-weight: 300; line-height: 1.8; color: #2c2c2a; margin-bottom: 2rem; }
     .sub-perks { list-style: none; display: flex; flex-direction: column; gap: 14px; }
-    .sub-perks li { display: flex; align-items: flex-start; gap: 12px; font-size: 16px; font-weight: 400; color: #3a3835; line-height: 1.5; }
+    .sub-perks li { display: flex; align-items: flex-start; gap: 12px; font-size: 16px; font-weight: 400; color: #2c2c2a; line-height: 1.5; }
     .perk-dot { width: 9px; height: 9px; border-radius: 50%; background: #beadc5; flex-shrink: 0; margin-top: 6px; }
     .sub-form-wrap { background: #faf9f7; border: 0.5px solid rgba(190,173,197,0.4); border-radius: 16px; padding: 2.5rem; }
     .sub-form-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: #2c2c2a; margin-bottom: 0.25rem; }
@@ -154,8 +154,8 @@
     .attach-label svg { width: 15px; height: 15px; }
     #file-input { display: none; }
     #attach-count { font-size: 0.78rem; color: var(--text-muted); }
-    .submit-btn { width: 100%; background: var(--gold); color: var(--white); border: none; border-radius: 6px; padding: 14px 24px; font-family: 'Lato', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: background .2s, transform .1s; }
-    .submit-btn:hover { background: var(--gold-light); }
+    .submit-btn { width: 100%; background: #fade4b; color: #2c2c2a; border: none; border-radius: 6px; padding: 14px 24px; font-family: 'Lato', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; transition: background .2s, transform .1s; }
+    .submit-btn:hover { background: #f5d535; }
     .submit-btn:active { transform: scale(0.99); }
     .success-msg { display: none; margin-top: 16px; padding: 14px 18px; background: var(--teal-light); border: 1.5px solid var(--teal); border-radius: 6px; font-size: 0.85rem; color: #7a5f84; font-weight: 700; text-align: center; }
     .success-msg.show { display: block; }
@@ -166,8 +166,8 @@
     .info-card p { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 0; }
     .info-item { display: flex; align-items: center; gap: 10px; font-size: 0.88rem; color: var(--text); margin-top: 10px; }
     .info-item svg { width: 16px; height: 16px; color: var(--teal); flex-shrink: 0; }
-    .info-item a { color: var(--gold); text-decoration: none; font-weight: 700; transition: color .15s; }
-    .info-item a:hover { color: var(--gold-light); }
+    .info-item a { color: #fade4b; text-decoration: none; font-weight: 700; transition: color .15s; }
+    .info-item a:hover { color: #f5d535; }
     .response-bubble { display: inline-flex; align-items: center; gap: 8px; background: rgba(160,120,180,0.15); border: 1px solid rgba(160,120,180,0.3); border-radius: 999px; padding: 8px 16px; margin-top: 14px; }
     .response-bubble svg { width: 16px; height: 16px; color: #9b6fb0; flex-shrink: 0; }
     .response-bubble span { font-size: 0.84rem; font-weight: 700; color: #7a4f96; letter-spacing: 0.02em; }
@@ -252,11 +252,11 @@
     <div class="sub-value">
       <p class="sub-eyebrow">Why Subscribe</p>
       <h2 class="sub-headline">Your skin deserves to be <em>first in line.</em></h2>
-      <p class="sub-body">Bioskinetics is built around you — so you should hear about new products and deals before anyone else. Join our list and we'll keep you in the loop on everything that matters for your routine.</p>
+      <p class="sub-body">Create an account to save your allergen profile, track your orders, and get early access to new products.</p>
       <ul class="sub-perks">
-        <li><span class="perk-dot"></span><span><strong>Early access</strong> to new product launches before they go public</span></li>
-        <li><span class="perk-dot"></span><span><strong>Exclusive discounts</strong> and promotions sent straight to you</span></li>
-        <li><span class="perk-dot"></span><span><strong>No spam</strong> — only updates that are actually worth your time</span></li>
+        <li><span class="perk-dot"></span><span><strong>Saved allergen profile</strong> so every product is already filtered for you</span></li>
+        <li><span class="perk-dot"></span><span><strong>Order history</strong> to reorder your favourites with one click</span></li>
+        <li><span class="perk-dot"></span><span><strong>Early access</strong> to new launches and exclusive discounts</span></li>
       </ul>
     </div>
     <div class="sub-form-wrap">
@@ -449,6 +449,9 @@
         alert('Please fill in all required fields (name, email, phone, and message).');
         return;
       }
+      var subject = encodeURIComponent('New Contact Message from ' + fname + ' ' + lname);
+      var body = encodeURIComponent('Name: ' + fname + ' ' + lname + '\nEmail: ' + email + '\nPhone: ' + phone + '\n\nMessage:\n' + message);
+      window.location.href = 'mailto:taiprice@bioskinetics.com?subject=' + subject + '&body=' + body;
       document.getElementById('success-msg').classList.add('show');
       document.querySelector('.submit-btn').disabled = true;
       document.querySelector('.submit-btn').textContent = 'Sent!';
