@@ -214,7 +214,7 @@ function buildStep3_b2a(){
     var emojiEl=document.createElement('div');emojiEl.style.cssText='font-size:22px;margin-bottom:6px;';emojiEl.textContent=emoji;
     var labelEl=document.createElement('div');labelEl.style.cssText='font-size:15px;font-weight:600;color:'+(allUnsafe?'#c0392b':'#2c2c2a')+';margin-bottom:2px;';labelEl.textContent=label;
     var descEl=document.createElement('div');descEl.style.cssText='font-size:12px;color:'+(allUnsafe?'#e07070':'#aaa')+';';
-    descEl.textContent=fragUnsafe?'Fragrance not available':allUnsafe?'No safe options available':desc;
+    descEl.textContent=fragUnsafe?'No Fragrance (allergen)':allUnsafe?'No safe options available':desc;
     card.appendChild(emojiEl);card.appendChild(labelEl);card.appendChild(descEl);
     if(allUnsafe){
       var msgBtn=document.createElement('button');
@@ -823,16 +823,16 @@ function bioBuildStep3(){
     var desc=DESCS[cat.cat]||'';
     var safePick=null;
     for(var i=0;i<cat.opts.length;i++){if(!cat.opts[i].sub||!bioUnsafe(cat.opts[i].sub)){safePick=cat.opts[i];break;}}
-    var fragUnsafe=isFrag&&cat.opts.some(function(o){return o.name==='Fragrance (Custom)'&&bioUnsafe(o.sub);});
+    var fragUnsafe=isFrag&&cat.opts.some(function(o){return o.name==='Fragrance (Custom)'&&bioUnsafe(o.sub);});if(fragUnsafe){card.dataset.chosen='0';}
     var allUnsafe=(!safePick)||fragUnsafe;
     var card=document.createElement('div');
     card.style.cssText='padding:14px 16px;border:1.5px solid '+(allUnsafe?'#f09595':'#e0dcea')+';border-radius:12px;background:'+(allUnsafe?'#fff5f5':'#faf9f7')+';position:relative;cursor:'+(allUnsafe?'default':'pointer')+';transition:all 0.15s;min-height:90px;';
     card.dataset.cat=cat.cat;card.dataset.chosen='0';card.dataset.safeName=safePick?safePick.name:'';card.dataset.safeSub=safePick?safePick.sub:'';
     var emojiEl=document.createElement('div');emojiEl.style.cssText='font-size:22px;margin-bottom:6px;';emojiEl.textContent=emoji;
     var labelEl=document.createElement('div');labelEl.style.cssText='font-size:15px;font-weight:600;color:'+(allUnsafe?'#c0392b':'#2c2c2a')+';margin-bottom:2px;';labelEl.textContent=label;
-    var descEl=document.createElement('div');descEl.style.cssText='font-size:12px;color:'+(allUnsafe?'#e07070':'#aaa')+';';descEl.textContent=fragUnsafe?'Fragrance removed (allergen)':allUnsafe?'No safe options':desc;
+    var descEl=document.createElement('div');descEl.style.cssText='font-size:12px;color:'+(allUnsafe?'#e07070':'#aaa')+';';descEl.textContent=fragUnsafe?'No Fragrance (allergen)':allUnsafe?'No safe options':desc;
     var ingEl=document.createElement('div');ingEl.style.cssText='font-size:11px;color:'+(allUnsafe?'#e07070':'#beadc5')+';margin-top:3px;font-style:italic;';ingEl.textContent=safePick?safePick.name:'';
-    card.appendChild(emojiEl);card.appendChild(labelEl);card.appendChild(descEl);card.appendChild(ingEl);
+    if(fragUnsafe){ingEl.style.display='none';}card.appendChild(emojiEl);card.appendChild(labelEl);card.appendChild(descEl);card.appendChild(ingEl);
     if(allUnsafe){
       var msgBtn=document.createElement('button');
       msgBtn.style.cssText='display:inline-block;margin-top:8px;font-size:11px;color:#c0392b;background:#fff;border:1.5px solid #f09595;border-radius:999px;padding:4px 12px;cursor:pointer;font-family:Georgia,serif;white-space:nowrap;';
