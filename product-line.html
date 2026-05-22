@@ -114,7 +114,7 @@
       <li><a href="/about-us.html">About Us</a></li>
       <li><a href="/how-it-works.html">How It Works</a></li>
       <li><a href="/my-allergens.html">My Allergens</a></li>
-      <li><a href="/product-line.html">Product Line</a></li>
+      <li><a href="/product-line.html">Shop</a></li>
       <li><a href="/my-account.html">My Account</a></li>
     </ul>
     <div class="bio-nav-icons">
@@ -472,7 +472,7 @@ body{padding-bottom:8px;}
         <div id="bio-color-grid" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1rem;"></div>
         <div style="display:flex;justify-content:space-between;padding-top:1rem;border-top:0.5px solid #f0edf2;">
           <button onclick="bioContainerBack()" style="font-size:14px;color:#bbb;background:none;border:none;cursor:pointer;">Back</button>
-          <button onclick="bioCollectAndSubmit()" style="font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#2c2c2a;background:#fade4b;border:none;border-radius:6px;padding:9px 20px;cursor:pointer;">Add to Cart</button>
+          <button onclick="bioShowCheckoutModal()" style="font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#2c2c2a;background:#fade4b;border:none;border-radius:6px;padding:9px 20px;cursor:pointer;">Add to Cart</button>
         </div>
       </div>
 
@@ -2137,5 +2137,68 @@ document.addEventListener('DOMContentLoaded',function(){var modal=$b('sv-modal-b
   <p class="connect-tagline">Stay connected with <strong>Bioskinetics</strong></p>
 </div>
 
+<!-- Checkout Modal -->
+<div id="bio-checkout-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:2000;align-items:center;justify-content:center;padding:1rem;">
+  <div style="background:#fff;border-radius:20px;width:100%;max-width:480px;padding:2.5rem;box-shadow:0 8px 32px rgba(0,0,0,0.18);">
+    <div style="text-align:center;margin-bottom:2rem;">
+      <p style="font-size:12px;letter-spacing:0.16em;text-transform:uppercase;color:#beadc5;margin-bottom:0.5rem;">Almost There</p>
+      <p style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:#b2a254;margin-bottom:0.5rem;">How would you like to continue?</p>
+      <p style="font-size:14px;color:#aaa;font-weight:300;">Sign in to save your order history, or continue as a guest.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <button onclick="bioGuestCheckout()" style="width:100%;background:#fade4b;color:#2c2c2a;font-family:'Jost',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;border:none;border-radius:6px;padding:16px 24px;cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='#f5d535'" onmouseout="this.style.background='#fade4b'">Continue as Guest</button>
+      <a href="/my-account.html" style="width:100%;display:block;text-align:center;background:none;color:#2c2c2a;font-family:'Jost',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;border:1.5px solid #e0dbe5;border-radius:6px;padding:15px 24px;cursor:pointer;text-decoration:none;transition:border-color 0.15s;" onmouseover="this.style.borderColor='#beadc5'" onmouseout="this.style.borderColor='#e0dbe5'">Sign In / Create Account</a>
+      <button onclick="document.getElementById('bio-checkout-modal').style.display='none'" style="background:none;border:none;font-size:13px;color:#bbb;cursor:pointer;padding:8px;font-family:'Jost',sans-serif;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function bioShowCheckoutModal(){
+  document.getElementById('bio-checkout-modal').style.display='flex';
+}
+
+async function bioGuestCheckout(){
+  var btn = document.querySelector('#bio-checkout-modal button');
+  btn.textContent = 'Redirecting...';
+  btn.disabled = true;
+
+  // Collect order details
+  var price = bioCalcPrice();
+  var ingredients = [];
+  document.querySelectorAll('#bio-required-list > div').forEach(function(row){
+    var span = row.querySelector('span:first-child');
+    if(span) ingredients.push(span.textContent.replace(/^•\s*/,'').replace(/\s*✓$/,'').trim());
+  });
+  document.querySelectorAll('#bio-optional-cats div[data-cat]').forEach(function(card){
+    if(card.dataset.chosen==='1') ingredients.push(card.dataset.safeName);
+  });
+  var scents = [];
+  document.querySelectorAll('#bio-scent-grid button').forEach(function(b){
+    if(b.dataset.selected==='1') scents.push(b.textContent);
+  });
+  if(scents.length) ingredients.push('Scent: '+scents.join(', '));
+
+  try {
+    var res = await fetch('/api/checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        amount: price,
+        productName: bioCurProduct,
+        variant: bioCurVariant,
+        ingredients: ingredients.join(', ')
+      })
+    });
+    var data = await res.json();
+    if(data.url){ window.location.href = data.url; }
+    else { alert('Checkout error: ' + (data.error || 'Unknown error')); btn.textContent='Continue as Guest'; btn.disabled=false; }
+  } catch(e) {
+    alert('Something went wrong. Please try again.');
+    btn.textContent='Continue as Guest';
+    btn.disabled=false;
+  }
+}
+</script>
 </body>
 </html>
