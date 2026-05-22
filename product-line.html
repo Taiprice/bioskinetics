@@ -97,6 +97,8 @@
   .connect-tagline { margin-top: 44px; font-family: 'Lato', sans-serif; font-size: 1.23rem; color: #bbb; font-weight: 300; letter-spacing: 0.06em; }
   .connect-tagline strong { color: #beadc5; font-weight: 700; }
 
+  
+  html, body { overflow: visible !important; height: auto !important; }
   </style>
 </head>
 <body>
@@ -313,7 +315,7 @@ var COLORS=[{name:'Purple',hex:'#beadc5'}];
       frames.forEach(function(f){
         try {
           if(f.contentWindow===window){
-            f.style.height = _origH+'px'; f.style.overflow = 'hidden';
+            f.style.height = _origH+'px';
             f.style.minHeight = '0';
             f.scrolling = 'no';
           }
@@ -1049,7 +1051,7 @@ function bioCloseSwap(){document.getElementById('bio-swap-modal').style.display=
 <!-- BLOCK: Skincare (5f) -->
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300&display=swap" rel="stylesheet" />
 <style>
-  html, body { background: #fff; margin: 0; padding: 0; overflow: hidden; }
+  html, body { background: #fff; margin: 0; padding: 0; }
   #product-list, #product-list-3 { font-family: 'Georgia', serif; padding: 0; max-width: 720px; margin: 0 auto; color: #1a1a1a; }
   .pl-category { margin-bottom: 0; }
   .pl-category-title { font-size: 1.9rem; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 8px 0; color: #1a1a1a; }
@@ -1202,7 +1204,7 @@ try{window.addEventListener('storage',function(e){if(e.key==='bio_survey_open'){
 <!-- INVISIBLE: HTML Code / Allergen highlight logic (5h) -->
 <style>
   html, body {
-    overflow: hidden !important;
+    
     margin: 0 !important;
     padding: 0 !important;
     background: #fff !important;
@@ -1256,8 +1258,8 @@ try{window.addEventListener('storage',function(e){if(e.key==='bio_survey_open'){
 </script>
 <style>
   *, *::before, *::after { box-sizing: border-box; }
-  html { overflow: hidden !important; height: auto !important; background: #fff !important; margin: 0 !important; padding: 0 !important; }
-  body { overflow: hidden !important; height: auto !important; background: #fff !important; margin: 0 !important; padding: 0 !important; }
+  html { background: #fff !important; margin: 0 !important; padding: 0 !important; }
+  body { background: #fff !important; margin: 0 !important; padding: 0 !important; }
   #product-list { padding-top: 0 !important; padding-bottom: 0 !important; }
   .pl-category:first-child { margin-top: 0 !important; }
   .pl-divider:first-child { display: none; }
