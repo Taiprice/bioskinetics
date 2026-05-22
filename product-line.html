@@ -103,6 +103,7 @@
   #bio-survey-wrap { position:fixed !important; inset:0 !important; overflow-y:auto !important; z-index:1000 !important; display:none; background:rgba(0,0,0,0.45); padding:2rem 1rem; }
   #bio-survey-panel { background:#fff; border-radius:20px; width:100%; max-width:680px; margin:0 auto; box-shadow:0 8px 32px rgba(0,0,0,0.18); overflow:visible !important; }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
@@ -2180,24 +2181,29 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 
 function bioShowCheckoutModal(){
-  document.getElementById('bio-checkout-modal').style.display='flex';
-  document.getElementById('bio-checkout-step1').style.display='block';
-  document.getElementById('bio-checkout-step2').style.display='none';
-  document.getElementById('bio-stripe-container').innerHTML='';
-  var btn=document.getElementById('bio-guest-btn');
-  btn.textContent='Continue as Guest';
-  btn.disabled=false;
+  // Check if user is already signed in via Supabase
+  const SUPABASE_URL = 'https://huojeekaztmuarwtnyib.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1b2plZWthenRtdWFyd3RueWliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzODA3OTQsImV4cCI6MjA5NDk1Njc5NH0.XKQnhHYQ0E8pjfgrUFOiIqNo7gakJvpYb0HKMtiP4eQ';
+  const { createClient } = supabase;
+  const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  sb.auth.getUser().then(({ data: { user } }) => {
+    if (user) {
+      // Already signed in — go straight to checkout
+      bioSaveOrderAndRedirect();
+    } else {
+      // Not signed in — show modal
+      document.getElementById('bio-checkout-modal').style.display='flex';
+      document.getElementById('bio-checkout-step1').style.display='block';
+      document.getElementById('bio-checkout-step2').style.display='none';
+      document.getElementById('bio-stripe-container').innerHTML='';
+      var btn=document.getElementById('bio-guest-btn');
+      btn.textContent='Continue as Guest';
+      btn.disabled=false;
+    }
+  });
 }
 
-function bioCloseCheckout(){
-  document.getElementById('bio-checkout-modal').style.display='none';
-}
-
-async function bioGuestCheckout(){
-  var btn=document.getElementById('bio-guest-btn');
-  btn.textContent='Loading...';
-  btn.disabled=true;
-
+function bioSaveOrderAndRedirect(){
   var price=bioCalcPrice();
   var ingredients=[];
   document.querySelectorAll('#bio-required-list > div').forEach(function(row){
@@ -2212,8 +2218,6 @@ async function bioGuestCheckout(){
     if(b.dataset.selected==='1') scents.push(b.textContent);
   });
   if(scents.length) ingredients.push('Scent: '+scents.join(', '));
-
-  // Save order to sessionStorage and go to checkout page
   sessionStorage.setItem('bioOrder', JSON.stringify({
     amount: price,
     productName: bioCurProduct,
@@ -2221,6 +2225,15 @@ async function bioGuestCheckout(){
     ingredients: ingredients.join(', ')
   }));
   window.location.href = '/checkout.html';
+}
+
+function bioCloseCheckout(){
+  document.getElementById('bio-checkout-modal').style.display='none';
+}
+
+async function bioGuestCheckout(){
+  bioCloseCheckout();
+  bioSaveOrderAndRedirect();
 }
 </script>
 </body>
