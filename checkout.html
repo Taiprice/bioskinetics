@@ -170,7 +170,7 @@
     </div>
 
     <!-- Account bar -->
-    <div class="co-account-bar">
+    <div class="co-account-bar" id="co-account-bar">
       <p>Save your order history and allergen profile — <strong>create a free account</strong> or sign in.</p>
       <a href="/my-account.html">Sign In →</a>
     </div>
@@ -243,10 +243,20 @@
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 var bioStripe;
 document.addEventListener('DOMContentLoaded', function(){
   bioStripe = Stripe('pk_test_51TZcUfRyb3PIbuNPU5IqwnGjX6frosXS3E8o8pcYOl3UckGlL10KIvcXCl4SQVqMbjA2oPVUjxGKeY2CEt68TJKm00t12hvFTH');
+
+  // Hide account bar if signed in
+  const sb = supabase.createClient('https://huojeekaztmuarwtnyib.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1b2plZWthenRtdWFyd3RueWliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzODA3OTQsImV4cCI6MjA5NDk1Njc5NH0.XKQnhHYQ0E8pjfgrUFOiIqNo7gakJvpYb0HKMtiP4eQ');
+  sb.auth.getUser().then(({ data: { user } }) => {
+    if (user) {
+      var bar = document.getElementById('co-account-bar');
+      if (bar) bar.style.display = 'none';
+    }
+  });
 
   // Load order data passed from product page via sessionStorage
   var order = JSON.parse(sessionStorage.getItem('bioOrder') || '{}');
