@@ -93,18 +93,49 @@
     @media (max-width: 660px) { .auth-wrap { grid-template-columns: 1fr; gap: 2rem; padding: 2rem 1.5rem 3rem; } .form-row { grid-template-columns: 1fr; } }
 
     /* Dashboard */
-    .dashboard-wrap { max-width: 700px; margin: 3rem auto; padding: 0 1.5rem 4rem; display: none; }
-    .dashboard-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; }
-    .dashboard-title { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; color: #b2a254; }
-    .signout-btn { background: none; border: 1.5px solid #e0dbe5; border-radius: 6px; padding: 10px 20px; font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #9a9895; cursor: pointer; transition: border-color 0.15s, color 0.15s; }
-    .signout-btn:hover { border-color: #beadc5; color: #2c2c2a; }
-    .dashboard-card { background: #fff; border: 1px solid #ece8f0; border-radius: 16px; padding: 2rem; margin-bottom: 1.5rem; }
-    .dashboard-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: #2c2c2a; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 0.5px solid #ece8f0; }
+    .dashboard-wrap { max-width: 1100px; margin: 3rem auto; padding: 0 2rem 4rem; display: none; gap: 2rem; }
+    .dashboard-layout { display: grid; grid-template-columns: 240px 1fr; gap: 2rem; align-items: start; }
+    /* Sidebar */
+    .dash-sidebar { background: #fff; border: 1px solid #ece8f0; border-radius: 16px; overflow: hidden; position: sticky; top: 1rem; }
+    .dash-user-block { background: #000; padding: 1.5rem; text-align: center; }
+    .dash-avatar { width: 56px; height: 56px; border-radius: 50%; background: #fade4b; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.75rem; font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: #2c2c2a; }
+    .dash-user-name { font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 500; color: #fff; margin-bottom: 0.2rem; }
+    .dash-user-email { font-size: 12px; font-weight: 300; color: #beadc5; }
+    .dash-nav { list-style: none; padding: 0.75rem 0; margin: 0; }
+    .dash-nav li { margin: 0; }
+    .dash-nav-btn { width: 100%; background: none; border: none; border-left: 3px solid transparent; padding: 0.9rem 1.5rem; display: flex; align-items: center; gap: 0.75rem; font-family: 'Jost', sans-serif; font-size: 13px; font-weight: 500; letter-spacing: 0.06em; color: #5f5e5a; cursor: pointer; text-align: left; transition: all 0.15s; }
+    .dash-nav-btn:hover { background: #faf8fb; color: #2c2c2a; }
+    .dash-nav-btn.active { border-left-color: #fade4b; background: #fdfbe8; color: #2c2c2a; font-weight: 600; }
+    .dash-nav-btn svg { width: 18px; height: 18px; flex-shrink: 0; opacity: 0.6; }
+    .dash-nav-btn.active svg { opacity: 1; }
+    .dash-signout { width: 100%; background: none; border: none; border-top: 1px solid #f0edf2; padding: 0.9rem 1.5rem; display: flex; align-items: center; gap: 0.75rem; font-family: 'Jost', sans-serif; font-size: 13px; font-weight: 500; color: #c0392b; cursor: pointer; transition: background 0.15s; }
+    .dash-signout:hover { background: #fff5f5; }
+    .dash-signout svg { width: 18px; height: 18px; }
+    /* Panels */
+    .dash-panel { display: none; }
+    .dash-panel.active { display: block; }
+    .dash-panel-title { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: #b2a254; margin-bottom: 1.5rem; }
+    .dash-card { background: #fff; border: 1px solid #ece8f0; border-radius: 16px; padding: 2rem; margin-bottom: 1.5rem; }
+    .dash-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: #2c2c2a; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 0.5px solid #ece8f0; }
     .info-row { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0; border-bottom: 0.5px solid #f5f2f8; font-size: 15px; }
     .info-row:last-child { border-bottom: none; }
     .info-label { font-weight: 500; color: #9a9895; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
     .info-value { color: #2c2c2a; font-weight: 300; }
-    .empty-orders { font-size: 15px; font-weight: 300; color: #b0b0b0; text-align: center; padding: 1.5rem 0; }
+    .empty-state { text-align: center; padding: 3rem 1rem; }
+    .empty-state p { font-size: 15px; font-weight: 300; color: #b0b0b0; margin-bottom: 1rem; }
+    .empty-state a { display: inline-block; background: #fade4b; color: #2c2c2a; font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; text-decoration: none; border-radius: 4px; padding: 12px 24px; }
+    .allergy-tag { display: inline-flex; align-items: center; gap: 6px; background: #fdf0ee; border: 1px solid #f5c6c0; border-radius: 999px; padding: 6px 14px; font-size: 13px; color: #c0392b; margin: 4px; }
+    .pref-toggle { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 0.5px solid #f5f2f8; }
+    .pref-toggle:last-child { border-bottom: none; }
+    .pref-toggle span { font-size: 15px; font-weight: 300; color: #2c2c2a; }
+    .toggle-switch { position: relative; width: 42px; height: 24px; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-slider { position: absolute; inset: 0; background: #e0dbe5; border-radius: 999px; cursor: pointer; transition: background 0.2s; }
+    .toggle-slider::before { content: ''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: transform 0.2s; }
+    .toggle-switch input:checked + .toggle-slider { background: #fade4b; }
+    .toggle-switch input:checked + .toggle-slider::before { transform: translateX(18px); }
+    .signout-btn { display: none; }
+    @media (max-width: 700px) { .dashboard-layout { grid-template-columns: 1fr; } .dash-sidebar { position: static; } }
 
     /* Connect */
     .connect-wrap { background: #ffffff; padding: 64px 24px 72px; text-align: center; }
@@ -202,19 +233,99 @@
 
 <!-- Dashboard (shown when logged in) -->
 <div class="dashboard-wrap" id="dashboard-section">
-  <div class="dashboard-header">
-    <h1 class="dashboard-title">My Account</h1>
-    <button class="signout-btn" onclick="handleSignOut()">Sign Out</button>
-  </div>
-  <div class="dashboard-card">
-    <h3>Profile</h3>
-    <div class="info-row"><span class="info-label">Name</span><span class="info-value" id="dash-name">—</span></div>
-    <div class="info-row"><span class="info-label">Email</span><span class="info-value" id="dash-email">—</span></div>
-    <div class="info-row"><span class="info-label">Member Since</span><span class="info-value" id="dash-since">—</span></div>
-  </div>
-  <div class="dashboard-card">
-    <h3>Order History</h3>
-    <p class="empty-orders">No orders yet — <a href="/product-line.html" style="color:#fade4b;">browse the product line</a> to get started.</p>
+  <div class="dashboard-layout">
+
+    <!-- Sidebar -->
+    <aside class="dash-sidebar">
+      <div class="dash-user-block">
+        <div class="dash-avatar" id="dash-avatar">B</div>
+        <p class="dash-user-name" id="dash-name">—</p>
+        <p class="dash-user-email" id="dash-email">—</p>
+      </div>
+      <ul class="dash-nav">
+        <li><button class="dash-nav-btn active" onclick="dashSwitch('profile', this)">
+          <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Profile
+        </button></li>
+        <li><button class="dash-nav-btn" onclick="dashSwitch('orders', this)">
+          <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          Order History
+        </button></li>
+        <li><button class="dash-nav-btn" onclick="dashSwitch('allergens', this)">
+          <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+          My Allergens
+        </button></li>
+        <li><button class="dash-nav-btn" onclick="dashSwitch('preferences', this)">
+          <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
+          Preferences
+        </button></li>
+      </ul>
+      <button class="dash-signout" onclick="handleSignOut()">
+        <svg fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+        Sign Out
+      </button>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+
+      <!-- Profile Panel -->
+      <div class="dash-panel active" id="panel-profile">
+        <p class="dash-panel-title">Profile</p>
+        <div class="dash-card">
+          <h3>Personal Information</h3>
+          <div class="info-row"><span class="info-label">Name</span><span class="info-value" id="dash-name-display">—</span></div>
+          <div class="info-row"><span class="info-label">Email</span><span class="info-value" id="dash-email-display">—</span></div>
+          <div class="info-row"><span class="info-label">Phone</span><span class="info-value" id="dash-phone-display">—</span></div>
+          <div class="info-row"><span class="info-label">Member Since</span><span class="info-value" id="dash-since">—</span></div>
+        </div>
+      </div>
+
+      <!-- Orders Panel -->
+      <div class="dash-panel" id="panel-orders">
+        <p class="dash-panel-title">Order History</p>
+        <div class="dash-card">
+          <div class="empty-state">
+            <p>No orders yet — your custom formulas will appear here.</p>
+            <a href="/product-line.html">Browse the Shop</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Allergens Panel -->
+      <div class="dash-panel" id="panel-allergens">
+        <p class="dash-panel-title">My Allergens</p>
+        <div class="dash-card">
+          <h3>Saved Allergens</h3>
+          <p style="font-size:14px;font-weight:300;color:#9a9895;margin-bottom:1rem;">These are synced from your My Allergens page and are used to flag ingredients automatically.</p>
+          <div class="empty-state">
+            <p>No allergens saved yet.</p>
+            <a href="/my-allergens.html">Go to My Allergens</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Preferences Panel -->
+      <div class="dash-panel" id="panel-preferences">
+        <p class="dash-panel-title">Preferences</p>
+        <div class="dash-card">
+          <h3>Email Notifications</h3>
+          <div class="pref-toggle">
+            <span>New product launches</span>
+            <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
+          </div>
+          <div class="pref-toggle">
+            <span>Promotions &amp; discounts</span>
+            <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
+          </div>
+          <div class="pref-toggle">
+            <span>Order updates</span>
+            <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+      </div>
+
+    </main>
   </div>
 </div>
 
@@ -302,13 +413,27 @@
     document.getElementById('auth-section').style.display = 'block';
   }
 
+  function dashSwitch(panel, btn) {
+    document.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.dash-nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + panel).classList.add('active');
+    btn.classList.add('active');
+  }
+
   function showDashboard(user) {
     document.getElementById('auth-section').style.display = 'none';
     document.getElementById('dashboard-section').style.display = 'block';
     const meta = user.user_metadata || {};
-    const name = [meta.first_name, meta.last_name].filter(Boolean).join(' ') || '—';
+    const fname = meta.first_name || '';
+    const lname = meta.last_name || '';
+    const name = [fname, lname].filter(Boolean).join(' ') || '—';
+    const initials = [fname[0], lname[0]].filter(Boolean).join('').toUpperCase() || 'B';
+    document.getElementById('dash-avatar').textContent = initials;
     document.getElementById('dash-name').textContent = name;
     document.getElementById('dash-email').textContent = user.email;
+    document.getElementById('dash-name-display').textContent = name;
+    document.getElementById('dash-email-display').textContent = user.email;
+    document.getElementById('dash-phone-display').textContent = meta.phone || '—';
     const since = new Date(user.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
     document.getElementById('dash-since').textContent = since;
   }
