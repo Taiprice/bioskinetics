@@ -2284,3 +2284,8 @@ function bioCloseLightbox() {
   document.getElementById('bio-lightbox-img').src = '';
 }
 </script>
+
+  <div id="bio-lightbox" onclick="bioCloseLightbox()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;align-items:center;justify-content:center;cursor:zoom-out;">
+  <button id="bio-lightbox-close" onclick="bioCloseLightbox()" style="position:absolute;top:1.25rem;right:1.5rem;background:none;border:none;color:#fff;font-size:2rem;cursor:pointer;line-height:1;">×</button>
+  <img id="bio-lightbox-img" src="" alt="Product preview" onclick="event.stopPropagation()" style="max-width:90vw;max-height:90vh;object-fit:contain;border-radius:12px;box-shadow:0 8px 48px rgba(0,0,0,0.4);" />
+</div>
