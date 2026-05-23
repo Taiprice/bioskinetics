@@ -1,5 +1,5 @@
 {
   "rewrites": [
-    { "source": "/lander", "destination": "/lander.html" }
+    { "source": "/lander", "destination": "/reset-password.html" }
   ]
 }
