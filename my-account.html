@@ -418,6 +418,7 @@
     document.getElementById('forgot-error').style.display = 'none';
     document.getElementById('forgot-success').style.display = 'none';
     if (!email) { showError('forgot-error', 'Please enter your email address.'); return; }
+    localStorage.setItem('bio_reset_email', email);
     const { error } = await sb.auth.resetPasswordForEmail(email, {
       redirectTo: 'https://bioskinetics.com/reset-password.html'
     });
