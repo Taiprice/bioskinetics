@@ -5,11 +5,25 @@
   <title>Redirecting…</title>
 </head>
 <body>
-  <script>
-    // Supabase lands here after email confirmation — forward everything to reset-password
-    const hash = window.location.hash;
-    const search = window.location.search;
-    window.location.replace('/reset-password.html' + search + hash);
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+    const sb = createClient(
+      'https://huojeekaztmuarwtnyib.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1b2plZWthenRtdWFyd3RueWliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzODA3OTQsImV4cCI6MjA5NDk1Njc5NH0.XKQnhHYQ0E8pjfgrUFOiIqNo7gakJvpYb0HKMtiP4eQ'
+    );
+
+    sb.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
+        window.location.replace('/reset-password.html');
+      }
+    });
+
+    // Also check immediately in case session is already set
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) {
+      window.location.replace('/reset-password.html');
+    }
   </script>
 </body>
 </html>
