@@ -258,16 +258,35 @@ document.addEventListener('DOMContentLoaded', function(){
     }
   });
 
-  // Load order data — use localStorage so it persists across page navigation
-  var order = JSON.parse(localStorage.getItem('bioOrder') || '{}');
-  if (order.productName) {
-    document.getElementById('co-product-name').textContent = order.productName;
-    document.getElementById('co-product-variant').textContent = order.variant || '';
-    document.getElementById('co-product-ingredients').textContent = order.ingredients || '';
-    var price = '$' + parseFloat(order.amount || 0).toFixed(2);
-    document.getElementById('co-product-price').textContent = price;
-    document.getElementById('co-subtotal').textContent = price;
-    document.getElementById('co-total').textContent = price;
+  // Load cart items from localStorage
+  var cart = JSON.parse(localStorage.getItem('bioCart') || '[]');
+  // fallback: support old single-item bioOrder
+  if (!cart.length) {
+    var old = JSON.parse(localStorage.getItem('bioOrder') || '{}');
+    if (old.productName) cart = [old];
+  }
+  var summaryBody = document.querySelector('.co-summary-body');
+  if (cart.length) {
+    // Remove placeholder row
+    var placeholder = summaryBody.querySelector('.co-product-row');
+    if (placeholder) placeholder.remove();
+    var total = 0;
+    cart.forEach(function(item) {
+      total += parseFloat(item.amount || 0);
+      var row = document.createElement('div');
+      row.className = 'co-product-row';
+      row.innerHTML = '<div class="co-product-img">🧴</div>' +
+        '<div class="co-product-info">' +
+          '<p class="co-product-name">' + (item.productName || '') + '</p>' +
+          '<p class="co-product-variant">' + (item.variant || '') + '</p>' +
+          '<p class="co-product-ingredients">' + (item.ingredients || '') + '</p>' +
+        '</div>' +
+        '<p class="co-product-price">$' + parseFloat(item.amount || 0).toFixed(2) + '</p>';
+      summaryBody.insertBefore(row, summaryBody.querySelector('.co-line'));
+    });
+    var totalStr = '$' + total.toFixed(2);
+    document.getElementById('co-subtotal').textContent = totalStr;
+    document.getElementById('co-total').textContent = totalStr;
   }
 });
 
@@ -307,17 +326,23 @@ function coBackToShipping() {
 }
 
 async function coLaunchStripe() {
-  // Use localStorage so cart data persists across page navigation
-  var order = JSON.parse(localStorage.getItem('bioOrder') || '{}');
+  // Read all cart items and sum total
+  var cart = JSON.parse(localStorage.getItem('bioCart') || '[]');
+  if (!cart.length) {
+    var old = JSON.parse(localStorage.getItem('bioOrder') || '{}');
+    if (old.productName) cart = [old];
+  }
+  var totalAmount = cart.reduce(function(sum, item) { return sum + parseFloat(item.amount || 0); }, 0);
+  var productNames = cart.map(function(i) { return i.productName; }).join(', ');
   try {
     var res = await fetch('/api/checkout', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        amount: order.amount || 0,
-        productName: order.productName || 'Custom Product',
-        variant: order.variant || '',
-        ingredients: order.ingredients || ''
+        amount: totalAmount,
+        productName: productNames || 'Custom Product',
+        variant: cart.length > 1 ? cart.length + ' items' : (cart[0] && cart[0].variant || ''),
+        ingredients: cart.map(function(i) { return i.ingredients; }).join(' | ')
       })
     });
     var data = await res.json();
