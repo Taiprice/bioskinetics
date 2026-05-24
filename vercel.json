@@ -1,5 +1,5 @@
 {
-  "redirects": [
-    { "source": "/lander", "destination": "/reset-password.html", "permanent": false }
+  "rewrites": [
+    { "source": "/lander", "destination": "/lander.html" }
   ]
 }
