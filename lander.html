@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8" /></head>
+<body>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const sb = supabase.createClient(
+      'https://huojeekaztmuarwtnyib.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1b2plZWthenRtdWFyd3RueWliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzODA3OTQsImV4cCI6MjA5NDk1Njc5NH0.XKQnhHYQ0E8pjfgrUFOiIqNo7gakJvpYb0HKMtiP4eQ'
+    );
+    sb.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        window.location.href = '/reset-password.html';
+      }
+    });
+  </script>
+</body>
+</html>
