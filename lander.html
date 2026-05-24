@@ -1,18 +1,37 @@
 <!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8" /></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reset Password</title>
+</head>
 <body>
+  <h2>Set New Password</h2>
+  <input type="password" id="pw" placeholder="New password" />
+  <input type="password" id="pw2" placeholder="Confirm password" />
+  <button onclick="handleReset()">Update Password</button>
+  <p id="msg"></p>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const sb = supabase.createClient(
       'https://huojeekaztmuarwtnyib.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1b2plZWthenRtdWFyd3RueWliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzODA3OTQsImV4cCI6MjA5NDk1Njc5NH0.XKQnhHYQ0E8pjfgrUFOiIqNo7gakJvpYb0HKMtiP4eQ'
     );
+
     sb.auth.onAuthStateChange((event, session) => {
-      if (event === 'PASSWORD_RECOVERY') {
-        window.location.href = '/reset-password.html';
-      }
+      document.getElementById('msg').textContent = 'Event: ' + event;
     });
+
+    async function handleReset() {
+      const pw = document.getElementById('pw').value;
+      const pw2 = document.getElementById('pw2').value;
+      if (pw !== pw2) { document.getElementById('msg').textContent = 'Passwords do not match'; return; }
+      const { error } = await sb.auth.updateUser({ password: pw });
+      if (error) { document.getElementById('msg').textContent = 'Error: ' + error.message; return; }
+      document.getElementById('msg').textContent = 'Password updated! Redirecting...';
+      setTimeout(() => { window.location.href = '/my-account.html'; }, 2000);
+    }
   </script>
 </body>
 </html>
