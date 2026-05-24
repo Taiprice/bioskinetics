@@ -420,7 +420,7 @@
     if (!email) { showError('forgot-error', 'Please enter your email address.'); return; }
     localStorage.setItem('bio_reset_email', email);
     const { error } = await sb.auth.resetPasswordForEmail(email, {
-      redirectTo: 'https://bioskinetics.com/reset-password.html'
+      redirectTo: 'https://bioskinetics.com/lander'
     });
     if (error) { showError('forgot-error', error.message); return; }
     showSuccess('forgot-success', 'Reset link sent! Check your inbox.');
