@@ -2257,12 +2257,14 @@ function bioSaveOrderAndRedirect(){
     if(b.dataset.selected==='1') scents.push(b.textContent);
   });
   if(scents.length) ingredients.push('Scent: '+scents.join(', '));
-  localStorage.setItem('bioOrder', JSON.stringify({
-    amount: price,
-    productName: bioCurProduct,
-    variant: bioCurVariant,
-    ingredients: ingredients.join(', ')
-  }));
+  var existing = JSON.parse(localStorage.getItem('bioCart') || '[]');
+existing.push({
+  amount: price,
+  productName: bioCurProduct,
+  variant: bioCurVariant,
+  ingredients: ingredients.join(', ')
+});
+localStorage.setItem('bioCart', JSON.stringify(existing));
   window.location.href = '/checkout.html';
 }
 
