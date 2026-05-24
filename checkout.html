@@ -333,7 +333,21 @@ function removeCartItem(index) {
   var cart = JSON.parse(localStorage.getItem('bioCart') || '[]');
   cart.splice(index, 1);
   localStorage.setItem('bioCart', JSON.stringify(cart));
-  window.location.reload();
+  if (cart.length === 0) {
+    var summaryBody = document.querySelector('.co-summary-body');
+    var rows = summaryBody.querySelectorAll('.co-product-row');
+    rows.forEach(function(r) { r.remove(); });
+    var empty = document.createElement('p');
+    empty.style.cssText = 'font-family:Jost,sans-serif;font-size:14px;font-weight:300;color:#9a9895;text-align:center;padding:1.5rem 0;';
+    empty.textContent = 'Your cart is empty.';
+    summaryBody.insertBefore(empty, summaryBody.querySelector('.co-line'));
+    document.getElementById('co-subtotal').textContent = '$0.00';
+    document.getElementById('co-total').textContent = '$0.00';
+    var btn = document.querySelector('.co-btn');
+    if (btn) btn.disabled = true;
+  } else {
+    window.location.reload();
+  }
 }
 
 async function coLaunchStripe() {
