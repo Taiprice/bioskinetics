@@ -342,16 +342,17 @@
           <h3>Email Notifications</h3>
           <div class="pref-toggle">
             <span>New product launches</span>
-            <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
+            <label class="toggle-switch"><input type="checkbox" id="pref-launches" onchange="savePreferences()" /><span class="toggle-slider"></span></label>
           </div>
           <div class="pref-toggle">
             <span>Promotions &amp; discounts</span>
-            <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
+            <label class="toggle-switch"><input type="checkbox" id="pref-promos" onchange="savePreferences()" /><span class="toggle-slider"></span></label>
           </div>
           <div class="pref-toggle">
             <span>Order updates</span>
-            <label class="toggle-switch"><input type="checkbox" checked /><span class="toggle-slider"></span></label>
+            <label class="toggle-switch"><input type="checkbox" id="pref-orders" onchange="savePreferences()" /><span class="toggle-slider"></span></label>
           </div>
+          <p id="pref-saved-msg" style="font-size:13px;color:#2c7a4b;margin-top:0.75rem;display:none;">&#10003; Preferences saved</p>
         </div>
       </div>
 
@@ -500,6 +501,27 @@
     });
   }
 
+function loadPreferences(user) {
+    var meta = user.user_metadata || {};
+    document.getElementById('pref-launches').checked = meta.pref_launches !== false;
+    document.getElementById('pref-promos').checked = meta.pref_promos !== false;
+    document.getElementById('pref-orders').checked = meta.pref_orders !== false;
+  }
+
+  async function savePreferences() {
+    var launches = document.getElementById('pref-launches').checked;
+    var promos = document.getElementById('pref-promos').checked;
+    var orders = document.getElementById('pref-orders').checked;
+    var { error } = await sb.auth.updateUser({
+      data: { pref_launches: launches, pref_promos: promos, pref_orders: orders }
+    });
+    var msg = document.getElementById('pref-saved-msg');
+    if (!error) {
+      msg.style.display = 'block';
+      setTimeout(function() { msg.style.display = 'none'; }, 2000);
+    }
+  }
+
 function dashSwitch(panel, btn) {
     document.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.dash-nav-btn').forEach(b => b.classList.remove('active'));
@@ -524,6 +546,7 @@ function dashSwitch(panel, btn) {
     document.getElementById('dash-phone-display').textContent = meta.phone || '—';
     const since = new Date(user.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
     document.getElementById('dash-since').textContent = since;
+    loadPreferences(user);
   }
 
   // Check session on load
