@@ -98,6 +98,7 @@
       </div>
 
       <button class="reset-btn" id="reset-btn" onclick="handleReset()">Update Password</button>
+      <a href="/my-account.html" id="signin-btn" style="display:none;width:100%;background:none;border:1.5px solid #e0dbe5;color:#2c2c2a;font-family:'Jost',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;border-radius:6px;padding:16px 24px;cursor:pointer;transition:border-color 0.15s;margin-top:0.75rem;text-align:center;text-decoration:none;box-sizing:border-box;">Return to Sign In</a>
       <p id="msg"></p>
     </div>
   </div>
@@ -141,9 +142,10 @@
       btn.textContent = 'Updating...';
       const { error } = await sb.auth.updateUser({ password: pw });
       if (error) { msg.textContent = 'Error: ' + error.message; msg.className = 'error'; btn.disabled = false; btn.textContent = 'Update Password'; return; }
-      msg.textContent = '✓ Password updated! Redirecting to your account...';
+      msg.textContent = '✓ Password updated successfully!';
       msg.className = 'success';
-      setTimeout(() => { window.location.href = '/my-account.html'; }, 2000);
+      document.getElementById('signin-btn').style.display = 'block';
+      btn.style.display = 'none';
     }
   </script>
 </body>
