@@ -469,32 +469,43 @@
   }
 
   function loadAllergenDisplay() {
-  var el = document.getElementById('allergen-display');
-  if (!el) return;
-  try {
-    // Read from ac_allergen_profiles which stores the human-readable names
-    var profiles = JSON.parse(localStorage.getItem('ac_allergen_profiles') || '{"Me":[]}');
-    var display = profiles['Me'] || [];
-    if (!display.length) {
-      el.innerHTML = '<p style="font-size:14px;color:#9a9895;font-style:italic;">No allergens saved yet.</p>';
-    } else {
-      var html = '<div style="display:flex;flex-wrap:wrap;gap:8px;">';
-      display.forEach(function(a) {
-        html += '<span style="font-size:12px;font-weight:500;letter-spacing:0.08em;text-transform:capitalize;padding:5px 14px;border-radius:999px;border:0.5px solid #beadc5;color:#9a88a3;background:#faf8fb;">' + a + '</span>';
-      });
-      html += '</div>';
-      el.innerHTML = html;
+    var display = document.getElementById('allergen-display');
+    if (!display) return;
+    var profiles;
+    try { profiles = JSON.parse(localStorage.getItem('ac_allergen_profiles')) || {}; }
+    catch(e) { profiles = {}; }
+
+    var keys = Object.keys(profiles);
+    if (keys.length === 0) {
+      display.innerHTML = '<p style="font-size:14px;color:#9a9895;font-style:italic;">No allergen profiles found. Add allergens on the My Allergens page.</p>';
+      return;
     }
-  } catch(e) {
-    el.innerHTML = '<p style="font-size:14px;color:#9a9895;">Could not load allergens.</p>';
+
+    display.innerHTML = '';
+    keys.forEach(function(name, i) {
+      var terms = profiles[name] || [];
+      var block = document.createElement('div');
+      block.style.cssText = 'margin-bottom:1.25rem;';
+      var header = '<p style="font-family:'Jost',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#beadc5;margin-bottom:0.5rem;">' + name + ' <span style="font-size:11px;font-weight:400;background:#f5f0f6;color:#9a88a3;border-radius:999px;padding:2px 8px;">' + terms.length + ' allergen' + (terms.length !== 1 ? 's' : '') + '</span></p>';
+      var tags = terms.length === 0
+        ? '<p style="font-size:13px;color:#9a9895;font-style:italic;">No allergens added to this profile.</p>'
+        : '<div style="display:flex;flex-wrap:wrap;gap:8px;">' + terms.map(function(t) { return '<span style="font-size:12px;font-weight:500;letter-spacing:0.08em;text-transform:capitalize;padding:5px 14px;border-radius:999px;border:0.5px solid #beadc5;color:#9a88a3;background:#faf8fb;">' + t + '</span>'; }).join('') + '</div>';
+      block.innerHTML = header + tags;
+      display.appendChild(block);
+      if (i < keys.length - 1) {
+        var divider = document.createElement('hr');
+        divider.style.cssText = 'border:none;border-top:0.5px solid #ece8f0;margin:1rem 0;';
+        display.appendChild(divider);
+      }
+    });
   }
-}
 
 function dashSwitch(panel, btn) {
     document.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.dash-nav-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('panel-' + panel).classList.add('active');
     btn.classList.add('active');
+    if (panel === 'allergens') loadAllergenDisplay();
   }
 
   function showDashboard(user) {
