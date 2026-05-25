@@ -153,8 +153,9 @@
       var email = user ? user.email : '';
       var meta = user ? (user.user_metadata || {}) : {};
       var prefs = [];
-      if (meta.pref_launches) prefs.push('New product launches');
-      if (meta.pref_promos) prefs.push('Promotions & discounts');
+      if (meta.pref_launches !== false) prefs.push('New product launches');
+      if (meta.pref_promos !== false) prefs.push('Promotions & discounts');
+      if (meta.pref_orders !== false) prefs.push('Order updates');
 
       // Allergens from localStorage
       var allergens = '';
