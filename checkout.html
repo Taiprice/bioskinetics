@@ -136,9 +136,48 @@
   .bio-footer-bottom { border-top: 0.5px solid #222; padding: 1.25rem 2rem; text-align: center; font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 300; color: #666; }
   @media (max-width: 768px) { .bio-footer-inner { grid-template-columns: 1fr 1fr; gap: 2rem; } }
   @media (max-width: 480px) { .bio-footer-inner { grid-template-columns: 1fr; } }
+  
+  /* ── Shipping Notice Popup ── */
+  #shipping-popup-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
+  #shipping-popup { background: #fff; border-radius: 20px; padding: 2.5rem 2rem; max-width: 460px; width: 100%; text-align: center; position: relative; box-shadow: 0 24px 80px rgba(0,0,0,0.25); }
+  #shipping-popup-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; cursor: pointer; color: #9a9895; font-size: 20px; line-height: 1; }
+  #shipping-popup-close:hover { color: #2c2c2a; }
+  .shipping-popup-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #beadc5; margin-bottom: 0.75rem; }
+  .shipping-popup-title { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: #b2a254; margin-bottom: 0.75rem; line-height: 1.15; }
+  .shipping-popup-divider { width: 40px; height: 1.5px; background: linear-gradient(to right, transparent, #beadc5, transparent); border: none; margin: 0.75rem auto; }
+  .shipping-popup-body { font-size: 15px; font-weight: 300; line-height: 1.75; color: #5f5e5a; margin-bottom: 1.5rem; }
+  .shipping-popup-body strong { font-weight: 600; color: #2c2c2a; }
+  .shipping-popup-btn { display: inline-block; background: #fade4b; color: #2c2c2a; font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; border: none; border-radius: 6px; padding: 14px 32px; cursor: pointer; transition: background 0.15s; }
+  .shipping-popup-btn:hover { background: #f5d535; }
   </style>
 </head>
 <body>
+
+  <!-- ── Shipping Notice Popup ── -->
+  <div id="shipping-popup-overlay">
+    <div id="shipping-popup">
+      <button id="shipping-popup-close" onclick="closeShippingPopup()" title="Close">&#x2715;</button>
+      <p class="shipping-popup-eyebrow">📦 Shipping Notice</p>
+      <h2 class="shipping-popup-title">Weekly Sunday Shipping</h2>
+      <hr class="shipping-popup-divider" />
+      <p class="shipping-popup-body">All orders are shipped once a week, <strong>every Sunday</strong>. Depending on when you place your order, there may be a short wait before your package goes out.<br /><br />If you order after Sunday, it will ship the <strong>following Sunday</strong> — please keep this in mind when estimating your delivery date.<br /><br />Thank you for your patience!</p>
+      <button class="shipping-popup-btn" onclick="closeShippingPopup()">Got It — Continue to Checkout</button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      if (!sessionStorage.getItem('bio_shipping_seen')) {
+        document.getElementById('shipping-popup-overlay').style.display = 'flex';
+      } else {
+        document.getElementById('shipping-popup-overlay').style.display = 'none';
+      }
+    })();
+    function closeShippingPopup() {
+      document.getElementById('shipping-popup-overlay').style.display = 'none';
+      sessionStorage.setItem('bio_shipping_seen', '1');
+    }
+  </script>
 
   <!-- ── Navigation ── -->
   <nav id="bio-nav">
@@ -258,7 +297,7 @@
 <script>
 var bioStripe;
 document.addEventListener('DOMContentLoaded', function(){
-  bioStripe = Stripe('pk_live_51TZcUHRrDkzeeX91Ea6sWISUIRwBRQ0ZmdUNpsbPtcGYGeRRNVO9mhiSNJnPy3jXzDq8SJ3d4VEjXo8gjOqUwGYB00MMumpEeO');
+  bioStripe = Stripe('pk_test_51TZcUfRyb3PIbuNPU5IqwnGjX6frosXS3E8o8pcYOl3UckGlL10KIvcXCl4SQVqMbjA2oPVUjxGKeY2CEt68TJKm00t12hvFTH');
 
   // Hide account bar if signed in
   const sb = supabase.createClient('https://huojeekaztmuarwtnyib.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1b2plZWthenRtdWFyd3RueWliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzODA3OTQsImV4cCI6MjA5NDk1Njc5NH0.XKQnhHYQ0E8pjfgrUFOiIqNo7gakJvpYb0HKMtiP4eQ');
