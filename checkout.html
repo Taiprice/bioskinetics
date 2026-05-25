@@ -378,7 +378,8 @@ async function coLaunchStripe() {
         amount: totalAmount,
         productName: productNames || 'Custom Product',
         variant: cart.length > 1 ? cart.length + ' items' : (cart[0] && cart[0].variant || ''),
-        ingredients: cart.map(function(i) { return i.ingredients; }).join(' | ')
+        ingredients: cart.map(function(i) { return i.ingredients; }).join(' | '),
+        itemCount: cart.length
       })
     });
     var data = await res.json();
