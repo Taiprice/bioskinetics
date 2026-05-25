@@ -128,5 +128,103 @@
     </div>
   </footer>
   <script>document.getElementById('bio-footer-year').textContent = new Date().getFullYear();</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+  (function() {
+    // Only submit once per session
+    if (sessionStorage.getItem('bio_order_submitted')) return;
+
+    // Gather cart data
+    var cart = JSON.parse(localStorage.getItem('bioCart') || '[]');
+    if (!cart.length) {
+      var old = JSON.parse(localStorage.getItem('bioOrder') || '{}');
+      if (old.productName) cart = [old];
+    }
+
+    // Gather customer info from Supabase
+    var sb = supabase.createClient(
+      'https://huojeekaztmuarwtnyib.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1b2plZWthenRtdWFyd3RueWliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzODA3OTQsImV4cCI6MjA5NDk1Njc5NH0.XKQnhHYQ0E8pjfgrUFOiIqNo7gakJvpYb0HKMtiP4eQ'
+    );
+
+    sb.auth.getUser().then(function(res) {
+      var user = res.data && res.data.user;
+      var email = user ? user.email : '';
+      var meta = user ? (user.user_metadata || {}) : {};
+      var prefs = [];
+      if (meta.pref_launches) prefs.push('New product launches');
+      if (meta.pref_promos) prefs.push('Promotions & discounts');
+
+      // Allergens from localStorage
+      var allergens = '';
+      try {
+        var profiles = JSON.parse(localStorage.getItem('ac_allergen_profiles') || '{}');
+        var allergenList = profiles['Me'] || [];
+        allergens = allergenList.join(', ');
+      } catch(e) {}
+
+      // Build cart summary fields
+      var products = cart.map(function(i) { return i.productName; }).join(', ');
+      var required = cart.map(function(i) {
+        // ingredients contains all — split out required vs extras/scents
+        return i.ingredients || '';
+      }).join(' | ');
+      var extras = cart.map(function(i) { return i.variant || ''; }).join(', ');
+      var total = cart.reduce(function(s, i) { return s + parseFloat(i.amount || 0); }, 0).toFixed(2);
+      var timestamp = new Date().toLocaleString();
+
+      // Scents, size, colors from cart items
+      var scents = cart.map(function(i) {
+        var parts = (i.ingredients || '').split(',');
+        var s = parts.filter(function(p) { return p.toLowerCase().includes('scent'); });
+        return s.join(', ');
+      }).join(', ');
+
+      var size = cart.map(function(i) {
+        var parts = (i.ingredients || '').split(',');
+        var s = parts.filter(function(p) { return p.match(/\d+oz/i); });
+        return s.join(', ');
+      }).join(', ');
+
+      var colors = cart.map(function(i) {
+        var parts = (i.ingredients || '').split(',');
+        var c = parts.filter(function(p) { return p.toLowerCase().includes('color') || p.toLowerCase().includes('purple') || p.toLowerCase().includes('black') || p.toLowerCase().includes('white'); });
+        return c.join(', ');
+      }).join(', ');
+
+      // Submit to Google Form
+      var formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSfYfCfU4R1BaPR2foliUYzK9cOKRKBR67FF21e63Wb8m0emtQ/formResponse';
+      var params = new URLSearchParams({
+        'entry.815220988': email,
+        'entry.545087580': products,
+        'entry.13343148': required,
+        'entry.1975907066': extras,
+        'entry.450288876': scents,
+        'entry.1465761607': size,
+        'entry.1967097564': colors,
+        'entry.364505809': allergens,
+        'entry.1645425314': '$' + total,
+        'entry.38621579': timestamp,
+        'entry.1093596374': prefs.join(', ')
+      });
+
+      // Use no-cors fetch to avoid CORS errors with Google Forms
+      fetch(formUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params.toString()
+      }).then(function() {
+        sessionStorage.setItem('bio_order_submitted', '1');
+        // Clear cart after successful submission
+        localStorage.removeItem('bioCart');
+        localStorage.removeItem('bioOrder');
+      }).catch(function(e) {
+        console.error('Order form submission failed:', e);
+      });
+    });
+  })();
+  </script>
 </body>
 </html>
