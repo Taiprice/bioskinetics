@@ -205,9 +205,51 @@
   .bio-footer-bottom { border-top: 0.5px solid #222; padding: 1.25rem 2rem; text-align: center; font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 300; color: #666; }
   @media (max-width: 768px) { .bio-footer-inner { grid-template-columns: 1fr 1fr; gap: 2rem; } }
   @media (max-width: 480px) { .bio-footer-inner { grid-template-columns: 1fr; } }
+
+  /* ── Launch Popup ── */
+  #bio-popup-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
+  #bio-popup { background: #fff; border-radius: 20px; padding: 2.5rem 2rem; max-width: 460px; width: 100%; text-align: center; position: relative; box-shadow: 0 24px 80px rgba(0,0,0,0.25); }
+  #bio-popup-close { position: absolute; top: 1rem; right: 1rem; background: none; border: none; cursor: pointer; color: #9a9895; font-size: 20px; line-height: 1; }
+  #bio-popup-close:hover { color: #2c2c2a; }
+  .bio-popup-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: #beadc5; margin-bottom: 0.75rem; }
+  .bio-popup-title { font-family: 'Playfair Display', serif; font-size: 30px; font-weight: 700; color: #b2a254; margin-bottom: 0.75rem; line-height: 1.15; }
+  .bio-popup-divider { width: 40px; height: 1.5px; background: linear-gradient(to right, transparent, #beadc5, transparent); border: none; margin: 0.75rem auto; }
+  .bio-popup-body { font-size: 15px; font-weight: 300; line-height: 1.75; color: #5f5e5a; margin-bottom: 1.5rem; }
+  .bio-popup-body strong { font-weight: 600; color: #2c2c2a; }
+  .bio-popup-date { display: inline-block; background: #fdfbe8; border: 1px solid #f5e97a; border-radius: 8px; padding: 0.6rem 1.25rem; font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: #2c2c2a; margin-bottom: 1.5rem; }
+  .bio-popup-btn { display: inline-block; background: #fade4b; color: #2c2c2a; font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; border: none; border-radius: 6px; padding: 14px 32px; cursor: pointer; transition: background 0.15s; }
+  .bio-popup-btn:hover { background: #f5d535; }
   </style>
 </head>
 <body>
+
+  <!-- ── Launch Popup ── -->
+  <div id="bio-popup-overlay">
+    <div id="bio-popup">
+      <button id="bio-popup-close" onclick="closeBioPopup()" title="Close">&#x2715;</button>
+      <p class="bio-popup-eyebrow">Heads Up</p>
+      <h2 class="bio-popup-title">Orders Open August 1st</h2>
+      <hr class="bio-popup-divider" />
+      <p class="bio-popup-body">We are so excited to have you here! Please note that we are not yet fulfilling orders. You are welcome to browse, customize, and add items to your cart — but orders will begin shipping on:</p>
+      <div class="bio-popup-date">August 1st, 2026</div>
+      <br />
+      <button class="bio-popup-btn" onclick="closeBioPopup()">Got It — Let Me Browse</button>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      if (!sessionStorage.getItem('bio_popup_seen')) {
+        document.getElementById('bio-popup-overlay').style.display = 'flex';
+      } else {
+        document.getElementById('bio-popup-overlay').style.display = 'none';
+      }
+    })();
+    function closeBioPopup() {
+      document.getElementById('bio-popup-overlay').style.display = 'none';
+      sessionStorage.setItem('bio_popup_seen', '1');
+    }
+  </script>
   <!-- ── Navigation ── -->
   <nav id="bio-nav">
     <a href="/index.html" class="bio-nav-logo">
