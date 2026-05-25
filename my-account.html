@@ -472,11 +472,9 @@
   var el = document.getElementById('allergen-display');
   if (!el) return;
   try {
-    var display = JSON.parse(localStorage.getItem('bio_allergen_display') || '[]');
-    if (!display.length) {
-      var sitewide = JSON.parse(localStorage.getItem('hl_sitewide_terms') || '[]');
-      display = sitewide;
-    }
+    // Read from ac_allergen_profiles which stores the human-readable names
+    var profiles = JSON.parse(localStorage.getItem('ac_allergen_profiles') || '{"Me":[]}');
+    var display = profiles['Me'] || [];
     if (!display.length) {
       el.innerHTML = '<p style="font-size:14px;color:#9a9895;font-style:italic;">No allergens saved yet.</p>';
     } else {
