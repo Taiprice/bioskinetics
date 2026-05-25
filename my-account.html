@@ -330,10 +330,8 @@
         <div class="dash-card">
           <h3>Saved Allergens</h3>
           <p style="font-size:14px;font-weight:300;color:#9a9895;margin-bottom:1rem;">These are synced from your My Allergens page and are used to flag ingredients automatically.</p>
-          <div class="empty-state">
-            <p>No allergens saved yet.</p>
-            <a href="/my-allergens.html">Go to My Allergens</a>
-          </div>
+          <div id="allergen-display"></div>
+          <a href="/my-allergens.html" style="display:inline-block;margin-top:1rem;font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;background:#fade4b;color:#2c2c2a;padding:10px 20px;border-radius:4px;text-decoration:none;">Go to My Allergens</a>
         </div>
       </div>
 
@@ -470,7 +468,31 @@
     document.getElementById('auth-section').style.display = 'block';
   }
 
-  function dashSwitch(panel, btn) {
+  function loadAllergenDisplay() {
+  var el = document.getElementById('allergen-display');
+  if (!el) return;
+  try {
+    var display = JSON.parse(localStorage.getItem('bio_allergen_display') || '[]');
+    if (!display.length) {
+      var sitewide = JSON.parse(localStorage.getItem('hl_sitewide_terms') || '[]');
+      display = sitewide;
+    }
+    if (!display.length) {
+      el.innerHTML = '<p style="font-size:14px;color:#9a9895;font-style:italic;">No allergens saved yet.</p>';
+    } else {
+      var html = '<div style="display:flex;flex-wrap:wrap;gap:8px;">';
+      display.forEach(function(a) {
+        html += '<span style="font-size:12px;font-weight:500;letter-spacing:0.08em;text-transform:capitalize;padding:5px 14px;border-radius:999px;border:0.5px solid #beadc5;color:#9a88a3;background:#faf8fb;">' + a + '</span>';
+      });
+      html += '</div>';
+      el.innerHTML = html;
+    }
+  } catch(e) {
+    el.innerHTML = '<p style="font-size:14px;color:#9a9895;">Could not load allergens.</p>';
+  }
+}
+
+function dashSwitch(panel, btn) {
     document.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.dash-nav-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('panel-' + panel).classList.add('active');
