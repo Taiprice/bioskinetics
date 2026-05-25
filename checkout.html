@@ -246,7 +246,7 @@
           <p class="co-product-price" id="co-product-price">—</p>
         </div>
         <div class="co-line"><span>Subtotal</span><span id="co-subtotal">—</span></div>
-        <div class="co-line"><span>Shipping</span><span>Calculated at next step</span></div>
+        <div class="co-line"><span>Shipping</span><span id="co-shipping">—</span></div>
         <div class="co-total"><span>Total</span><span id="co-total">—</span></div>
       </div>
     </div>
@@ -301,7 +301,11 @@ document.addEventListener('DOMContentLoaded', function(){
     });
     var totalStr = '$' + total.toFixed(2);
     document.getElementById('co-subtotal').textContent = totalStr;
-    document.getElementById('co-total').textContent = totalStr;
+    // Calculate shipping: $15 per 4 items
+    var shippingAmount = Math.ceil(cart.length / 4) * 15;
+    var shippingStr = '$' + shippingAmount.toFixed(2);
+    document.getElementById('co-shipping').textContent = shippingStr;
+    document.getElementById('co-total').textContent = '$' + (total + shippingAmount).toFixed(2);
   }
 });
 
