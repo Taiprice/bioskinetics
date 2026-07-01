@@ -101,6 +101,19 @@
     .step-link:hover { opacity: 0.7; }
     .step-link::after { content: '▶'; font-size: 9px; }
     @media (max-width: 600px) { .steps-wrap { padding: 2rem 1.5rem 3rem; } .step { grid-template-columns: 56px 1fr; gap: 1.25rem; } .step-num-circle { width: 40px; height: 40px; font-size: 18px; } .step-title { font-size: 24px; } }
+    /* Choice Boxes */
+    .choice-wrap { max-width: 1000px; margin: 0 auto; padding: 2rem 3rem 5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+    .choice-card { background: #faf9f7; border: 1px solid rgba(190,173,197,0.35); border-radius: 20px; padding: 3rem 2.25rem; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 1.1rem; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; position: relative; overflow: hidden; }
+    .choice-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(to right, #beadc5, #fade4b); }
+    .choice-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(0,0,0,0.1); border-color: transparent; }
+    .choice-icon-wrap { width: 76px; height: 76px; border-radius: 50%; background: #ffffff; border: 1.5px solid #e8e0eb; display: flex; align-items: center; justify-content: center; margin-bottom: 0.25rem; }
+    .choice-icon-wrap svg { width: 34px; height: 34px; color: #beadc5; }
+    .choice-eyebrow { font-size: 12px; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: #beadc5; }
+    .choice-title { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 600; line-height: 1.2; color: #2c2c2a; }
+    .choice-body { font-size: 15.5px; font-weight: 300; line-height: 1.75; color: #5f5e5a; max-width: 320px; }
+    .choice-btn { margin-top: 0.5rem; display: inline-flex; align-items: center; gap: 8px; background: #fade4b; color: #2c2c2a; font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; border: none; border-radius: 6px; padding: 14px 28px; transition: background 0.15s; }
+    .choice-card:hover .choice-btn { background: #f5d535; }
+    @media (max-width: 700px) { .choice-wrap { grid-template-columns: 1fr; padding: 2rem 1.5rem 3.5rem; gap: 1.5rem; } }
     /* Connect */
     .connect-wrap { background: #ffffff; padding: 64px 24px 72px; text-align: center; }
     .connect-title { font-family: 'Playfair Display', Georgia, serif; font-size: 3.2rem; font-weight: 700; color: rgb(172, 155, 71); letter-spacing: 0.02em; margin-bottom: 10px; }
@@ -156,42 +169,31 @@
   </nav>
 
 
-  <!-- BLOCK 1: 3 Simple Steps -->
+  <!-- BLOCK 1: Choose Your Path -->
   <div class="bio-page-header">
-    <h1>3 Simple Steps</h1>
-    <p>Getting started is easier than you think</p>
+    <h1>How It Works</h1>
+    <p>Tell us where you're starting from</p>
     <div class="header-rule"></div>
   </div>
-  <div class="steps-wrap">
-    <div class="step">
-      <div class="step-number"><div class="step-num-circle">1</div><div class="step-connector"></div></div>
-      <div class="step-content">
-        <span class="step-eyebrow">Step One</span>
-        <h2 class="step-title">Add Your Allergens &amp; Sensitivities</h2>
-        <hr class="step-divider" />
-        <p class="step-body">Head to the <strong>My Allergens</strong> tab and enter any ingredients you're allergic to, sensitive to, or simply prefer to avoid. Once saved, our system will automatically flag those ingredients across every product — so you never have to read a label twice. You can update your list anytime.</p>
-        <a href="my-allergens.html" class="step-link">Go to My Allergens</a>
+  <div class="choice-wrap">
+    <a href="/instructions-know-allergens.html" class="choice-card">
+      <div class="choice-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
       </div>
-    </div>
-    <div class="step">
-      <div class="step-number"><div class="step-num-circle">2</div><div class="step-connector"></div></div>
-      <div class="step-content">
-        <span class="step-eyebrow">Step Two</span>
-        <h2 class="step-title">Customize Your Formula</h2>
-        <hr class="step-divider" />
-        <p class="step-body">Browse the <strong>Product Line</strong> and click <strong>Customize Now</strong> on any product. You'll see your base formula with all required ingredients listed. Any ingredient that conflicts with your allergen list will be highlighted — simply click <strong>Swap</strong> on that ingredient to choose a safe alternative. Then move on to Step 2 to add optional extras like moisture boosters, protein treatments, frizz control, or a custom scent.</p>
-        <a href="product-line.html" class="step-link">Browse Products</a>
+      <span class="choice-eyebrow">Already Know Your Triggers</span>
+      <h2 class="choice-title">I Know My Allergens</h2>
+      <p class="choice-body">Enter your allergens and sensitivities once, and we'll flag conflicting ingredients across every product so you can build a fully customized formula.</p>
+      <span class="choice-btn">See How It Works</span>
+    </a>
+    <a href="/instructions-sensitive-skin.html" class="choice-card">
+      <div class="choice-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5"/></svg>
       </div>
-    </div>
-    <div class="step">
-      <div class="step-number"><div class="step-num-circle">3</div><div class="step-connector"></div></div>
-      <div class="step-content">
-        <span class="step-eyebrow">Step Three</span>
-        <h2 class="step-title">Pick Your Container &amp; Add to Cart</h2>
-        <hr class="step-divider" />
-        <p class="step-body">Once your formula is set, choose your preferred <strong>size and color</strong> for the container. When you're happy with everything, hit <strong>Add to Cart</strong> — and your personalized product is on its way to being made just for you.</p>
-      </div>
-    </div>
+      <span class="choice-eyebrow">Not Sure Yet</span>
+      <h2 class="choice-title">I Don't Know My Allergens — I Just Have Sensitive Skin</h2>
+      <p class="choice-body">No problem. Browse our premade collections, thoughtfully formulated for sensitive skin, so you can start caring for yourself right away.</p>
+      <span class="choice-btn">See How It Works</span>
+    </a>
   </div>
 
   <hr class="section-divider" />
