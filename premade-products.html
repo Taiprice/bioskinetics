@@ -168,24 +168,166 @@
     </div>
   </nav>
 
-  <div style="max-width:1100px; margin:2rem auto 0; padding:0 3rem;">
-    <a href="/product-line.html" style="font-family:'Jost',sans-serif; font-size:12px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:#beadc5; text-decoration:none;">&larr; Back to Product Line</a>
-  </div>
+  <div style="text-align:left; padding:0.75rem 1rem 0 2rem;"><a href="/product-line.html" style="display:inline-flex; align-items:center; gap:6px; font-family:'Jost',sans-serif; font-size:12px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:#beadc5; text-decoration:none;">&larr; Back to Product Line</a></div>
 
-  <div class="bio-page-header">
+  <div class="bio-page-header" style="padding-top:0.5rem;">
     <h1>Premade Products</h1>
-    <p>Sensitive-skin friendly, ready to go</p>
+    <p>Sensitive skin, ready to go</p>
     <div class="header-rule"></div>
   </div>
-  <div style="max-width:700px; margin:0 auto; padding:1rem 3rem 5rem; text-align:center;">
-    <p style="font-family:'Jost',sans-serif; font-size:17px; font-weight:300; line-height:1.85; color:#5f5e5a; margin-bottom:1.5rem;">
-      We're putting together a collection of premade formulas — thoughtfully made for sensitive skin, even when specific allergies haven't been identified. No allergen list required, no customization needed. Just pick a product and go.
-    </p>
-    <p style="font-family:'Jost',sans-serif; font-size:17px; font-weight:300; line-height:1.85; color:#5f5e5a; margin-bottom:2rem;">
-      This collection is coming soon. In the meantime, if you'd like a fully custom formula, you can build one based on your own allergens.
-    </p>
-    <a href="/customize-now.html" style="display:inline-flex; align-items:center; gap:8px; background:#fade4b; color:#2c2c2a; font-family:'Jost',sans-serif; font-size:12px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; border:none; border-radius:6px; padding:14px 28px; text-decoration:none;">Customize Your Own Formula</a>
+
+  <div style="max-width:560px; margin:0 auto; padding:1rem 2rem 5rem;">
+
+    <p style="text-align:center; font-size:15px; color:#5f5e5a; margin:0 auto 2.5rem;">No allergen list needed — just answer a few quick questions and we'll point you toward what fits.</p>
+
+    <div id="progress" style="display:flex; gap:6px; margin-bottom:2.5rem;"></div>
+    <div id="wizard"></div>
+
   </div>
+
+  <style>
+    .opt { font-family:'Jost',sans-serif; width:100%; text-align:left; font-size:15px; padding:15px 18px; border-radius:10px; border:1px solid #ece7dc; background:#fff; color:#2c2c2a; cursor:pointer; display:flex; align-items:center; justify-content:space-between; transition:all .15s; margin-bottom:10px; }
+    .opt.sel { border-color:#fade4b; background:#fffdf3; }
+    .opt.disabled { opacity:0.45; cursor:not-allowed; }
+    .navbtn { background:#fade4b; color:#2c2c2a; border:none; border-radius:6px; padding:13px 30px; font-size:12px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; font-family:'Jost',sans-serif; }
+    .backbtn { background:none; border:none; color:#b0aca2; font-size:13px; cursor:pointer; font-family:'Jost',sans-serif; }
+    .pcard { background:#faf9f7; border:1px solid rgba(190,173,197,0.35); border-radius:16px; padding:1.75rem; text-align:center; margin-bottom:1rem; }
+    .ptag { display:inline-block; background:#eef7ee; color:#3b6d11; font-size:11px; padding:4px 10px; border-radius:999px; margin:0 4px 8px 0; font-family:'Jost',sans-serif; }
+  </style>
+
+  <script>
+    var psState = { step: 0, product: [], trigger: [], itemtype: [], severity: null, hairType: null, skinType: null };
+
+    var psLiveProducts = {
+      'Shampoo': { name: 'Sensitive Skin Shampoo', desc: 'Gentle daily cleanse, formulated without common irritants.', prices: { 'Thick Hair': '$30.50', 'Thin Hair': '$27.00', 'Curly Hair': '$30.50' }, defaultPrice: '$27.00' },
+      'Conditioner': { name: 'Sensitive Skin Conditioner', desc: 'Lightweight, non-greasy conditioner for reactive scalps.', prices: { 'Thick Hair': '$24.00', 'Thin Hair': '$21.00', 'Curly Hair': '$24.50' }, defaultPrice: '$21.00' },
+      'Body Wash': { name: 'Sensitive Skin Body Wash', desc: 'Low-lather, barrier-friendly daily wash.', prices: { 'Dry Skin': '$22.50', 'Oily Skin': '$22.50' }, defaultPrice: '$22.50' }
+    };
+    var psComingSoon = ['Facewash','Toner','Serum','Moisturizer','Lotion','Chapstick'];
+
+    function psGetSteps() {
+      var steps = [
+        { key:'product', title:'What are you shopping for?', sub:'Pick as many as you like', multi:true,
+          options: ['Shampoo','Conditioner','Body Wash'].map(function(v){return {val:v,label:v};}).concat(psComingSoon.map(function(v){return {val:v,label:v,disabled:true};})) },
+        { key:'trigger', title:'Has anything like this bothered your skin before?', sub:'Pick as many as you like', multi:true,
+          options: [{val:'Fragrance',label:'Strong scents'},{val:'Sulfate',label:'Foaming or lathering products'},{val:'Dye',label:'Colored or dyed products'},{val:'Nut',label:'Nut oils'},{val:'NotSure',label:'Not sure'}] },
+        { key:'itemtype', title:'Have you struggled with any of these items?', sub:'Pick as many as you like', multi:true,
+          options: [{val:'Liquid Soaps',label:'Liquid soaps'},{val:'Bar Soaps',label:'Bar soaps'},{val:'Body Scrubs',label:'Body scrubs'},{val:'Acne Treatments',label:'Acne treatments'},{val:'Serums/Toners',label:'Serums or toners'}] },
+        { key:'severity', title:'How does your skin usually react?', sub:'Pick one', multi:false,
+          options: [{val:'Mild',label:'Mild — a little dry or itchy'},{val:'Strong',label:'Noticeable — redness or bumps'}] }
+      ];
+      var wantsHairStep = psState.product.indexOf('Shampoo') !== -1 || psState.product.indexOf('Conditioner') !== -1;
+      var wantsSkinStep = psState.product.indexOf('Body Wash') !== -1;
+      if (wantsHairStep) {
+        steps.push({ key:'hairType', title:'What\'s your hair type?', sub:'Pick one', multi:false,
+          options: [{val:'Thick Hair',label:'Thick'},{val:'Thin Hair',label:'Thin'},{val:'Curly Hair',label:'Curly'}] });
+      }
+      if (wantsSkinStep) {
+        steps.push({ key:'skinType', title:'What\'s your skin type?', sub:'Pick one', multi:false,
+          options: [{val:'Dry Skin',label:'Dry'},{val:'Oily Skin',label:'Oily'}] });
+      }
+      return steps;
+    }
+
+    function psRenderProgress(steps) {
+      var el = document.getElementById('progress');
+      el.innerHTML = '';
+      for (var i=0;i<steps.length;i++) {
+        var seg = document.createElement('div');
+        seg.style.cssText = 'height:3px; flex:1; border-radius:2px; background:' + (i <= psState.step ? '#fade4b' : '#f0ece0') + ';';
+        el.appendChild(seg);
+      }
+    }
+
+    function psToggle(key, val, multi) {
+      if (multi) {
+        var idx = psState[key].indexOf(val);
+        if (idx === -1) psState[key].push(val); else psState[key].splice(idx,1);
+      } else {
+        psState[key] = val;
+      }
+      psRender();
+    }
+
+    function psRender() {
+      var steps = psGetSteps();
+      psRenderProgress(steps);
+      var el = document.getElementById('wizard');
+      if (psState.step < steps.length) {
+        var s = steps[psState.step];
+        var selected = s.multi ? psState[s.key] : [psState[s.key]];
+        var html = '<div style="text-align:center;">'
+          + '<div style="font-size:12px; letter-spacing:0.14em; color:#b0aca2; margin-bottom:1rem;">QUESTION ' + (psState.step+1) + ' OF ' + steps.length + '</div>'
+          + '<div style="font-family:\'Cormorant Garamond\',serif; font-size:28px; font-weight:600; color:#2c2c2a; margin-bottom:10px; line-height:1.25;">' + s.title + '</div>'
+          + '<div style="font-size:14px; color:#9b9b96; margin-bottom:2rem;">' + s.sub + '</div>'
+          + '</div><div>';
+        s.options.forEach(function(o){
+          var isSel = selected.indexOf(o.val) !== -1;
+          html += '<button type="button" class="opt ' + (isSel?'sel':'') + ' ' + (o.disabled?'disabled':'') + '" ' + (o.disabled?'disabled':'onclick="psToggle(\''+s.key+'\',\''+o.val+'\','+s.multi+')"') + '>'
+            + '<span>' + o.label + '</span>'
+            + (o.disabled ? '<span style="font-size:11px; font-style:italic; color:#b0aca2;">Coming soon</span>' : (isSel ? '<i class="ti ti-check" style="font-size:18px; color:#c4a800;" aria-hidden="true"></i>' : ''))
+            + '</button>';
+        });
+        html += '<div id="ps-warning" style="display:none; text-align:center; font-size:12px; color:#a32d2d; margin-bottom:0.75rem;">Please answer this question to continue.</div>';
+        html += '</div><div style="display:flex; justify-content:space-between; align-items:center; margin-top:1.5rem;">';
+        html += psState.step > 0 ? '<button type="button" class="backbtn" onclick="psPrev()">&larr; Back</button>' : '<span></span>';
+        html += '<button type="button" class="navbtn" onclick="psNext()">' + (psState.step === steps.length-1 ? 'See My Matches' : 'Next') + '</button>';
+        html += '</div>';
+        el.innerHTML = html;
+      } else {
+        var matched = psState.product.filter(function(p){ return psLiveProducts[p]; });
+        var soonPicked = psState.product.filter(function(p){ return psComingSoon.indexOf(p) !== -1; });
+        var html2 = '<div style="text-align:center; margin-bottom:1.5rem;"><div style="font-family:\'Cormorant Garamond\',serif; font-size:28px; font-weight:600; color:#2c2c2a;">Your Matches</div></div>';
+        if (matched.length === 0 && soonPicked.length === 0) { matched = Object.keys(psLiveProducts); }
+        matched.forEach(function(p){
+          var d = psLiveProducts[p];
+          var variant = (p === 'Shampoo' || p === 'Conditioner') ? psState.hairType : psState.skinType;
+          var price = (variant && d.prices[variant]) ? d.prices[variant] : d.defaultPrice;
+          var variantLabel = variant ? ' — ' + variant : '';
+          html2 += '<div class="pcard"><div style="font-family:\'Cormorant Garamond\',serif; font-size:22px; font-weight:600; margin-bottom:6px;">' + d.name + variantLabel + '</div><div style="font-size:13px; color:#5f5e5a; margin-bottom:12px;">' + d.desc + '</div><span class="ptag">Fragrance-Free</span><span class="ptag">Sulfate-Free</span><span class="ptag">Dye-Free</span><div style="font-size:18px; font-weight:600; margin:12px 0; color:#2c2c2a;">' + price + '</div><button type="button" class="navbtn">Add to Cart</button></div>';
+        });
+        if (soonPicked.length > 0) {
+          html2 += '<div class="pcard"><div style="font-size:13px; color:#5f5e5a;">' + soonPicked.join(', ') + ' — not live yet, check back soon.</div></div>';
+        }
+        var triggers = psState.trigger.filter(function(t){ return t !== 'NotSure'; });
+        if (triggers.length > 0 || psState.itemtype.length > 0) {
+          html2 += '<div style="background:#f8f5f9; border:1px solid #e2d8e6; border-radius:12px; padding:1.25rem 1.5rem; margin-top:0.5rem; text-align:left;">';
+          html2 += '<div style="font-size:13px; font-weight:600; color:#2c2c2a; margin-bottom:8px;">What you told us</div>';
+          if (triggers.length > 0) { html2 += '<div style="font-size:13px; color:#5f5e5a; margin-bottom:4px;">Sensitive to: ' + triggers.join(', ') + '</div>'; }
+          if (psState.itemtype.length > 0) { html2 += '<div style="font-size:13px; color:#5f5e5a;">Has struggled with: ' + psState.itemtype.join(', ') + '</div>'; }
+          html2 += '</div>';
+        }
+        html2 += '<div style="text-align:center; margin-top:1.5rem; padding-top:1.25rem; border-top:1px solid rgba(190,173,197,0.35);">';
+        html2 += '<button type="button" class="backbtn" onclick="psRestart()" style="margin-bottom:1.25rem; display:block; margin-left:auto; margin-right:auto;">Start Over</button>';
+        html2 += '<div style="font-size:13px; color:#5f5e5a; margin-bottom:8px;">Know your exact allergens?</div>';
+        html2 += '<a href="/instructions-know-allergens.html" style="display:inline-flex; align-items:center; gap:8px; background:#fade4b; color:#2c2c2a; font-family:\'Jost\',sans-serif; font-size:12px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; border:none; border-radius:6px; padding:14px 28px; text-decoration:none;">Switch to Custom Formula</a>';
+        html2 += '</div>';
+        el.innerHTML = html2;
+      }
+    }
+
+    function psIsAnswered(s) {
+      if (s.multi) { return psState[s.key].length > 0; }
+      return !!psState[s.key];
+    }
+
+    function psNext(){
+      var steps = psGetSteps();
+      var s = steps[psState.step];
+      if (!psIsAnswered(s)) {
+        var warn = document.getElementById('ps-warning');
+        if (warn) { warn.style.display = 'block'; }
+        return;
+      }
+      if (psState.step < steps.length) psState.step++;
+      psRender();
+      window.scrollTo({top: document.getElementById('wizard').getBoundingClientRect().top + window.scrollY - 100, behavior:'smooth'});
+    }
+    function psPrev(){ if (psState.step > 0) psState.step--; psRender(); }
+    function psRestart(){ psState = { step:0, product:[], trigger:[], itemtype:[], severity:null, hairType:null, skinType:null }; psRender(); }
+
+    psRender();
+  </script>
 
   <hr class="section-divider" />
 
