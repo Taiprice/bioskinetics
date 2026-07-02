@@ -283,6 +283,9 @@
 
   <!-- RIGHT: Order Summary -->
   <div class="checkout-right">
+    <div id="co-back-to-matches" style="display:none;margin-bottom:0.85rem;">
+      <a href="/premade-products.html?resume=1" style="display:inline-flex;align-items:center;gap:6px;font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#5f5e5a;text-decoration:none;">&larr; Back to Your Matches</a>
+    </div>
     <div class="co-summary">
       <div class="co-summary-header"><p>Order Summary</p></div>
       <div class="co-summary-body">
@@ -318,6 +321,14 @@ document.addEventListener('DOMContentLoaded', function(){
       if (bar) bar.style.display = 'none';
     }
   });
+
+  // Show "Back to Your Matches" if the person came from the sensitive-skin survey
+  try {
+    if (localStorage.getItem('bio_ps_state')) {
+      var backLink = document.getElementById('co-back-to-matches');
+      if (backLink) backLink.style.display = 'block';
+    }
+  } catch(e) {}
 
   // Load cart items from localStorage
   var cart = JSON.parse(localStorage.getItem('bioCart') || '[]');
