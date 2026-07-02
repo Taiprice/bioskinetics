@@ -337,11 +337,20 @@ document.addEventListener('DOMContentLoaded', function(){
       var row = document.createElement('div');
       row.className = 'co-product-row';
       row.setAttribute('data-index', cart.indexOf(item));
+      var rawIngredients = item.ingredients || '';
+      var scentLine = '';
+      var baseIngredients = rawIngredients;
+      var scentMatch = rawIngredients.match(/(^|,\s*)(Scent:\s*[^,]*(?:,\s*(?!Scent:)[^,]*)*)$/);
+      if (scentMatch) {
+        scentLine = scentMatch[2];
+        baseIngredients = rawIngredients.slice(0, scentMatch.index).replace(/,\s*$/, '');
+      }
       row.innerHTML = '<div class="co-product-img">🧴</div>' +
         '<div class="co-product-info">' +
           '<p class="co-product-name">' + (item.productName || '') + '</p>' +
           '<p class="co-product-variant">' + (item.variant || '') + '</p>' +
-          '<p class="co-product-ingredients">' + (item.ingredients || '') + '</p>' +
+          (scentLine ? '<p class="co-product-scent" style="font-size:12px;font-weight:600;color:#beadc5;margin:0.15rem 0;">' + scentLine + '</p>' : '') +
+          '<p class="co-product-ingredients">' + baseIngredients + '</p>' +
         '</div>' +
         '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">' +
           '<p class="co-product-price">$' + parseFloat(item.amount || 0).toFixed(2) + '</p>' +
