@@ -412,6 +412,9 @@
 
   <script>
     var psState = { step: 0, product: [], trigger: [], itemtype: [], hairType: null, skinType: null };
+    function psSaveState() {
+      try { localStorage.setItem('bio_ps_state', JSON.stringify(psState)); } catch(e) {}
+    }
 
     var psLiveProducts = {
       'Shampoo': { name: 'Sensitive Skin Shampoo', desc: 'Gentle daily cleanse, formulated without common irritants.', prices: { 'Thick Hair': '$30.50', 'Thin Hair': '$27.00', 'Curly Hair': '$30.50' }, defaultPrice: '$27.00', freeFrom: ['Fragrance','Sulfate','Nut'],
@@ -517,6 +520,7 @@
       } else {
         psState[key] = val;
       }
+      psSaveState();
       psRender();
     }
 
@@ -603,12 +607,28 @@
         return;
       }
       if (psState.step < steps.length) psState.step++;
+      psSaveState();
       psRender();
       window.scrollTo({top: document.getElementById('wizard').getBoundingClientRect().top + window.scrollY - 100, behavior:'smooth'});
     }
-    function psPrev(){ if (psState.step > 0) psState.step--; psRender(); }
-    function psRestart(){ psState = { step:0, product:[], trigger:[], itemtype:[], hairType:null, skinType:null }; psRender(); }
+    function psPrev(){ if (psState.step > 0) psState.step--; psSaveState(); psRender(); }
+    function psRestart(){ psState = { step:0, product:[], trigger:[], itemtype:[], hairType:null, skinType:null }; psSaveState(); psRender(); }
 
+    (function psTryResume(){
+      var params = new URLSearchParams(window.location.search);
+      if (params.get('resume') !== '1') return;
+      try {
+        var saved = JSON.parse(localStorage.getItem('bio_ps_state') || 'null');
+        if (saved) {
+          psState.product = saved.product || [];
+          psState.trigger = saved.trigger || [];
+          psState.itemtype = saved.itemtype || [];
+          psState.hairType = saved.hairType || null;
+          psState.skinType = saved.skinType || null;
+          psState.step = psGetSteps().length;
+        }
+      } catch(e) {}
+    })();
     psRender();
   </script>
 
