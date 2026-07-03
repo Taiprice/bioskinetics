@@ -376,10 +376,17 @@
           amount: order.amount,
           email: email
         });
-        var timeoutPromise = new Promise(function(resolve){ setTimeout(resolve, 1500); });
-        await Promise.race([insertPromise, timeoutPromise]);
+        var timeoutPromise = new Promise(function(resolve){ setTimeout(function(){ resolve({ timedOut: true }); }, 1500); });
+        var result = await Promise.race([insertPromise, timeoutPromise]);
+        if (result && result.timedOut) {
+          console.warn('[BIO_ORDER_LOG] Insert timed out after 1.5s');
+        } else if (result && result.error) {
+          console.error('[BIO_ORDER_LOG] Supabase insert error:', result.error);
+        } else {
+          console.log('[BIO_ORDER_LOG] Order logged successfully', result);
+        }
       } catch(e) {
-        console.error('Order log failed', e);
+        console.error('[BIO_ORDER_LOG] Order log failed (exception)', e);
       }
     }
     async function psSaveOrderAndRedirect() {
