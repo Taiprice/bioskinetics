@@ -740,6 +740,39 @@ var BIO_DATA={
 // ── State ──
 var bioCurProduct='', bioCurVariant='', bioCurStep=2;
 
+function bioCaptureBuilderState(){
+  try {
+    var extras = [];
+    document.querySelectorAll('#bio-optional-cats div[data-cat]').forEach(function(card){
+      if (card.dataset.chosen === '1') extras.push(card.dataset.cat);
+    });
+    var scents = [];
+    document.querySelectorAll('#bio-scent-grid button').forEach(function(btn){
+      if (btn.dataset.selected === '1') scents.push(btn.textContent);
+    });
+    var pickedSize = '';
+    document.querySelectorAll('#bio-size-grid button').forEach(function(btn){
+      if (btn.style.background === 'rgb(253, 251, 232)') pickedSize = btn.textContent;
+    });
+    var pickedColor = '';
+    document.querySelectorAll('#bio-color-grid button').forEach(function(wrap){
+      var sw = wrap.querySelector('div');
+      if (sw && sw.style.border.indexOf('rgb(255, 255, 255)') !== -1) {
+        var l = wrap.querySelector('span'); if (l) pickedColor = l.textContent;
+      }
+    });
+    var state = {
+      product: bioCurProduct,
+      variant: bioCurVariant,
+      extras: extras,
+      scents: scents,
+      size: pickedSize,
+      color: pickedColor
+    };
+    localStorage.setItem('bio_builder_state', JSON.stringify(state));
+  } catch(e) {}
+}
+
 // ── Helpers ──
 function bioUnsafe(s){
   try{var a=JSON.parse(localStorage.getItem('hl_sitewide_terms')||'[]').map(function(t){return t.toLowerCase().trim();});
@@ -1091,6 +1124,48 @@ function bioSubmitContact(){
   document.getElementById('bio-contact-modal').style.display='none';
 }
 function bioCloseSwap(){document.getElementById('bio-swap-modal').style.display='none';}
+
+(function bioTryResumeBuilder(){
+  var params = new URLSearchParams(window.location.search);
+  if (params.get('resume') !== '1') return;
+  var raw;
+  try { raw = localStorage.getItem('bio_builder_state'); } catch(e) { return; }
+  if (!raw) return;
+  var state;
+  try { state = JSON.parse(raw); } catch(e) { return; }
+  if (!state || !state.product || !state.variant) return;
+  try { localStorage.removeItem('bio_builder_state'); } catch(e) {}
+
+  bioLaunch(state.product, state.variant);
+
+  // Reapply optional extras
+  document.querySelectorAll('#bio-optional-cats div[data-cat]').forEach(function(card){
+    if (state.extras.indexOf(card.dataset.cat) !== -1 && card.onclick) card.onclick();
+  });
+
+  // If fragrance was among the chosen extras, rebuild scents and reapply picks
+  var hasFrag = state.extras.some(function(c){ return c.toLowerCase().includes('fragrance'); });
+  if (hasFrag) {
+    bioBuildScents();
+    document.querySelectorAll('#bio-scent-grid button').forEach(function(btn){
+      if (state.scents.indexOf(btn.textContent) !== -1) btn.onclick();
+    });
+  }
+
+  bioBuildContainer();
+  bioUpdatePrice();
+
+  // Reapply size and color
+  document.querySelectorAll('#bio-size-grid button').forEach(function(btn){
+    if (btn.textContent === state.size) btn.onclick();
+  });
+  document.querySelectorAll('#bio-color-grid button').forEach(function(wrap){
+    var lbl = wrap.querySelector('span');
+    if (lbl && lbl.textContent === state.color && wrap.onclick) wrap.onclick();
+  });
+
+  bioGoToNamed('cont');
+})();
 </script>
 
 <!-- BLOCK: Skincare (5f) -->
@@ -2216,7 +2291,7 @@ document.addEventListener('DOMContentLoaded',function(){var modal=$b('sv-modal-b
       </div>
       <div style="display:flex;flex-direction:column;gap:12px;">
         <button id="bio-guest-btn" onclick="bioGuestCheckout()" style="width:100%;background:#fade4b;color:#2c2c2a;font-family:'Jost',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;border:none;border-radius:6px;padding:16px 24px;cursor:pointer;">Continue as Guest</button>
-        <a href="/my-account.html" onclick="try{localStorage.setItem('bio_return_url','/customize-now.html');}catch(e){}" style="width:100%;display:block;text-align:center;background:none;color:#2c2c2a;font-family:'Jost',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;border:1.5px solid #e0dbe5;border-radius:6px;padding:15px 24px;text-decoration:none;">Sign In / Create Account</a>
+        <a href="/my-account.html" onclick="bioCaptureBuilderState();try{localStorage.setItem('bio_return_url','/customize-now.html?resume=1');}catch(e){}" style="width:100%;display:block;text-align:center;background:none;color:#2c2c2a;font-family:'Jost',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;border:1.5px solid #e0dbe5;border-radius:6px;padding:15px 24px;text-decoration:none;">Sign In / Create Account</a>
         <button onclick="bioCloseCheckout()" style="background:none;border:none;font-size:13px;color:#bbb;cursor:pointer;padding:8px;font-family:'Jost',sans-serif;">Cancel</button>
       </div>
     </div>
