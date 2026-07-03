@@ -83,6 +83,14 @@
     .bio-page-header p { font-family: 'Lato', sans-serif; font-size: 24px; font-weight: 300; color: #b0b0b0; margin-bottom: 0; letter-spacing: 0.03em; }
     .header-rule { width: 60px; height: 1.5px; background: linear-gradient(to right, transparent, #beadc5 30%, #beadc5 70%, transparent); margin: 1rem auto 0; border: none; }
     .section-divider { width: 100%; height: 1px; background: linear-gradient(to right, transparent, #e8e3ee 20%, #e8e3ee 80%, transparent); border: none; margin: 0; }
+    /* Welcome block */
+    .welcome-wrap { max-width: 820px; margin: 0 auto; padding: 0.5rem 2rem 3rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 1.4rem; }
+    .welcome-rule-top, .welcome-rule-bottom { width: 100%; height: 0.5px; background: rgba(0,0,0,0.08); border: none; }
+    .welcome-title { font-family: 'Cormorant Garamond', serif; font-size: 52px; font-weight: 600; color: #2c2c2a; line-height: 1.2; margin-bottom: 0.1rem; }
+    .welcome-body { font-size: 21px; font-weight: 300; line-height: 1.85; color: #5f5e5a; max-width: 720px; }
+    .welcome-link { display: inline-flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #fade4b; text-decoration: underline; text-underline-offset: 3px; margin-top: -0.8rem; transition: opacity 0.15s; cursor: pointer; }
+    .welcome-link:hover { opacity: 0.7; }
+    .welcome-link::after { content: '▶'; font-size: 9px; text-decoration: none; }
     /* Steps */
     .steps-wrap { max-width: 1100px; margin: 0 auto; padding: 3rem 3rem 4rem; display: flex; flex-direction: column; gap: 0; }
     .step { display: grid; grid-template-columns: 80px 1fr; gap: 2rem; padding: 2.5rem 0; border-bottom: 0.5px solid rgba(0,0,0,0.07); align-items: start; }
@@ -170,6 +178,17 @@
   </nav>
 
   <div style="text-align:left; padding:0.75rem 1rem 0 2rem;"><a href="/product-line.html" style="display:inline-flex; align-items:center; gap:6px; font-family:'Jost',sans-serif; font-size:12px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:#beadc5; text-decoration:none;">&larr; Back to Product Line</a></div>
+
+<!-- BLOCK: Welcome (5c) -->
+<div class="welcome-wrap">
+    <h2 class="welcome-title">Welcome</h2>
+
+    <p class="welcome-body">There's much to see here. So, take your time, look around, and learn all there is to know about us. It can be overwhelming on how to start, so with any questions, try the 'How It Works' page or shoot us a message!</p>
+
+    <a href="how-it-works.html" class="welcome-link">Find Out More</a>
+  </div>
+
+<hr class="section-divider" />
 
   <div class="bio-page-header" style="padding-top:0.5rem;">
     <h1>Premade Products</h1>
@@ -361,6 +380,7 @@
       psCloseCheckout();
       psSaveOrderAndRedirect();
     }
+    var PS_SHEET_LOG_URL = 'https://script.google.com/macros/s/AKfycbzFSmxgUTUBbTx-pNW1XU8X9TgV8jG5s6v1jrEWufjO6vZP9WH_PWcVp5MBbNWDOply/exec';
     async function psLogOrder(order) {
       try {
         var SUPABASE_URL = 'https://huojeekaztmuarwtnyib.supabase.co';
@@ -368,25 +388,24 @@
         var sbLog = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         var userRes = await sbLog.auth.getUser();
         var email = (userRes.data && userRes.data.user) ? userRes.data.user.email : null;
-        var insertPromise = sbLog.from('orders').insert({
-          source: 'premade',
-          product_name: order.productName,
-          variant: order.variant,
-          ingredients: order.ingredients,
-          amount: order.amount,
-          email: email
+        await fetch(PS_SHEET_LOG_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: JSON.stringify({
+            email: email,
+            source: 'premade',
+            productName: order.productName,
+            variant: order.variant,
+            ingredients: order.baseIngredients,
+            scent: order.scent,
+            size: order.size,
+            color: order.color,
+            amount: order.amount
+          })
         });
-        var timeoutPromise = new Promise(function(resolve){ setTimeout(function(){ resolve({ timedOut: true }); }, 1500); });
-        var result = await Promise.race([insertPromise, timeoutPromise]);
-        if (result && result.timedOut) {
-          console.warn('[BIO_ORDER_LOG] Insert timed out after 1.5s');
-        } else if (result && result.error) {
-          console.error('[BIO_ORDER_LOG] Supabase insert error:', result.error);
-        } else {
-          console.log('[BIO_ORDER_LOG] Order logged successfully', result);
-        }
+        console.log('[BIO_ORDER_LOG] Order sent to Sheet');
       } catch(e) {
-        console.error('[BIO_ORDER_LOG] Order log failed (exception)', e);
+        console.error('[BIO_ORDER_LOG] Order log failed', e);
       }
     }
     async function psSaveOrderAndRedirect() {
@@ -395,16 +414,22 @@
       var variant = (product === 'Shampoo' || product === 'Conditioner') ? psState.hairType : psState.skinType;
       var price = (variant && d.prices[variant]) ? d.prices[variant] : d.defaultPrice;
       var amount = parseFloat(String(price).replace('$', ''));
-      var ingredients = psBuildIngredientList(product, variant);
-      if (psSelectedScents.length) ingredients = ingredients.concat(['Scent: ' + psSelectedScents.join(', ')]);
+      var baseIngredients = psBuildIngredientList(product, variant);
+      var scentStr = psSelectedScents.length ? psSelectedScents.join(', ') : '';
+      var fullIngredients = baseIngredients.slice();
+      if (scentStr) fullIngredients.push('Scent: ' + scentStr);
       var orderItem = {
         amount: amount,
         productName: d.name,
         variant: variant,
-        ingredients: ingredients.join(', ')
+        ingredients: fullIngredients.join(', '),
+        baseIngredients: baseIngredients.join(', '),
+        scent: scentStr,
+        size: '16oz',
+        color: 'Purple'
       };
       var existing = JSON.parse(localStorage.getItem('bioCart') || '[]');
-      existing.push(orderItem);
+      existing.push({ amount: orderItem.amount, productName: orderItem.productName, variant: orderItem.variant, ingredients: orderItem.ingredients });
       localStorage.setItem('bioCart', JSON.stringify(existing));
       await psLogOrder(orderItem);
       window.location.href = '/checkout.html';
