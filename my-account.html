@@ -475,7 +475,12 @@
 
   async function handleSignOut() {
     await sb.auth.signOut();
-    try { localStorage.removeItem('bio_ps_state'); } catch(e) {}
+    try {
+      localStorage.removeItem('bio_ps_state');
+      localStorage.removeItem('ac_allergen_profiles');
+      localStorage.removeItem('hl_sitewide_terms');
+      localStorage.removeItem('bio_allergen_display');
+    } catch(e) {}
     document.getElementById('dashboard-section').style.display = 'none';
     document.getElementById('auth-section').style.display = 'block';
   }
