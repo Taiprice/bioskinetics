@@ -1127,44 +1127,60 @@ function bioCloseSwap(){document.getElementById('bio-swap-modal').style.display=
 
 (function bioTryResumeBuilder(){
   var params = new URLSearchParams(window.location.search);
-  if (params.get('resume') !== '1') return;
+  if (params.get('resume') !== '1') { console.log('[BIO_RESUME] no resume=1 param, skipping'); return; }
   var raw;
-  try { raw = localStorage.getItem('bio_builder_state'); } catch(e) { return; }
-  if (!raw) return;
+  try { raw = localStorage.getItem('bio_builder_state'); } catch(e) { console.log('[BIO_RESUME] localStorage read failed', e); return; }
+  if (!raw) { console.log('[BIO_RESUME] no saved state found'); return; }
   var state;
-  try { state = JSON.parse(raw); } catch(e) { return; }
-  if (!state || !state.product || !state.variant) return;
+  try { state = JSON.parse(raw); } catch(e) { console.log('[BIO_RESUME] JSON parse failed', e); return; }
+  if (!state || !state.product || !state.variant) { console.log('[BIO_RESUME] state missing product/variant', state); return; }
   try { localStorage.removeItem('bio_builder_state'); } catch(e) {}
+  console.log('[BIO_RESUME] restoring state', state);
 
-  bioLaunch(state.product, state.variant);
+  try {
+    bioLaunch(state.product, state.variant);
+    console.log('[BIO_RESUME] bioLaunch OK');
+  } catch(e) { console.log('[BIO_RESUME] bioLaunch FAILED', e); }
 
-  // Reapply optional extras
-  document.querySelectorAll('#bio-optional-cats div[data-cat]').forEach(function(card){
-    if (state.extras.indexOf(card.dataset.cat) !== -1 && card.onclick) card.onclick();
-  });
-
-  // If fragrance was among the chosen extras, rebuild scents and reapply picks
-  var hasFrag = state.extras.some(function(c){ return c.toLowerCase().includes('fragrance'); });
-  if (hasFrag) {
-    bioBuildScents();
-    document.querySelectorAll('#bio-scent-grid button').forEach(function(btn){
-      if (state.scents.indexOf(btn.textContent) !== -1) btn.onclick();
+  try {
+    document.querySelectorAll('#bio-optional-cats div[data-cat]').forEach(function(card){
+      if (state.extras.indexOf(card.dataset.cat) !== -1 && card.onclick) card.onclick();
     });
-  }
+    console.log('[BIO_RESUME] extras reapplied OK');
+  } catch(e) { console.log('[BIO_RESUME] extras FAILED', e); }
 
-  bioBuildContainer();
-  bioUpdatePrice();
+  try {
+    var hasFrag = state.extras.some(function(c){ return c.toLowerCase().includes('fragrance'); });
+    if (hasFrag) {
+      bioBuildScents();
+      document.querySelectorAll('#bio-scent-grid button').forEach(function(btn){
+        if (state.scents.indexOf(btn.textContent) !== -1) btn.onclick();
+      });
+    }
+    console.log('[BIO_RESUME] scents reapplied OK, hasFrag=', hasFrag);
+  } catch(e) { console.log('[BIO_RESUME] scents FAILED', e); }
 
-  // Reapply size and color
-  document.querySelectorAll('#bio-size-grid button').forEach(function(btn){
-    if (btn.textContent === state.size) btn.onclick();
-  });
-  document.querySelectorAll('#bio-color-grid button').forEach(function(wrap){
-    var lbl = wrap.querySelector('span');
-    if (lbl && lbl.textContent === state.color && wrap.onclick) wrap.onclick();
-  });
+  try {
+    bioBuildContainer();
+    bioUpdatePrice();
+    console.log('[BIO_RESUME] container built OK');
+  } catch(e) { console.log('[BIO_RESUME] container build FAILED', e); }
 
-  bioGoToNamed('cont');
+  try {
+    document.querySelectorAll('#bio-size-grid button').forEach(function(btn){
+      if (btn.textContent === state.size) btn.onclick();
+    });
+    document.querySelectorAll('#bio-color-grid button').forEach(function(wrap){
+      var lbl = wrap.querySelector('span');
+      if (lbl && lbl.textContent === state.color && wrap.onclick) wrap.onclick();
+    });
+    console.log('[BIO_RESUME] size/color reapplied OK');
+  } catch(e) { console.log('[BIO_RESUME] size/color FAILED', e); }
+
+  try {
+    bioGoToNamed('cont');
+    console.log('[BIO_RESUME] jumped to cont step OK');
+  } catch(e) { console.log('[BIO_RESUME] final navigation FAILED', e); }
 })();
 </script>
 
