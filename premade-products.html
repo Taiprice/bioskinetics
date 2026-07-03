@@ -380,34 +380,6 @@
       psCloseCheckout();
       psSaveOrderAndRedirect();
     }
-    var PS_SHEET_LOG_URL = 'https://script.google.com/macros/s/AKfycbzFSmxgUTUBbTx-pNW1XU8X9TgV8jG5s6v1jrEWufjO6vZP9WH_PWcVp5MBbNWDOply/exec';
-    async function psLogOrder(order) {
-      try {
-        var SUPABASE_URL = 'https://huojeekaztmuarwtnyib.supabase.co';
-        var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1b2plZWthenRtdWFyd3RueWliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzODA3OTQsImV4cCI6MjA5NDk1Njc5NH0.XKQnhHYQ0E8pjfgrUFOiIqNo7gakJvpYb0HKMtiP4eQ';
-        var sbLog = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        var userRes = await sbLog.auth.getUser();
-        var email = (userRes.data && userRes.data.user) ? userRes.data.user.email : null;
-        await fetch(PS_SHEET_LOG_URL, {
-          method: 'POST',
-          mode: 'no-cors',
-          body: JSON.stringify({
-            email: email,
-            source: 'premade',
-            productName: order.productName,
-            variant: order.variant,
-            ingredients: order.baseIngredients,
-            scent: order.scent,
-            size: order.size,
-            color: order.color,
-            amount: order.amount
-          })
-        });
-        console.log('[BIO_ORDER_LOG] Order sent to Sheet');
-      } catch(e) {
-        console.error('[BIO_ORDER_LOG] Order log failed', e);
-      }
-    }
     async function psSaveOrderAndRedirect() {
       var product = psModalCurrentProduct;
       var d = psLiveProducts[product];
@@ -418,20 +390,19 @@
       var scentStr = psSelectedScents.length ? psSelectedScents.join(', ') : '';
       var fullIngredients = baseIngredients.slice();
       if (scentStr) fullIngredients.push('Scent: ' + scentStr);
-      var orderItem = {
+      var existing = JSON.parse(localStorage.getItem('bioCart') || '[]');
+      existing.push({
         amount: amount,
         productName: d.name,
         variant: variant,
         ingredients: fullIngredients.join(', '),
         baseIngredients: baseIngredients.join(', '),
-        scent: scentStr,
+        scent: scentStr || 'Unscented',
         size: '16oz',
-        color: 'Purple'
-      };
-      var existing = JSON.parse(localStorage.getItem('bioCart') || '[]');
-      existing.push({ amount: orderItem.amount, productName: orderItem.productName, variant: orderItem.variant, ingredients: orderItem.ingredients });
+        color: 'Purple',
+        source: 'premade'
+      });
       localStorage.setItem('bioCart', JSON.stringify(existing));
-      await psLogOrder(orderItem);
       window.location.href = '/checkout.html';
     }
     function psCloseContainerModal() {
