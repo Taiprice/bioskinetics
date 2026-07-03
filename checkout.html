@@ -470,6 +470,7 @@ async function coLaunchStripe() {
       alert('Payment error: ' + (data.error || 'Please try again.'));
     }
   } catch(e) {
+    console.error('coLaunchStripe error:', e);
     alert('Something went wrong. Please try again.');
   }
 }
