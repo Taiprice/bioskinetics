@@ -2264,7 +2264,7 @@ async function bioSaveOrderAndRedirect(){
   var baseIngredients=[];
   document.querySelectorAll('#bio-required-list > div').forEach(function(row){
     var span=row.querySelector('span:first-child');
-    if(span) baseIngredients.push(span.textContent.replace(/^•\s*/,'').replace(/\s*✓$/,'').trim());
+    if(span) baseIngredients.push(span.textContent.replace(/^•\s*/,'').replace(/\s*✓$/,'').replace(/\s*\(was [^)]+\)\s*$/,'').trim());
   });
   document.querySelectorAll('#bio-optional-cats div[data-cat]').forEach(function(card){
     if(card.dataset.chosen==='1') baseIngredients.push(card.dataset.safeName);
