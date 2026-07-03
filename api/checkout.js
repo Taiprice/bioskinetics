@@ -19,28 +19,32 @@ module.exports = async function handler(req, res) {
   const shippingAmount = shippingUnits * 1500; // in cents
 
   // Log each cart item to the order sheet, with its share of shipping folded into Price
-  // so Price reflects the true total paid. Logging failures never block checkout.
+  // so Price reflects the true total paid. Capped at 4s total so a slow/unresponsive
+  // Apps Script call can never block or time out the actual checkout.
   if (Array.isArray(cart) && cart.length) {
     const shippingSharePerItem = (shippingAmount / 100) / cart.length;
-    try {
-      await Promise.all(cart.map(function(item) {
-        return fetch(SHEET_LOG_URL, {
-          method: 'POST',
-          body: JSON.stringify({
-            email: email || '',
-            productName: item.productName || '',
-            variant: item.variant || '',
-            ingredients: item.baseIngredients || item.ingredients || '',
-            scent: item.scent || 'Unscented',
-            size: item.size || '',
-            color: item.color || '',
-            amount: (parseFloat(item.amount || 0) + shippingSharePerItem).toFixed(2)
-          })
-        });
-      }));
-    } catch (logErr) {
+    const logPromise = Promise.all(cart.map(function(item) {
+      return fetch(SHEET_LOG_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+          email: email || '',
+          productName: item.productName || '',
+          variant: item.variant || '',
+          ingredients: item.baseIngredients || item.ingredients || '',
+          scent: item.scent || 'Unscented',
+          size: item.size || '',
+          color: item.color || '',
+          amount: (parseFloat(item.amount || 0) + shippingSharePerItem).toFixed(2)
+        })
+      }).then(function(r) {
+        console.log('Sheet log response status:', r.status);
+        return r;
+      });
+    })).catch(function(logErr) {
       console.error('Sheet logging failed', logErr);
-    }
+    });
+    const timeoutPromise = new Promise(function(resolve) { setTimeout(resolve, 4000); });
+    await Promise.race([logPromise, timeoutPromise]);
   }
 
   try {
