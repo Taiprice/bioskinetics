@@ -360,12 +360,13 @@ document.addEventListener('DOMContentLoaded', function(){
         '<div class="co-product-info">' +
           '<p class="co-product-name">' + (item.productName || '') + '</p>' +
           '<p class="co-product-variant">' + (item.variant || '') + '</p>' +
+          ((item.size || item.color) ? '<p class="co-product-options" style="font-size:12px;color:#5f5e5a;margin:0.15rem 0;">' + [item.size, item.color].filter(Boolean).join(' · ') + '</p>' : '') +
           (scentLine ? '<p class="co-product-scent" style="font-size:12px;font-weight:600;color:#beadc5;margin:0.15rem 0;">' + scentLine + '</p>' : '') +
           '<p class="co-product-ingredients">' + baseIngredients + '</p>' +
         '</div>' +
         '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">' +
           '<p class="co-product-price">$' + parseFloat(item.amount || 0).toFixed(2) + '</p>' +
-          '<button onclick="removeCartItem(' + cart.indexOf(item) + ')" style="background:none;border:none;color:#c0392b;font-size:12px;cursor:pointer;font-family:Jost,sans-serif;letter-spacing:0.08em;text-transform:uppercase;">Remove</button>' +
+          '<button class="co-remove-btn" onclick="removeCartItem(' + cart.indexOf(item) + ')" style="background:none;border:none;color:#c0392b;font-size:12px;cursor:pointer;font-family:Jost,sans-serif;letter-spacing:0.08em;text-transform:uppercase;">Remove</button>' +
         '</div>';
       summaryBody.insertBefore(row, summaryBody.querySelector('.co-line'));
     });
@@ -405,6 +406,9 @@ function coProceedToPayment() {
   document.getElementById('co-step-1').style.display = 'none';
   document.getElementById('co-step-2').style.display = 'block';
 
+  // Lock the cart in place now that shipping info is submitted
+  document.querySelectorAll('.co-remove-btn').forEach(function(btn) { btn.style.display = 'none'; });
+
   // Launch Stripe embedded checkout
   coLaunchStripe();
 }
@@ -415,6 +419,7 @@ function coBackToShipping() {
   document.getElementById('co-step-1').style.display = 'block';
   document.getElementById('co-step-2').style.display = 'none';
   document.getElementById('co-stripe-container').innerHTML = '';
+  document.querySelectorAll('.co-remove-btn').forEach(function(btn) { btn.style.display = ''; });
 }
 
 function removeCartItem(index) {
