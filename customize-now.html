@@ -2262,36 +2262,6 @@ function bioShowCheckoutModal(){
   });
 }
 
-var BIO_SHEET_LOG_URL = 'https://script.google.com/macros/s/AKfycbzFSmxgUTUBbTx-pNW1XU8X9TgV8jG5s6v1jrEWufjO6vZP9WH_PWcVp5MBbNWDOply/exec';
-async function bioLogOrder(order){
-  try {
-    var SUPABASE_URL = 'https://huojeekaztmuarwtnyib.supabase.co';
-    var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1b2plZWthenRtdWFyd3RueWliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzODA3OTQsImV4cCI6MjA5NDk1Njc5NH0.XKQnhHYQ0E8pjfgrUFOiIqNo7gakJvpYb0HKMtiP4eQ';
-    var sbLog = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    var userRes = await sbLog.auth.getUser();
-    var email = (userRes.data && userRes.data.user) ? userRes.data.user.email : null;
-    await fetch(BIO_SHEET_LOG_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      body: JSON.stringify({
-        email: email,
-        source: 'custom',
-        productName: order.productName,
-        variant: order.variant,
-        ingredients: order.baseIngredients,
-        scent: order.scent,
-        allergens: order.allergens,
-        size: order.size,
-        color: order.color,
-        amount: order.amount
-      })
-    });
-    console.log('[BIO_ORDER_LOG] Order sent to Sheet');
-  } catch(e) {
-    console.error('[BIO_ORDER_LOG] Order log failed', e);
-  }
-}
-
 async function bioSaveOrderAndRedirect(){
   var price=bioCalcPrice();
   var baseIngredients=[];
@@ -2309,8 +2279,6 @@ async function bioSaveOrderAndRedirect(){
   var scentStr = scents.length ? scents.join(', ') : '';
   var fullIngredients = baseIngredients.slice();
   if(scentStr) fullIngredients.push('Scent: '+scentStr);
-  var allergensStr = '';
-  try{var d=localStorage.getItem('bio_allergen_display');if(d)allergensStr=JSON.parse(d).join(', ');}catch(e){}
   var bottleSize='';
   document.querySelectorAll('#bio-size-grid button').forEach(function(btn){if(btn.style.background==='rgb(253, 251, 232)')bottleSize=btn.textContent;});
   var bottleColor='';
@@ -2318,21 +2286,19 @@ async function bioSaveOrderAndRedirect(){
     var sw=wrap.querySelector('div');
     if(sw&&sw.style.border.indexOf('rgb(255, 255, 255)')!==-1){var l=wrap.querySelector('span');if(l)bottleColor=l.textContent;}
   });
-  var orderItem = {
+  var existing = JSON.parse(localStorage.getItem('bioCart') || '[]');
+  existing.push({
     amount: price,
     productName: bioCurProduct,
     variant: bioCurVariant,
     ingredients: fullIngredients.join(', '),
     baseIngredients: baseIngredients.join(', '),
-    scent: scentStr,
-    allergens: allergensStr,
+    scent: scentStr || 'Unscented',
     size: bottleSize,
-    color: bottleColor
-  };
-  var existing = JSON.parse(localStorage.getItem('bioCart') || '[]');
-  existing.push({ amount: orderItem.amount, productName: orderItem.productName, variant: orderItem.variant, ingredients: orderItem.ingredients });
+    color: bottleColor,
+    source: 'custom'
+  });
   localStorage.setItem('bioCart', JSON.stringify(existing));
-  await bioLogOrder(orderItem);
   window.location.href = '/checkout.html';
 }
 
