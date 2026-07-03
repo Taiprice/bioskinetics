@@ -2262,6 +2262,7 @@ function bioShowCheckoutModal(){
   });
 }
 
+var BIO_SHEET_LOG_URL = 'https://script.google.com/macros/s/AKfycbzFSmxgUTUBbTx-pNW1XU8X9TgV8jG5s6v1jrEWufjO6vZP9WH_PWcVp5MBbNWDOply/exec';
 async function bioLogOrder(order){
   try {
     var SUPABASE_URL = 'https://huojeekaztmuarwtnyib.supabase.co';
@@ -2269,51 +2270,67 @@ async function bioLogOrder(order){
     var sbLog = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     var userRes = await sbLog.auth.getUser();
     var email = (userRes.data && userRes.data.user) ? userRes.data.user.email : null;
-    var insertPromise = sbLog.from('orders').insert({
-      source: 'custom',
-      product_name: order.productName,
-      variant: order.variant,
-      ingredients: order.ingredients,
-      amount: order.amount,
-      email: email
+    await fetch(BIO_SHEET_LOG_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      body: JSON.stringify({
+        email: email,
+        source: 'custom',
+        productName: order.productName,
+        variant: order.variant,
+        ingredients: order.baseIngredients,
+        scent: order.scent,
+        allergens: order.allergens,
+        size: order.size,
+        color: order.color,
+        amount: order.amount
+      })
     });
-    var timeoutPromise = new Promise(function(resolve){ setTimeout(function(){ resolve({ timedOut: true }); }, 1500); });
-    var result = await Promise.race([insertPromise, timeoutPromise]);
-    if (result && result.timedOut) {
-      console.warn('[BIO_ORDER_LOG] Insert timed out after 1.5s');
-    } else if (result && result.error) {
-      console.error('[BIO_ORDER_LOG] Supabase insert error:', result.error);
-    } else {
-      console.log('[BIO_ORDER_LOG] Order logged successfully', result);
-    }
+    console.log('[BIO_ORDER_LOG] Order sent to Sheet');
   } catch(e) {
-    console.error('[BIO_ORDER_LOG] Order log failed (exception)', e);
+    console.error('[BIO_ORDER_LOG] Order log failed', e);
   }
 }
 
 async function bioSaveOrderAndRedirect(){
   var price=bioCalcPrice();
-  var ingredients=[];
+  var baseIngredients=[];
   document.querySelectorAll('#bio-required-list > div').forEach(function(row){
     var span=row.querySelector('span:first-child');
-    if(span) ingredients.push(span.textContent.replace(/^•\s*/,'').replace(/\s*✓$/,'').trim());
+    if(span) baseIngredients.push(span.textContent.replace(/^•\s*/,'').replace(/\s*✓$/,'').trim());
   });
   document.querySelectorAll('#bio-optional-cats div[data-cat]').forEach(function(card){
-    if(card.dataset.chosen==='1') ingredients.push(card.dataset.safeName);
+    if(card.dataset.chosen==='1') baseIngredients.push(card.dataset.safeName);
   });
   var scents=[];
   document.querySelectorAll('#bio-scent-grid button').forEach(function(b){
     if(b.dataset.selected==='1') scents.push(b.textContent);
   });
-  if(scents.length) ingredients.push('Scent: '+scents.join(', '));
+  var scentStr = scents.length ? scents.join(', ') : '';
+  var fullIngredients = baseIngredients.slice();
+  if(scentStr) fullIngredients.push('Scent: '+scentStr);
+  var allergensStr = '';
+  try{var d=localStorage.getItem('bio_allergen_display');if(d)allergensStr=JSON.parse(d).join(', ');}catch(e){}
+  var bottleSize='';
+  document.querySelectorAll('#bio-size-grid button').forEach(function(btn){if(btn.style.background==='rgb(253, 251, 232)')bottleSize=btn.textContent;});
+  var bottleColor='';
+  document.querySelectorAll('#bio-color-grid button').forEach(function(wrap){
+    var sw=wrap.querySelector('div');
+    if(sw&&sw.style.border.indexOf('rgb(255, 255, 255)')!==-1){var l=wrap.querySelector('span');if(l)bottleColor=l.textContent;}
+  });
   var orderItem = {
     amount: price,
     productName: bioCurProduct,
     variant: bioCurVariant,
-    ingredients: ingredients.join(', ')
+    ingredients: fullIngredients.join(', '),
+    baseIngredients: baseIngredients.join(', '),
+    scent: scentStr,
+    allergens: allergensStr,
+    size: bottleSize,
+    color: bottleColor
   };
   var existing = JSON.parse(localStorage.getItem('bioCart') || '[]');
-  existing.push(orderItem);
+  existing.push({ amount: orderItem.amount, productName: orderItem.productName, variant: orderItem.variant, ingredients: orderItem.ingredients });
   localStorage.setItem('bioCart', JSON.stringify(existing));
   await bioLogOrder(orderItem);
   window.location.href = '/checkout.html';
