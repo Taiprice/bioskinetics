@@ -507,6 +507,7 @@ body{padding-bottom:8px;}
 <p style="font-size:12px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:#beadc5;margin-bottom:8px;">Size</p>
         <div id="bio-size-grid" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:1rem;"></div>
         <div id="bio-color-grid" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1rem;"></div>
+        <p id="bio-selection-warning" style="display:none;font-size:13px;color:#c0392b;background:#fdecea;border:1px solid #f5c2c0;border-radius:6px;padding:10px 14px;margin-bottom:1rem;">Please select a bottle size and color before adding to cart.</p>
         <div style="display:flex;justify-content:space-between;padding-top:1rem;border-top:0.5px solid #f0edf2;">
           <button onclick="bioContainerBack()" style="font-size:14px;color:#bbb;background:none;border:none;cursor:pointer;">Back</button>
           <button onclick="bioShowCheckoutModal()" style="font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#2c2c2a;background:#fade4b;border:none;border-radius:6px;padding:9px 20px;cursor:pointer;">Add to Cart</button>
@@ -924,13 +925,15 @@ function bioBuildContainer(){
     btn.onclick=function(){sg.querySelectorAll('button').forEach(function(b){b.style.borderColor='#e8e3ee';b.style.background='#faf9f7';});btn.style.borderColor='#fade4b';btn.style.background='#fdfbe8';};
     sg.appendChild(btn);if(!firstBtn)firstBtn=btn;
   });
+  if(firstBtn){firstBtn.style.borderColor='#fade4b';firstBtn.style.background='#fdfbe8';}
   var smore=document.createElement('p');smore.className='bio-cs-note';smore.style.cssText='font-size:12px;color:#aaa;font-style:italic;margin-top:8px;';smore.textContent='More sizes coming soon';sg.parentNode.insertBefore(smore,sg.nextSibling);
   var colorLbl=document.createElement('p');colorLbl.className='bio-color-lbl';colorLbl.style.cssText='font-size:12px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:#beadc5;margin-bottom:8px;margin-top:12px;';colorLbl.textContent='Color';sg.parentNode.insertBefore(colorLbl,smore.nextSibling);
   var cg=document.getElementById('bio-color-grid');cg.innerHTML='';cg.style.cssText='display:flex;flex-wrap:wrap;gap:10px;';
   BIO_COLORS.forEach(function(c){
     var wrap=document.createElement('button');wrap.type='button';wrap.style.cssText='display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;outline:none;background:none;border:none;padding:0;';
     var sw=document.createElement('div');
-    sw.style.cssText='width:28px;height:28px;border-radius:50%;background:'+c.hex+';transition:all 0.15s;border:3px solid transparent;box-shadow:0 0 0 1.5px #e8e3ee;';
+    var isDefault=(c.name==='Purple');
+    sw.style.cssText='width:28px;height:28px;border-radius:50%;background:'+c.hex+';transition:all 0.15s;'+(isDefault?'border:3px solid #fff;box-shadow:0 0 0 3px #beadc5;':'border:3px solid transparent;box-shadow:0 0 0 1.5px #e8e3ee;');
     sw.title=c.name;
     var lbl=document.createElement('span');lbl.style.cssText='font-size:10px;color:#aaa;text-align:center;display:block;';lbl.textContent=c.name;
     wrap.onmousedown=function(e){e.preventDefault();};
@@ -2244,9 +2247,10 @@ function bioShowCheckoutModal(){
     if(sw&&sw.style.border.indexOf('rgb(255, 255, 255)')!==-1){var l=wrap.querySelector('span');if(l)pickedColor=l.textContent;}
   });
   if(!pickedSize || !pickedColor){
-    alert('Please select a bottle size and color before adding to cart.');
+    document.getElementById('bio-selection-warning').style.display='block';
     return;
   }
+  document.getElementById('bio-selection-warning').style.display='none';
   // Check if user is already signed in via Supabase
   const SUPABASE_URL = 'https://huojeekaztmuarwtnyib.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1b2plZWthenRtdWFyd3RueWliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzODA3OTQsImV4cCI6MjA5NDk1Njc5NH0.XKQnhHYQ0E8pjfgrUFOiIqNo7gakJvpYb0HKMtiP4eQ';
