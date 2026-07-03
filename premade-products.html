@@ -225,7 +225,7 @@
 
         <p style="font-size:12px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:#beadc5;margin-bottom:8px;">Size</p>
         <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:0.5rem;">
-          <button type="button" style="font-family:Georgia,serif;font-size:13px;color:#2c2c2a;background:#fdfbe8;border:1.5px solid #fade4b;border-radius:8px;padding:8px 20px;cursor:pointer;">16oz</button>
+          <button type="button" id="ps-size-16oz" onclick="psSelectedSize='16oz';document.getElementById('ps-size-16oz').style.borderColor='#fade4b';document.getElementById('ps-size-16oz').style.background='#fdfbe8';" style="font-family:Georgia,serif;font-size:13px;color:#2c2c2a;background:#faf9f7;border:1.5px solid #e8e3ee;border-radius:8px;padding:8px 20px;cursor:pointer;">16oz</button>
         </div>
         <p style="font-size:12px;color:#aaa;font-style:italic;margin-bottom:1rem;">More sizes coming soon</p>
 
@@ -300,6 +300,7 @@
     var PS_SCENTS = ['Sandalwood','White Tea','Grapefruit','Jasmine','Mugwort','Chamomile','Lavender','Rosemary','Vetiver','Ylang Ylang','Lemon','Clary Sage','Frankincense','Sweet Orange','Tea Tree','Ginger','Rose','Bergamot','Eucalyptus','Patchouli','Cinnamon','Lemongrass','Clove','Peppermint'];
     var PS_COLORS = [{name:'Red',hex:'#c0392b'},{name:'Orange',hex:'#e07b39'},{name:'Yellow',hex:'#f1c40f'},{name:'Green',hex:'#6fae7d'},{name:'Blue',hex:'#5b9bd5'},{name:'Purple',hex:'#beadc5'},{name:'Pink',hex:'#e6a4c4'},{name:'Brown',hex:'#8b6b4f'},{name:'Black',hex:'#2c2c2a'}];
     var psSelectedColor = '';
+    var psSelectedSize = '';
     var psSelectedScents = [];
     var psModalCurrentProduct = null;
     var psProductImages = {
@@ -326,11 +327,14 @@
       psSelectedScents = [];
       psUpdateScentSummary();
       psSelectedColor = '';
+      psSelectedSize = '';
       fragSection.style.display = fragranceAllowed ? 'block' : 'none';
 
       document.getElementById('ps-modal-overlay').style.display = 'flex';
       document.body.style.overflow = 'hidden';
       psBuildColorGrid();
+      var sizeBtn = document.getElementById('ps-size-16oz');
+      if (sizeBtn) { sizeBtn.style.borderColor = '#e8e3ee'; sizeBtn.style.background = '#faf9f7'; }
     }
     function psBuildColorGrid() {
       var cg = document.getElementById('ps-modal-color-grid');
@@ -388,6 +392,10 @@
       psUpdateScentSummary();
     }
     function psShowCheckoutModal() {
+      if (!psSelectedSize || !psSelectedColor) {
+        alert('Please select a bottle size and color before adding to cart.');
+        return;
+      }
       var SUPABASE_URL = 'https://huojeekaztmuarwtnyib.supabase.co';
       var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1b2plZWthenRtdWFyd3RueWliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzODA3OTQsImV4cCI6MjA5NDk1Njc5NH0.XKQnhHYQ0E8pjfgrUFOiIqNo7gakJvpYb0HKMtiP4eQ';
       var sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -424,7 +432,7 @@
         ingredients: fullIngredients.join(', '),
         baseIngredients: baseIngredients.join(', '),
         scent: scentStr || 'Unscented',
-        size: '16oz',
+        size: psSelectedSize,
         color: psSelectedColor,
         source: 'premade'
       });
