@@ -547,6 +547,14 @@ function dashSwitch(panel, btn) {
   }
 
   function showDashboard(user) {
+    try {
+      var returnUrl = localStorage.getItem('bio_return_url');
+      if (returnUrl) {
+        localStorage.removeItem('bio_return_url');
+        window.location.href = returnUrl;
+        return;
+      }
+    } catch(e) {}
     document.getElementById('auth-section').style.display = 'none';
     document.getElementById('dashboard-section').style.display = 'block';
     const meta = user.user_metadata || {};
