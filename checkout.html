@@ -447,6 +447,7 @@ async function coLaunchStripe() {
   }
   var totalAmount = cart.reduce(function(sum, item) { return sum + parseFloat(item.amount || 0); }, 0);
   var productNames = cart.map(function(i) { return i.productName; }).join(', ');
+  var shopperEmail = (document.getElementById('co-email') && document.getElementById('co-email').value.trim()) || '';
   try {
     var res = await fetch('/api/checkout', {
       method: 'POST',
@@ -456,7 +457,9 @@ async function coLaunchStripe() {
         productName: productNames || 'Custom Product',
         variant: cart.length > 1 ? cart.length + ' items' : (cart[0] && cart[0].variant || ''),
         ingredients: cart.map(function(i) { return i.ingredients; }).join(' | '),
-        itemCount: cart.length
+        itemCount: cart.length,
+        email: shopperEmail,
+        cart: cart
       })
     });
     var data = await res.json();
