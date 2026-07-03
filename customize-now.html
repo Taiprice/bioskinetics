@@ -2262,7 +2262,29 @@ function bioShowCheckoutModal(){
   });
 }
 
-function bioSaveOrderAndRedirect(){
+async function bioLogOrder(order){
+  try {
+    var SUPABASE_URL = 'https://huojeekaztmuarwtnyib.supabase.co';
+    var SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1b2plZWthenRtdWFyd3RueWliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzODA3OTQsImV4cCI6MjA5NDk1Njc5NH0.XKQnhHYQ0E8pjfgrUFOiIqNo7gakJvpYb0HKMtiP4eQ';
+    var sbLog = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    var userRes = await sbLog.auth.getUser();
+    var email = (userRes.data && userRes.data.user) ? userRes.data.user.email : null;
+    var insertPromise = sbLog.from('orders').insert({
+      source: 'custom',
+      product_name: order.productName,
+      variant: order.variant,
+      ingredients: order.ingredients,
+      amount: order.amount,
+      email: email
+    });
+    var timeoutPromise = new Promise(function(resolve){ setTimeout(resolve, 1500); });
+    await Promise.race([insertPromise, timeoutPromise]);
+  } catch(e) {
+    console.error('Order log failed', e);
+  }
+}
+
+async function bioSaveOrderAndRedirect(){
   var price=bioCalcPrice();
   var ingredients=[];
   document.querySelectorAll('#bio-required-list > div').forEach(function(row){
@@ -2277,14 +2299,16 @@ function bioSaveOrderAndRedirect(){
     if(b.dataset.selected==='1') scents.push(b.textContent);
   });
   if(scents.length) ingredients.push('Scent: '+scents.join(', '));
+  var orderItem = {
+    amount: price,
+    productName: bioCurProduct,
+    variant: bioCurVariant,
+    ingredients: ingredients.join(', ')
+  };
   var existing = JSON.parse(localStorage.getItem('bioCart') || '[]');
-existing.push({
-  amount: price,
-  productName: bioCurProduct,
-  variant: bioCurVariant,
-  ingredients: ingredients.join(', ')
-});
-localStorage.setItem('bioCart', JSON.stringify(existing));
+  existing.push(orderItem);
+  localStorage.setItem('bioCart', JSON.stringify(existing));
+  await bioLogOrder(orderItem);
   window.location.href = '/checkout.html';
 }
 
