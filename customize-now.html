@@ -938,7 +938,6 @@ function bioBuildContainer(){
     wrap.onclick=function(){cg.querySelectorAll('div>div').forEach(function(b){b.style.border='3px solid transparent';b.style.boxShadow='0 0 0 1.5px #e8e3ee';});sw.style.border='3px solid #fff';sw.style.boxShadow='0 0 0 3px #beadc5';};
     wrap.appendChild(sw);wrap.appendChild(lbl);cg.appendChild(wrap);
   });
-  var cmore=document.createElement('p');cmore.className='bio-cs-note';cmore.style.cssText='font-size:12px;color:#aaa;font-style:italic;margin-top:8px;width:100%;';cmore.textContent='More colors coming soon';cg.parentNode.insertBefore(cmore,cg.nextSibling);
 }
 function bioContainerBack(){
   var chosen=false;
