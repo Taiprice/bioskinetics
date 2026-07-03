@@ -559,7 +559,7 @@ var _ICE='ice hair restore,behentrimonium chloride,cetrimonium chloride,behentri
 
 var BIO_SCENTS=['Sandalwood','White Tea','Grapefruit','Jasmine','Mugwort','Chamomile','Lavender','Rosemary','Vetiver','Ylang Ylang','Lemon','Clary Sage','Frankincense','Sweet Orange','Tea Tree','Ginger','Rose','Bergamot','Eucalyptus','Patchouli','Cinnamon','Lemongrass','Clove','Peppermint'];
 var BIO_SIZES=[{label:'16oz'}];
-var BIO_COLORS=[{name:'Purple',hex:'#beadc5'}];
+var BIO_COLORS=[{name:'Red',hex:'#c0392b'},{name:'Orange',hex:'#e07b39'},{name:'Yellow',hex:'#f1c40f'},{name:'Green',hex:'#6fae7d'},{name:'Blue',hex:'#5b9bd5'},{name:'Purple',hex:'#beadc5'},{name:'Pink',hex:'#e6a4c4'},{name:'Brown',hex:'#8b6b4f'},{name:'Black',hex:'#2c2c2a'}];
 
 var BIO_SUBSTITUTES={
   "xanthan gum":[["HEC","hec,hydroxyethylcellulose,natrosol"],["ICE Alginate","ice alginate,sodium alginate"]],
@@ -928,12 +928,10 @@ function bioBuildContainer(){
   var smore=document.createElement('p');smore.className='bio-cs-note';smore.style.cssText='font-size:12px;color:#aaa;font-style:italic;margin-top:8px;';smore.textContent='More sizes coming soon';sg.parentNode.insertBefore(smore,sg.nextSibling);
   var colorLbl=document.createElement('p');colorLbl.className='bio-color-lbl';colorLbl.style.cssText='font-size:12px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:#beadc5;margin-bottom:8px;margin-top:12px;';colorLbl.textContent='Color';sg.parentNode.insertBefore(colorLbl,smore.nextSibling);
   var cg=document.getElementById('bio-color-grid');cg.innerHTML='';cg.style.cssText='display:flex;flex-wrap:wrap;gap:10px;';
-  var isFirst=true;
   BIO_COLORS.forEach(function(c){
     var wrap=document.createElement('button');wrap.type='button';wrap.style.cssText='display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;outline:none;background:none;border:none;padding:0;';
-    var sel=isFirst;isFirst=false;
     var sw=document.createElement('div');
-    sw.style.cssText='width:28px;height:28px;border-radius:50%;background:'+c.hex+';transition:all 0.15s;'+(sel?'border:3px solid #fff;box-shadow:0 0 0 3px #beadc5;':'border:3px solid transparent;box-shadow:0 0 0 1.5px #e8e3ee;');
+    sw.style.cssText='width:28px;height:28px;border-radius:50%;background:'+c.hex+';transition:all 0.15s;border:3px solid transparent;box-shadow:0 0 0 1.5px #e8e3ee;';
     sw.title=c.name;
     var lbl=document.createElement('span');lbl.style.cssText='font-size:10px;color:#aaa;text-align:center;display:block;';lbl.textContent=c.name;
     wrap.onmousedown=function(e){e.preventDefault();};
