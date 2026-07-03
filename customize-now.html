@@ -924,7 +924,6 @@ function bioBuildContainer(){
     btn.onclick=function(){sg.querySelectorAll('button').forEach(function(b){b.style.borderColor='#e8e3ee';b.style.background='#faf9f7';});btn.style.borderColor='#fade4b';btn.style.background='#fdfbe8';};
     sg.appendChild(btn);if(!firstBtn)firstBtn=btn;
   });
-  if(firstBtn){firstBtn.style.borderColor='#fade4b';firstBtn.style.background='#fdfbe8';}
   var smore=document.createElement('p');smore.className='bio-cs-note';smore.style.cssText='font-size:12px;color:#aaa;font-style:italic;margin-top:8px;';smore.textContent='More sizes coming soon';sg.parentNode.insertBefore(smore,sg.nextSibling);
   var colorLbl=document.createElement('p');colorLbl.className='bio-color-lbl';colorLbl.style.cssText='font-size:12px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:#beadc5;margin-bottom:8px;margin-top:12px;';colorLbl.textContent='Color';sg.parentNode.insertBefore(colorLbl,smore.nextSibling);
   var cg=document.getElementById('bio-color-grid');cg.innerHTML='';cg.style.cssText='display:flex;flex-wrap:wrap;gap:10px;';
@@ -2237,6 +2236,17 @@ document.addEventListener('DOMContentLoaded', function(){
 });
 
 function bioShowCheckoutModal(){
+  var pickedSize='';
+  document.querySelectorAll('#bio-size-grid button').forEach(function(btn){if(btn.style.background==='rgb(253, 251, 232)')pickedSize=btn.textContent;});
+  var pickedColor='';
+  document.querySelectorAll('#bio-color-grid button').forEach(function(wrap){
+    var sw=wrap.querySelector('div');
+    if(sw&&sw.style.border.indexOf('rgb(255, 255, 255)')!==-1){var l=wrap.querySelector('span');if(l)pickedColor=l.textContent;}
+  });
+  if(!pickedSize || !pickedColor){
+    alert('Please select a bottle size and color before adding to cart.');
+    return;
+  }
   // Check if user is already signed in via Supabase
   const SUPABASE_URL = 'https://huojeekaztmuarwtnyib.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1b2plZWthenRtdWFyd3RueWliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzODA3OTQsImV4cCI6MjA5NDk1Njc5NH0.XKQnhHYQ0E8pjfgrUFOiIqNo7gakJvpYb0HKMtiP4eQ';
