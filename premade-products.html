@@ -299,7 +299,7 @@
   <script>
     var PS_SCENTS = ['Sandalwood','White Tea','Grapefruit','Jasmine','Mugwort','Chamomile','Lavender','Rosemary','Vetiver','Ylang Ylang','Lemon','Clary Sage','Frankincense','Sweet Orange','Tea Tree','Ginger','Rose','Bergamot','Eucalyptus','Patchouli','Cinnamon','Lemongrass','Clove','Peppermint'];
     var PS_COLORS = [{name:'Red',hex:'#c0392b'},{name:'Orange',hex:'#e07b39'},{name:'Yellow',hex:'#f1c40f'},{name:'Green',hex:'#6fae7d'},{name:'Blue',hex:'#5b9bd5'},{name:'Purple',hex:'#beadc5'},{name:'Pink',hex:'#e6a4c4'},{name:'Brown',hex:'#8b6b4f'},{name:'Black',hex:'#2c2c2a'}];
-    var psSelectedColor = 'Purple';
+    var psSelectedColor = '';
     var psSelectedScents = [];
     var psModalCurrentProduct = null;
     var psProductImages = {
@@ -325,7 +325,7 @@
       var fragSection = document.getElementById('ps-modal-fragrance-section');
       psSelectedScents = [];
       psUpdateScentSummary();
-      psSelectedColor = 'Purple';
+      psSelectedColor = '';
       fragSection.style.display = fragranceAllowed ? 'block' : 'none';
 
       document.getElementById('ps-modal-overlay').style.display = 'flex';
