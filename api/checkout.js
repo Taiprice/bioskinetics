@@ -1,5 +1,5 @@
 const Stripe = require('stripe');
-const SHEET_LOG_URL = 'https://script.google.com/macros/s/AKfycbxMJAM3Q3n1Qowkl-rFymrX3LfUK-cy-AdxMk5jLZEvl7EL6rR5OjW_R-ds3hAcxGg/exec';
+const SHEET_LOG_URL = 'https://script.google.com/macros/s/AKfycbzkBB94SDwPVYV4HeZhTAnZ7lYijj65b-O2TXud0T_UjfbrJ93A2msRGp_FC6jqoqpE/exec';
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
