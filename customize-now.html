@@ -935,7 +935,7 @@ function bioBuildContainer(){
     sw.title=c.name;
     var lbl=document.createElement('span');lbl.style.cssText='font-size:10px;color:#aaa;text-align:center;display:block;';lbl.textContent=c.name;
     wrap.onmousedown=function(e){e.preventDefault();};
-    wrap.onclick=function(){cg.querySelectorAll('div>div').forEach(function(b){b.style.border='3px solid transparent';b.style.boxShadow='0 0 0 1.5px #e8e3ee';});sw.style.border='3px solid #fff';sw.style.boxShadow='0 0 0 3px #beadc5';};
+    wrap.onclick=function(){cg.querySelectorAll('div').forEach(function(b){b.style.border='3px solid transparent';b.style.boxShadow='0 0 0 1.5px #e8e3ee';});sw.style.border='3px solid #fff';sw.style.boxShadow='0 0 0 3px #beadc5';};
     wrap.appendChild(sw);wrap.appendChild(lbl);cg.appendChild(wrap);
   });
 }
