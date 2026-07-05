@@ -988,7 +988,8 @@ var BIO_SHAMPOO_COLOR_IMAGES={
 };
 function bioUpdateShampooColorImage(colorName){
   if(bioCurProduct!=='Shampoo')return;
-  var img=document.querySelector('.bio-gallery-shampoo');
+  var scope=document.getElementById('bio-survey-wrap')||document;
+  var img=scope.querySelector('.bio-gallery-shampoo');
   if(img&&BIO_SHAMPOO_COLOR_IMAGES[colorName])img.src=BIO_SHAMPOO_COLOR_IMAGES[colorName];
 }
 function bioContainerBack(){
