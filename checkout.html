@@ -298,7 +298,7 @@
           </div>
           <p class="co-product-price" id="co-product-price">—</p>
         </div>
-        <div class="co-promo-row" style="display:flex;gap:8px;margin-bottom:1rem;">
+        <div class="co-promo-row" id="co-promo-row" style="display:flex;gap:8px;margin-bottom:1rem;">
           <input type="text" id="co-promo-input" placeholder="Promo code" style="flex:1;padding:9px 12px;border:1px solid #ddd;border-radius:6px;font-family:'Lato',sans-serif;font-size:14px;" />
           <button type="button" onclick="coApplyPromo()" style="padding:9px 16px;border:none;border-radius:6px;background:#2c2c2a;color:#fff;font-family:'Jost',sans-serif;font-size:12px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">Apply</button>
         </div>
@@ -445,6 +445,9 @@ function coProceedToPayment() {
   // Lock the cart in place now that shipping info is submitted
   document.querySelectorAll('.co-remove-btn').forEach(function(btn) { btn.style.display = 'none'; });
 
+  // Hide the promo code field during payment
+  document.getElementById('co-promo-row').style.display = 'none';
+
   // Launch Stripe embedded checkout
   coLaunchStripe();
 }
@@ -456,6 +459,9 @@ function coBackToShipping() {
   document.getElementById('co-step-2').style.display = 'none';
   document.getElementById('co-stripe-container').innerHTML = '';
   document.querySelectorAll('.co-remove-btn').forEach(function(btn) { btn.style.display = ''; });
+
+  // Show the promo code field again
+  document.getElementById('co-promo-row').style.display = 'flex';
 }
 
 function removeCartItem(index) {
