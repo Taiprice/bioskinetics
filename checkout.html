@@ -310,15 +310,20 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 var bioStripe;
+var bioSignedInEmail = '';
 document.addEventListener('DOMContentLoaded', function(){
   bioStripe = Stripe('pk_test_51Tor4hF3IPKKRTMiR9Ci3FU9hAsR4NzLyD1Cv8jfY4VNgpiTn8uVnMCFngM8rr0qQbc8FuHXHPBJqP7iPuxoYvGs00TwYgnwKu');
 
-  // Hide account bar if signed in
+  // Hide account bar + email field if signed in; pull email from the account instead
   const sb = supabase.createClient('https://huojeekaztmuarwtnyib.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1b2plZWthenRtdWFyd3RueWliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzODA3OTQsImV4cCI6MjA5NDk1Njc5NH0.XKQnhHYQ0E8pjfgrUFOiIqNo7gakJvpYb0HKMtiP4eQ');
   sb.auth.getUser().then(({ data: { user } }) => {
     if (user) {
       var bar = document.getElementById('co-account-bar');
       if (bar) bar.style.display = 'none';
+      bioSignedInEmail = user.email || '';
+      var emailField = document.getElementById('co-email');
+      var emailWrap = emailField ? emailField.closest('.field') : null;
+      if (emailWrap) emailWrap.style.display = 'none';
     }
   });
 
@@ -386,7 +391,7 @@ document.addEventListener('DOMContentLoaded', function(){
 function coProceedToPayment() {
   var fname = document.getElementById('co-fname').value.trim();
   var lname = document.getElementById('co-lname').value.trim();
-  var email = document.getElementById('co-email').value.trim();
+  var email = bioSignedInEmail || document.getElementById('co-email').value.trim();
   var address = document.getElementById('co-address').value.trim();
   var city = document.getElementById('co-city').value.trim();
   var state = document.getElementById('co-state').value.trim();
@@ -452,7 +457,8 @@ async function coLaunchStripe() {
   }
   var totalAmount = cart.reduce(function(sum, item) { return sum + parseFloat(item.amount || 0); }, 0);
   var productNames = cart.map(function(i) { return i.productName; }).join(', ');
-  var shopperEmail = (document.getElementById('co-email') && document.getElementById('co-email').value.trim()) || '';
+  var shopperEmail = bioSignedInEmail || (document.getElementById('co-email') && document.getElementById('co-email').value.trim()) || '';
+  var shopperAddress = (document.getElementById('co-address') && document.getElementById('co-address').value.trim()) || '';
   try {
     var res = await fetch('/api/checkout', {
       method: 'POST',
@@ -464,6 +470,7 @@ async function coLaunchStripe() {
         ingredients: cart.map(function(i) { return i.ingredients; }).join(' | '),
         itemCount: cart.length,
         email: shopperEmail,
+        address: shopperAddress,
         cart: cart
       })
     });
