@@ -974,18 +974,28 @@ function bioBuildContainer(){
     wrap.appendChild(sw);wrap.appendChild(lbl);cg.appendChild(wrap);
   });
   bioUpdateShampooColorImage('Purple');
+  bioPreloadShampooColorImages();
 }
 var BIO_SHAMPOO_COLOR_IMAGES={
-  'Red':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Red.png',
-  'Orange':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Orange.png',
-  'Yellow':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Yellow.png',
-  'Green':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Green.png',
-  'Blue':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Blue.png',
-  'Purple':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Purple.png',
-  'Pink':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Pink.png',
-  'Brown':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Brown.png',
-  'Black':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Black.png'
+  'Red':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Red.jpg',
+  'Orange':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Orange.jpg',
+  'Yellow':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Yellow.jpg',
+  'Green':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Green.jpg',
+  'Blue':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Blue.jpg',
+  'Purple':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Purple.jpg',
+  'Pink':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Pink.jpg',
+  'Brown':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Brown.jpg',
+  'Black':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Black.jpg'
 };
+var bioShampooImagesPreloaded=false;
+function bioPreloadShampooColorImages(){
+  if(bioShampooImagesPreloaded)return;
+  bioShampooImagesPreloaded=true;
+  Object.keys(BIO_SHAMPOO_COLOR_IMAGES).forEach(function(name){
+    var preloadImg=new Image();
+    preloadImg.src=BIO_SHAMPOO_COLOR_IMAGES[name];
+  });
+}
 function bioUpdateShampooColorImage(colorName){
   if(bioCurProduct!=='Shampoo')return;
   var scope=document.getElementById('bio-survey-wrap')||document;
