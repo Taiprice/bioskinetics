@@ -458,7 +458,14 @@ async function coLaunchStripe() {
   var totalAmount = cart.reduce(function(sum, item) { return sum + parseFloat(item.amount || 0); }, 0);
   var productNames = cart.map(function(i) { return i.productName; }).join(', ');
   var shopperEmail = bioSignedInEmail || (document.getElementById('co-email') && document.getElementById('co-email').value.trim()) || '';
-  var shopperAddress = (document.getElementById('co-address') && document.getElementById('co-address').value.trim()) || '';
+  var shopperAddress = [
+    document.getElementById('co-address') && document.getElementById('co-address').value.trim(),
+    document.getElementById('co-city') && document.getElementById('co-city').value.trim(),
+    [
+      document.getElementById('co-state') && document.getElementById('co-state').value.trim(),
+      document.getElementById('co-zip') && document.getElementById('co-zip').value.trim()
+    ].filter(Boolean).join(' ')
+  ].filter(Boolean).join(', ');
   try {
     var res = await fetch('/api/checkout', {
       method: 'POST',
