@@ -298,6 +298,11 @@
           </div>
           <p class="co-product-price" id="co-product-price">—</p>
         </div>
+        <div class="co-promo-row" style="display:flex;gap:8px;margin-bottom:1rem;">
+          <input type="text" id="co-promo-input" placeholder="Promo code" style="flex:1;padding:9px 12px;border:1px solid #ddd;border-radius:6px;font-family:'Lato',sans-serif;font-size:14px;" />
+          <button type="button" onclick="coApplyPromo()" style="padding:9px 16px;border:none;border-radius:6px;background:#2c2c2a;color:#fff;font-family:'Jost',sans-serif;font-size:12px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;">Apply</button>
+        </div>
+        <p id="co-promo-msg" style="display:none;font-size:13px;margin:-0.5rem 0 1rem;"></p>
         <div class="co-line"><span>Subtotal</span><span id="co-subtotal">—</span></div>
         <div class="co-line"><span>Shipping</span><span id="co-shipping">—</span></div>
         <div class="co-total"><span>Total</span><span id="co-total">—</span></div>
@@ -311,6 +316,9 @@
 <script>
 var bioStripe;
 var bioSignedInEmail = '';
+var bioPromoApplied = false;
+var bioCartCount = 0;
+var bioCartSubtotal = 0;
 document.addEventListener('DOMContentLoaded', function(){
   bioStripe = Stripe('pk_test_51Tor4hF3IPKKRTMiR9Ci3FU9hAsR4NzLyD1Cv8jfY4VNgpiTn8uVnMCFngM8rr0qQbc8FuHXHPBJqP7iPuxoYvGs00TwYgnwKu');
 
@@ -375,18 +383,41 @@ document.addEventListener('DOMContentLoaded', function(){
         '</div>';
       summaryBody.insertBefore(row, summaryBody.querySelector('.co-line'));
     });
-    var totalStr = '$' + total.toFixed(2);
-    document.getElementById('co-subtotal').textContent = totalStr;
-    // Calculate shipping: $15 per 4 items
-    var shippingAmount = Math.ceil(cart.length / 4) * 15;
-    var shippingStr = '$' + shippingAmount.toFixed(2);
-    document.getElementById('co-shipping').textContent = shippingStr;
-    document.getElementById('co-total').textContent = '$' + (total + shippingAmount).toFixed(2);
+    bioCartCount = cart.length;
+    bioCartSubtotal = total;
+    coRecalcTotals();
     // Enable proceed button only if cart has items
     var proceedBtn = document.getElementById('co-proceed-btn');
     if (proceedBtn) proceedBtn.disabled = false;
   }
 });
+
+function coRecalcTotals() {
+  var shippingAmount = bioPromoApplied ? 0 : Math.ceil(bioCartCount / 4) * 15;
+  document.getElementById('co-subtotal').textContent = '$' + bioCartSubtotal.toFixed(2);
+  document.getElementById('co-shipping').textContent = '$' + shippingAmount.toFixed(2);
+  document.getElementById('co-total').textContent = '$' + (bioCartSubtotal + shippingAmount).toFixed(2);
+}
+
+function coApplyPromo() {
+  var input = document.getElementById('co-promo-input');
+  var msg = document.getElementById('co-promo-msg');
+  var code = input.value.trim();
+  if (code.toUpperCase() === '37') {
+    bioPromoApplied = true;
+    coRecalcTotals();
+    msg.textContent = 'Promo applied — free local delivery.';
+    msg.style.color = '#4a7c59';
+    msg.style.display = 'block';
+    input.disabled = true;
+    var btn = input.nextElementSibling;
+    if (btn) btn.disabled = true;
+  } else {
+    msg.textContent = 'Invalid promo code.';
+    msg.style.color = '#c0392b';
+    msg.style.display = 'block';
+  }
+}
 
 function coProceedToPayment() {
   var fname = document.getElementById('co-fname').value.trim();
@@ -478,6 +509,7 @@ async function coLaunchStripe() {
         itemCount: cart.length,
         email: shopperEmail,
         address: shopperAddress,
+        promoApplied: bioPromoApplied,
         cart: cart
       })
     });
