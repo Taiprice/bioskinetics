@@ -970,37 +970,52 @@ function bioBuildContainer(){
     sw.title=c.name;
     var lbl=document.createElement('span');lbl.style.cssText='font-size:10px;color:#aaa;text-align:center;display:block;';lbl.textContent=c.name;
     wrap.onmousedown=function(e){e.preventDefault();};
-    wrap.onclick=function(){cg.querySelectorAll('div').forEach(function(b){b.style.border='3px solid transparent';b.style.boxShadow='0 0 0 1.5px #e8e3ee';});sw.style.border='3px solid #fff';sw.style.boxShadow='0 0 0 3px #beadc5';bioUpdateShampooColorImage(c.name);};
+    wrap.onclick=function(){cg.querySelectorAll('div').forEach(function(b){b.style.border='3px solid transparent';b.style.boxShadow='0 0 0 1.5px #e8e3ee';});sw.style.border='3px solid #fff';sw.style.boxShadow='0 0 0 3px #beadc5';bioUpdateColorImage(c.name);};
     wrap.appendChild(sw);wrap.appendChild(lbl);cg.appendChild(wrap);
   });
-  bioUpdateShampooColorImage('Purple');
-  bioPreloadShampooColorImages();
+  bioUpdateColorImage('Purple');
+  bioPreloadColorImages(bioCurProduct);
 }
-var BIO_SHAMPOO_COLOR_IMAGES={
-  'Red':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Red.jpg',
-  'Orange':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Orange.jpg',
-  'Yellow':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Yellow.jpg',
-  'Green':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Green.jpg',
-  'Blue':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Blue.jpg',
-  'Purple':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Purple.jpg',
-  'Pink':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Pink.jpg',
-  'Brown':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Brown.jpg',
-  'Black':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Black.jpg'
+var BIO_COLOR_IMAGES_BY_PRODUCT={
+  'Shampoo':{
+    'Red':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Red.jpg',
+    'Orange':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Orange.jpg',
+    'Yellow':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Yellow.jpg',
+    'Green':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Green.jpg',
+    'Blue':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Blue.jpg',
+    'Purple':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Purple.jpg',
+    'Pink':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Pink.jpg',
+    'Brown':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Brown.jpg',
+    'Black':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Black.jpg'
+  },
+  'Conditioner':{
+    'Red':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_conditioner_bottles/Red.jpg',
+    'Orange':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_conditioner_bottles/Orange.jpg',
+    'Yellow':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_conditioner_bottles/Yellow.jpg',
+    'Green':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_conditioner_bottles/Green.jpg',
+    'Blue':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_conditioner_bottles/Blue.jpg',
+    'Purple':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_conditioner_bottles/Purple.jpg',
+    'Pink':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_conditioner_bottles/Pink.jpg',
+    'Brown':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_conditioner_bottles/Brown.jpg',
+    'Black':'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_conditioner_bottles/Black.jpg'
+  }
 };
-var bioShampooImagesPreloaded=false;
-function bioPreloadShampooColorImages(){
-  if(bioShampooImagesPreloaded)return;
-  bioShampooImagesPreloaded=true;
-  Object.keys(BIO_SHAMPOO_COLOR_IMAGES).forEach(function(name){
+var bioPreloadedProducts={};
+function bioPreloadColorImages(product){
+  var colorMap=BIO_COLOR_IMAGES_BY_PRODUCT[product];
+  if(!colorMap||bioPreloadedProducts[product])return;
+  bioPreloadedProducts[product]=true;
+  Object.keys(colorMap).forEach(function(name){
     var preloadImg=new Image();
-    preloadImg.src=BIO_SHAMPOO_COLOR_IMAGES[name];
+    preloadImg.src=colorMap[name];
   });
 }
-function bioUpdateShampooColorImage(colorName){
-  if(bioCurProduct!=='Shampoo')return;
+function bioUpdateColorImage(colorName){
+  var colorMap=BIO_COLOR_IMAGES_BY_PRODUCT[bioCurProduct];
+  if(!colorMap)return;
   var scope=document.getElementById('bio-survey-wrap')||document;
   var img=scope.querySelector('.bio-gallery-shampoo');
-  if(img&&BIO_SHAMPOO_COLOR_IMAGES[colorName])img.src=BIO_SHAMPOO_COLOR_IMAGES[colorName];
+  if(img&&colorMap[colorName])img.src=colorMap[colorName];
 }
 function bioContainerBack(){
   var chosen=false;
