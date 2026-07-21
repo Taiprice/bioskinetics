@@ -503,6 +503,17 @@ async function coLaunchStripe() {
       document.getElementById('co-zip') && document.getElementById('co-zip').value.trim()
     ].filter(Boolean).join(' ')
   ].filter(Boolean).join(', ');
+
+  // Persist everything needed to log the order later, once payment is actually confirmed
+  // on the thank-you page. The embedded checkout does a full-page redirect on completion,
+  // so nothing in memory/DOM here survives — localStorage is the only thing that does.
+  localStorage.setItem('bioPendingOrder', JSON.stringify({
+    email: shopperEmail,
+    address: shopperAddress,
+    promoApplied: bioPromoApplied,
+    cart: cart
+  }));
+
   try {
     var res = await fetch('/api/checkout', {
       method: 'POST',
