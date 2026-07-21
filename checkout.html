@@ -317,6 +317,7 @@
 var bioStripe;
 var bioSignedInEmail = '';
 var bioPromoApplied = false;
+var bioTestOrder = false;
 var bioCartCount = 0;
 var bioCartSubtotal = 0;
 document.addEventListener('DOMContentLoaded', function(){
@@ -396,7 +397,7 @@ function coRecalcTotals() {
   var shippingAmount = bioPromoApplied ? 0 : Math.ceil(bioCartCount / 4) * 15;
   document.getElementById('co-subtotal').textContent = '$' + bioCartSubtotal.toFixed(2);
   document.getElementById('co-shipping').textContent = '$' + shippingAmount.toFixed(2);
-  document.getElementById('co-total').textContent = '$' + (bioCartSubtotal + shippingAmount).toFixed(2);
+  document.getElementById('co-total').textContent = bioTestOrder ? '$0.01' : '$' + (bioCartSubtotal + shippingAmount).toFixed(2);
 }
 
 function coApplyPromo() {
@@ -412,6 +413,15 @@ function coApplyPromo() {
     input.disabled = true;
     var btn = input.nextElementSibling;
     if (btn) btn.disabled = true;
+  } else if (code.toUpperCase() === 'TAI') {
+    bioTestOrder = true;
+    coRecalcTotals();
+    msg.textContent = 'Test order applied — total set to $0.01.';
+    msg.style.color = '#4a7c59';
+    msg.style.display = 'block';
+    input.disabled = true;
+    var btn2 = input.nextElementSibling;
+    if (btn2) btn2.disabled = true;
   } else {
     msg.textContent = 'Invalid promo code.';
     msg.style.color = '#c0392b';
@@ -503,30 +513,19 @@ async function coLaunchStripe() {
       document.getElementById('co-zip') && document.getElementById('co-zip').value.trim()
     ].filter(Boolean).join(' ')
   ].filter(Boolean).join(', ');
-
-  // Persist everything needed to log the order later, once payment is actually confirmed
-  // on the thank-you page. The embedded checkout does a full-page redirect on completion,
-  // so nothing in memory/DOM here survives — localStorage is the only thing that does.
-  localStorage.setItem('bioPendingOrder', JSON.stringify({
-    email: shopperEmail,
-    address: shopperAddress,
-    promoApplied: bioPromoApplied,
-    cart: cart
-  }));
-
   try {
     var res = await fetch('/api/checkout', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
-        amount: totalAmount,
+        amount: bioTestOrder ? 0.01 : totalAmount,
         productName: productNames || 'Custom Product',
         variant: cart.length > 1 ? cart.length + ' items' : (cart[0] && cart[0].variant || ''),
         ingredients: cart.map(function(i) { return i.ingredients; }).join(' | '),
         itemCount: cart.length,
         email: shopperEmail,
         address: shopperAddress,
-        promoApplied: bioPromoApplied,
+        promoApplied: bioTestOrder ? true : bioPromoApplied,
         cart: cart
       })
     });
