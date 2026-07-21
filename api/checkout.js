@@ -1,4 +1,5 @@
 const Stripe = require('stripe');
+const SHEET_LOG_URL = 'https://script.google.com/macros/s/AKfycbzkBB94SDwPVYV4HeZhTAnZ7lYijj65b-O2TXud0T_UjfbrJ93A2msRGp_FC6jqoqpE/exec';
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -8,7 +9,7 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
   const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
   const { amount, productName, variant, ingredients, itemCount, email, address, promoApplied, cart } = req.body;
-  if (!amount || amount < 1) {
+  if (!amount || amount < 0.01) {
     return res.status(400).json({ error: 'Invalid amount' });
   }
 
@@ -17,6 +18,36 @@ module.exports = async function handler(req, res) {
   const shippingUnits = Math.ceil(count / 4);
   const shippingAmount = promoApplied ? 0 : shippingUnits * 1500; // in cents
   const shippingLabel = promoApplied ? 'Free Local Delivery' : `Standard Shipping (${count} item${count !== 1 ? 's' : ''})`;
+
+  // Log each cart item to the order sheet, with its share of shipping folded into Price
+  // so Price reflects the true total paid. Capped at 4s total so a slow/unresponsive
+  // Apps Script call can never block or time out the actual checkout.
+  if (Array.isArray(cart) && cart.length) {
+    const shippingSharePerItem = (shippingAmount / 100) / cart.length;
+    const logPromise = Promise.all(cart.map(function(item) {
+      return fetch(SHEET_LOG_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+          email: email || '',
+          address: address || '',
+          productName: item.productName || '',
+          variant: item.variant || '',
+          ingredients: item.baseIngredients || item.ingredients || '',
+          scent: item.scent || 'Unscented',
+          size: item.size || '',
+          color: item.color || '',
+          amount: (parseFloat(item.amount || 0) + shippingSharePerItem).toFixed(2)
+        })
+      }).then(function(r) {
+        console.log('Sheet log response status:', r.status);
+        return r;
+      });
+    })).catch(function(logErr) {
+      console.error('Sheet logging failed', logErr);
+    });
+    const timeoutPromise = new Promise(function(resolve) { setTimeout(resolve, 4000); });
+    await Promise.race([logPromise, timeoutPromise]);
+  }
 
   try {
     const session = await stripe.checkout.sessions.create({
