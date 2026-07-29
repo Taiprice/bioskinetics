@@ -238,19 +238,19 @@
   <div id="bio-popup-overlay">
     <div id="bio-popup">
       <button id="bio-popup-close" onclick="closeBioPopup()" title="Close">&#x2715;</button>
-      <p class="bio-popup-eyebrow">Heads Up</p>
-      <h2 class="bio-popup-title">Orders Open August 1st</h2>
+      <p class="bio-popup-eyebrow">Great News</p>
+      <h2 class="bio-popup-title">Orders Open Now!</h2>
       <hr class="bio-popup-divider" />
-      <p class="bio-popup-body">We are so excited to have you here! Please note that we are not yet fulfilling orders. You are welcome to browse, customize, and add items to your cart — but orders will begin shipping on:</p>
-      <div class="bio-popup-date">August 1st, 2026</div>
-      <br />
+      <p class="bio-popup-body">We are so excited to have you here! We are officially taking orders — browse, customize your products, and check out today.</p>
       <button class="bio-popup-btn" onclick="closeBioPopup()">Got It — Let Me Browse</button>
     </div>
   </div>
 
   <script>
     (function() {
-      if (!sessionStorage.getItem('bio_popup_seen')) {
+      // This popup automatically stops appearing after August 15, 2026 — no code changes needed after that date.
+      var bioPopupExpires = new Date('2026-08-16T00:00:00');
+      if (new Date() < bioPopupExpires && !sessionStorage.getItem('bio_popup_seen')) {
         document.getElementById('bio-popup-overlay').style.display = 'flex';
       } else {
         document.getElementById('bio-popup-overlay').style.display = 'none';
