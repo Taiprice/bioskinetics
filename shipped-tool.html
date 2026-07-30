@@ -18,14 +18,16 @@
   button:hover { background: #f5d535; }
   button:disabled { background: #e0e0e0; cursor: not-allowed; }
   button.secondary { background: none; border: 1.5px solid #e0dbe5; color: #2c2c2a; }
-  .order-card { background: #fff; border: 1px solid #ece8f0; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 0.85rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
-  .order-card.done { opacity: 0.5; }
+  .order-card { background: #fff; border: 1px solid #ece8f0; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 0.85rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; transition: opacity 0.4s, max-height 0.4s; }
+  .order-card.done { opacity: 0; }
   .order-info { flex: 1; min-width: 220px; }
   .order-info .name { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: #2c2c2a; }
   .order-info .meta { font-size: 12px; color: #9a9895; margin: 2px 0; }
   .order-info .products { font-size: 13px; color: #5f5e5a; }
   .order-ship { display: flex; gap: 8px; align-items: center; }
   .order-ship input { width: 220px; }
+  .delete-btn { background: none; border: none; color: #c0392b; font-size: 20px; cursor: pointer; padding: 4px 8px; line-height: 1; }
+  .delete-btn:hover { color: #791f1f; }
   .row-msg { font-size: 12px; margin-top: 4px; width: 100%; }
   .row-msg.ok { color: #4a7c59; }
   .row-msg.err { color: #c0392b; }
@@ -112,6 +114,7 @@
         '<div class="order-ship">' +
           '<input type="text" class="tracking-input" id="tracking-' + idx + '" placeholder="UPS tracking number" />' +
           '<button onclick="shipOne(' + idx + ')" id="ship-btn-' + idx + '">Ship & Email</button>' +
+          '<button class="delete-btn" onclick="deleteOrder(' + idx + ')" id="delete-btn-' + idx + '" title="Remove this order">&#x1F5D1;</button>' +
         '</div>' +
         '<div class="row-msg" id="row-msg-' + idx + '"></div>';
       listEl.appendChild(card);
@@ -144,7 +147,9 @@
       if (data.status === 'ok') {
         msgEl.textContent = 'Shipped email sent!';
         msgEl.className = 'row-msg ok';
-        document.getElementById('order-card-' + idx).classList.add('done');
+        var cardEl = document.getElementById('order-card-' + idx);
+        cardEl.classList.add('done');
+        setTimeout(function() { cardEl.remove(); checkEmpty(); }, 700);
         return true;
       } else {
         msgEl.textContent = 'Error: ' + (data.error || 'Unknown error');
@@ -161,6 +166,39 @@
       btn.textContent = 'Ship & Email';
       trackingInput.disabled = false;
       return false;
+    }
+  }
+
+  function checkEmpty() {
+    var listEl = document.getElementById('orders-list');
+    var emptyEl = document.getElementById('empty-msg');
+    emptyEl.style.display = listEl.querySelector('.order-card') ? 'none' : 'block';
+  }
+
+  async function deleteOrder(idx) {
+    var order = currentOrders[idx];
+    if (!confirm('Remove this order for good? This deletes it from the Sheet — it can\'t be undone.')) return;
+
+    var delBtn = document.getElementById('delete-btn-' + idx);
+    delBtn.disabled = true;
+
+    try {
+      var res = await fetch('/api/delete-order', {
+        method: 'POST',
+        headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders()),
+        body: JSON.stringify({ orderId: order.orderId })
+      });
+      var data = await res.json();
+      if (data.status === 'ok') {
+        document.getElementById('order-card-' + idx).remove();
+        checkEmpty();
+      } else {
+        alert('Error removing order: ' + (data.error || 'Unknown error'));
+        delBtn.disabled = false;
+      }
+    } catch (e) {
+      alert('Something went wrong. Try again.');
+      delBtn.disabled = false;
     }
   }
 
