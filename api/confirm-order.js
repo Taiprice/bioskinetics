@@ -101,9 +101,7 @@ async function sendOrderReceivedEmail(email, name, cart, shippingAmount) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        // Once bioskinetics.com is verified as a sending domain in Resend, change this to:
-        // 'Bioskinetics <orders@bioskinetics.com>'
-        from: 'Bioskinetics <onboarding@resend.dev>',
+        from: 'Bioskinetics <orders@bioskinetics.com>',
         to: email,
         subject: 'Your Bioskinetics Order Is Confirmed',
         html: `
