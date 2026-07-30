@@ -50,7 +50,7 @@ module.exports = async function handler(req, res) {
             </div>
             <div style="padding:2rem 1.5rem;text-align:center;">
               <h2 style="font-family:'Playfair Display',Georgia,serif;color:#b2a254;font-size:26px;margin:0 0 0.5rem;">Your Order Has Arrived!</h2>
-              <p style="font-size:15px;line-height:1.6;color:#5f5e5a;">UPS just confirmed delivery of your package. We hope you love it!</p>
+              <p style="font-size:15px;line-height:1.6;color:#5f5e5a;">Hi ${(order.name || '').split(' ')[0] || 'there'} — UPS just confirmed delivery of your package. We hope you love it!</p>
               <ul style="text-align:left;list-style:none;padding:0;margin:1.5rem 0;">${itemsHtml}</ul>
               <p style="font-size:14px;line-height:1.6;color:#5f5e5a;">Questions about your order? Just reply to this email — we're happy to help.</p>
             </div>
