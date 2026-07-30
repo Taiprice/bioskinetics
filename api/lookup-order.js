@@ -12,12 +12,11 @@ module.exports = async function handler(req, res) {
   }
 
   const email = req.query.email;
-  if (!email) return res.status(400).json({ error: 'Missing email' });
 
   try {
     const sheetRes = await fetch(SHEET_LOG_URL, {
       method: 'POST',
-      body: JSON.stringify({ action: 'lookupByEmail', email })
+      body: JSON.stringify(email ? { action: 'lookupByEmail', email } : { action: 'listUnshipped' })
     });
     const data = await sheetRes.json();
     return res.status(200).json(data);
