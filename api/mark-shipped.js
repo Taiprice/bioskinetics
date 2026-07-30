@@ -1,191 +1,87 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Ship Orders — Bioskinetics</title>
-<meta name="robots" content="noindex, nofollow" />
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Jost', sans-serif; background: #fafaf8; color: #2c2c2a; min-height: 100vh; padding: 2rem 1rem; }
-  .wrap { max-width: 780px; margin: 0 auto; }
-  h1 { font-family: 'Playfair Display', serif; color: #b2a254; font-size: 28px; margin-bottom: 1.5rem; }
-  .toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; }
-  input { font-family: 'Jost', sans-serif; font-size: 15px; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; }
-  input.tracking-input { width: 100%; }
-  button { background: #fade4b; color: #2c2c2a; border: none; border-radius: 6px; padding: 10px 20px; font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; white-space: nowrap; }
-  button:hover { background: #f5d535; }
-  button:disabled { background: #e0e0e0; cursor: not-allowed; }
-  button.secondary { background: none; border: 1.5px solid #e0dbe5; color: #2c2c2a; }
-  .order-card { background: #fff; border: 1px solid #ece8f0; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 0.85rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
-  .order-card.done { opacity: 0.5; }
-  .order-info { flex: 1; min-width: 220px; }
-  .order-info .name { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: #2c2c2a; }
-  .order-info .meta { font-size: 12px; color: #9a9895; margin: 2px 0; }
-  .order-info .products { font-size: 13px; color: #5f5e5a; }
-  .order-ship { display: flex; gap: 8px; align-items: center; }
-  .order-ship input { width: 220px; }
-  .row-msg { font-size: 12px; margin-top: 4px; width: 100%; }
-  .row-msg.ok { color: #4a7c59; }
-  .row-msg.err { color: #c0392b; }
-  #gate { max-width: 320px; margin: 4rem auto; text-align: center; }
-  #empty-msg { color: #9a9895; font-size: 14px; padding: 2rem 0; text-align: center; }
-</style>
-</head>
-<body>
+const SHEET_LOG_URL = 'https://script.google.com/macros/s/AKfycbzkBB94SDwPVYV4HeZhTAnZ7lYijj65b-O2TXud0T_UjfbrJ93A2msRGp_FC6jqoqpE/exec';
 
-<div id="gate">
-  <h1>Bioskinetics</h1>
-  <label style="display:block;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:#9a9895;margin-bottom:6px;">Enter Admin PIN</label>
-  <input type="password" id="pin-input" style="width:100%;margin-bottom:1rem;" />
-  <button onclick="checkPin()" style="width:100%;">Enter</button>
-</div>
+module.exports = async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-admin-secret');
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-<div class="wrap" id="app" style="display:none;">
-  <h1>Ship Orders</h1>
-  <div class="toolbar">
-    <button class="secondary" onclick="loadOrders()">Refresh List</button>
-    <button onclick="shipAllEntered()" id="ship-all-btn">Ship All Entered</button>
-    <span id="toolbar-msg" style="font-size:13px;"></span>
-  </div>
-  <div id="orders-list"></div>
-  <div id="empty-msg" style="display:none;">No unshipped orders right now — you're all caught up!</div>
-</div>
-
-<script>
-  var currentOrders = [];
-
-  function checkPin() {
-    var pin = document.getElementById('pin-input').value;
-    sessionStorage.setItem('bio_admin_secret', pin);
-    document.getElementById('gate').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    loadOrders();
+  if (req.headers['x-admin-secret'] !== process.env.ADMIN_SECRET) {
+    return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  function authHeaders() {
-    return { 'x-admin-secret': sessionStorage.getItem('bio_admin_secret') || '' };
+  const { orderId, trackingNumber } = req.body;
+  if (!orderId || !trackingNumber) {
+    return res.status(400).json({ error: 'Missing orderId or trackingNumber' });
   }
 
-  async function loadOrders() {
-    var listEl = document.getElementById('orders-list');
-    var emptyEl = document.getElementById('empty-msg');
-    listEl.innerHTML = '<p style="color:#9a9895;font-size:14px;">Loading...</p>';
-    emptyEl.style.display = 'none';
-
-    try {
-      var res = await fetch('/api/lookup-order', { headers: authHeaders() });
-      if (res.status === 401) {
-        listEl.innerHTML = '<p style="color:#c0392b;">Wrong PIN — refresh the page and try again.</p>';
-        return;
-      }
-      var data = await res.json();
-      currentOrders = data.orders || [];
-      renderOrders();
-    } catch (e) {
-      listEl.innerHTML = '<p style="color:#c0392b;">Something went wrong loading orders. Try refreshing.</p>';
-    }
-  }
-
-  function renderOrders() {
-    var listEl = document.getElementById('orders-list');
-    var emptyEl = document.getElementById('empty-msg');
-    listEl.innerHTML = '';
-
-    if (!currentOrders.length) {
-      emptyEl.style.display = 'block';
-      return;
-    }
-    emptyEl.style.display = 'none';
-
-    currentOrders.forEach(function(order, idx) {
-      var card = document.createElement('div');
-      card.className = 'order-card';
-      card.id = 'order-card-' + idx;
-      card.innerHTML =
-        '<div class="order-info">' +
-          '<div class="name">' + (order.name || '(no name)') + '</div>' +
-          '<div class="meta">' + new Date(order.timestamp).toLocaleDateString() + ' — ' + order.email + ' — $' + order.total.toFixed(2) + '</div>' +
-          '<div class="products">' + order.items.join(', ') + '</div>' +
-        '</div>' +
-        '<div class="order-ship">' +
-          '<input type="text" class="tracking-input" id="tracking-' + idx + '" placeholder="UPS tracking number" />' +
-          '<button onclick="shipOne(' + idx + ')" id="ship-btn-' + idx + '">Ship & Email</button>' +
-        '</div>' +
-        '<div class="row-msg" id="row-msg-' + idx + '"></div>';
-      listEl.appendChild(card);
+  try {
+    // 1. Update the Sheet: set tracking number + Status = "Shipped" on every row for this order
+    const sheetRes = await fetch(SHEET_LOG_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'updateTracking', orderId, trackingNumber })
     });
-  }
+    const order = await sheetRes.json();
 
-  async function shipOne(idx) {
-    var order = currentOrders[idx];
-    var trackingInput = document.getElementById('tracking-' + idx);
-    var tracking = trackingInput.value.trim();
-    var btn = document.getElementById('ship-btn-' + idx);
-    var msgEl = document.getElementById('row-msg-' + idx);
-    if (!tracking) {
-      msgEl.textContent = 'Enter a tracking number first.';
-      msgEl.className = 'row-msg err';
-      return false;
+    if (order.status !== 'ok') {
+      return res.status(404).json({ error: 'Order not found in Sheet' });
     }
 
-    btn.disabled = true;
-    btn.textContent = 'Sending...';
-    trackingInput.disabled = true;
-
+    // 2. Register the tracking number with EasyPost so we get a webhook when it's delivered.
+    //    EasyPost uses HTTP Basic Auth with the API key as the username and no password.
     try {
-      var res = await fetch('/api/mark-shipped', {
+      await fetch('https://api.easypost.com/v2/trackers', {
         method: 'POST',
-        headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders()),
-        body: JSON.stringify({ orderId: order.orderId, trackingNumber: tracking })
+        headers: {
+          'Authorization': 'Basic ' + Buffer.from(process.env.EASYPOST_API_KEY + ':').toString('base64'),
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          tracker: { tracking_code: trackingNumber, carrier: 'UPS' }
+        })
       });
-      var data = await res.json();
-      if (data.status === 'ok') {
-        msgEl.textContent = 'Shipped email sent!';
-        msgEl.className = 'row-msg ok';
-        document.getElementById('order-card-' + idx).classList.add('done');
-        return true;
-      } else {
-        msgEl.textContent = 'Error: ' + (data.error || 'Unknown error');
-        msgEl.className = 'row-msg err';
-        btn.disabled = false;
-        btn.textContent = 'Ship & Email';
-        trackingInput.disabled = false;
-        return false;
-      }
-    } catch (e) {
-      msgEl.textContent = 'Something went wrong. Try again.';
-      msgEl.className = 'row-msg err';
-      btn.disabled = false;
-      btn.textContent = 'Ship & Email';
-      trackingInput.disabled = false;
-      return false;
+    } catch (epErr) {
+      // Don't block the "Shipped" email over an EasyPost hiccup — worst case, Delivered
+      // detection needs to be retried manually later. Log it for now.
+      console.error('EasyPost tracker registration failed:', epErr);
     }
+
+    // 3. Send the "Shipped" email
+    const trackUrl = `https://www.ups.com/track?loc=en_US&tracknum=${encodeURIComponent(trackingNumber)}&requester=WT/trackdetails`;
+    const itemsHtml = order.items.map(function(label) {
+      return `<li style="font-family:'Cormorant Garamond',Georgia,serif;font-size:16px;color:#2c2c2a;margin-bottom:4px;">${label}</li>`;
+    }).join('');
+
+    await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: 'Bioskinetics <orders@bioskinetics.com>',
+        to: order.email,
+        subject: 'Your Bioskinetics Order Has Shipped!',
+        html: `
+          <div style="max-width:520px;margin:0 auto;font-family:'Jost',Arial,sans-serif;color:#2c2c2a;">
+            <div style="background:#000;padding:1.5rem;text-align:center;">
+              <p style="font-family:'Playfair Display',Georgia,serif;color:#fade4b;font-size:20px;font-weight:700;margin:0;">Bioskinetics</p>
+            </div>
+            <div style="padding:2rem 1.5rem;text-align:center;">
+              <h2 style="font-family:'Playfair Display',Georgia,serif;color:#b2a254;font-size:26px;margin:0 0 0.5rem;">Your Order Is On Its Way!</h2>
+              <p style="font-size:15px;line-height:1.6;color:#5f5e5a;">Hi ${(order.name || '').split(' ')[0] || 'there'} — great news, your package just shipped via UPS.</p>
+              <ul style="text-align:left;list-style:none;padding:0;margin:1.5rem 0;">${itemsHtml}</ul>
+              <a href="${trackUrl}" style="display:inline-block;background:#fade4b;color:#2c2c2a;font-family:'Jost',Arial,sans-serif;font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;border-radius:6px;padding:14px 32px;margin-top:0.5rem;">Track Your Package</a>
+              <p style="font-size:13px;color:#9a9895;margin-top:1.5rem;">Tracking Number: ${trackingNumber}</p>
+            </div>
+          </div>
+        `
+      })
+    });
+
+    return res.status(200).json({ status: 'ok' });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
   }
-
-  async function shipAllEntered() {
-    var toolbarMsg = document.getElementById('toolbar-msg');
-    var allBtn = document.getElementById('ship-all-btn');
-    var indices = currentOrders.map(function(_, i) { return i; })
-      .filter(function(i) { return document.getElementById('tracking-' + i).value.trim() && !document.getElementById('order-card-' + i).classList.contains('done'); });
-
-    if (!indices.length) {
-      toolbarMsg.textContent = 'No tracking numbers entered yet.';
-      return;
-    }
-
-    allBtn.disabled = true;
-    var successCount = 0;
-    for (var n = 0; n < indices.length; n++) {
-      toolbarMsg.textContent = 'Sending ' + (n + 1) + ' of ' + indices.length + '...';
-      var ok = await shipOne(indices[n]);
-      if (ok) successCount++;
-    }
-    toolbarMsg.textContent = 'Done — ' + successCount + ' of ' + indices.length + ' sent successfully.';
-    allBtn.disabled = false;
-  }
-</script>
-
-</body>
-</html>
+};
