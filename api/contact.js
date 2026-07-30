@@ -20,7 +20,7 @@ module.exports = async function handler(req, res) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Bioskinetics Contact <onboarding@resend.dev>',
+        from: 'Bioskinetics Contact <contact@bioskinetics.com>',
         to: 'taiprice@bioskinetics.com',
         reply_to: email,
         subject: `New Contact Message from ${fname} ${lname}`,
