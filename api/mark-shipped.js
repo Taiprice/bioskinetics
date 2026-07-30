@@ -72,7 +72,7 @@ module.exports = async function handler(req, res) {
             </div>
             <div style="padding:2rem 1.5rem;text-align:center;">
               <h2 style="font-family:'Playfair Display',Georgia,serif;color:#b2a254;font-size:26px;margin:0 0 0.5rem;">Your Order Is On Its Way!</h2>
-              <p style="font-size:15px;line-height:1.6;color:#5f5e5a;">Great news — your package just shipped via UPS.</p>
+              <p style="font-size:15px;line-height:1.6;color:#5f5e5a;">Hi ${(order.name || '').split(' ')[0] || 'there'} — great news, your package just shipped via UPS.</p>
               <ul style="text-align:left;list-style:none;padding:0;margin:1.5rem 0;">${itemsHtml}</ul>
               <a href="${trackUrl}" style="display:inline-block;background:#fade4b;color:#2c2c2a;font-family:'Jost',Arial,sans-serif;font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;border-radius:6px;padding:14px 32px;margin-top:0.5rem;">Track Your Package</a>
               <p style="font-size:13px;color:#9a9895;margin-top:1.5rem;">Tracking Number: ${trackingNumber}</p>
