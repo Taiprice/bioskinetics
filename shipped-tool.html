@@ -93,7 +93,7 @@
         div.className = 'order-item';
         div.onclick = function() { selectOrder(order.orderId, div); };
         div.innerHTML =
-          '<p>' + new Date(order.timestamp).toLocaleDateString() + ' — $' + order.total.toFixed(2) + '</p>' +
+          '<p><strong>' + (order.name || '(no name)') + '</strong> — ' + new Date(order.timestamp).toLocaleDateString() + ' — $' + order.total.toFixed(2) + '</p>' +
           '<p class="products">' + order.items.join(', ') + '</p>';
         resultsEl.appendChild(div);
       });
