@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mark Order Shipped — Bioskinetics</title>
+<meta name="robots" content="noindex, nofollow" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Jost', sans-serif; background: #fafaf8; color: #2c2c2a; min-height: 100vh; padding: 2rem 1rem; }
+  .wrap { max-width: 560px; margin: 0 auto; }
+  h1 { font-family: 'Playfair Display', serif; color: #b2a254; font-size: 28px; margin-bottom: 1.5rem; }
+  .card { background: #fff; border: 1px solid #ece8f0; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+  label { display: block; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: #9a9895; margin-bottom: 6px; }
+  input { width: 100%; font-family: 'Jost', sans-serif; font-size: 15px; padding: 12px 14px; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 1rem; }
+  button { background: #fade4b; color: #2c2c2a; border: none; border-radius: 6px; padding: 12px 24px; font-size: 13px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; }
+  button:hover { background: #f5d535; }
+  button:disabled { background: #e0e0e0; cursor: not-allowed; }
+  .order-item { border: 1px solid #ece8f0; border-radius: 8px; padding: 1rem; margin-bottom: 0.75rem; cursor: pointer; }
+  .order-item.selected { border-color: #fade4b; background: #fdfbe8; }
+  .order-item p { font-size: 13px; color: #5f5e5a; margin-bottom: 4px; }
+  .order-item .products { font-family: 'Cormorant Garamond', serif; font-size: 16px; color: #2c2c2a; }
+  #msg { font-size: 14px; margin-top: 1rem; padding: 10px 14px; border-radius: 6px; display: none; }
+  #msg.ok { background: #eef7ee; color: #4a7c59; display: block; }
+  #msg.err { background: #fdf0ee; color: #c0392b; display: block; }
+  #gate { max-width: 320px; margin: 4rem auto; text-align: center; }
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <h1>Bioskinetics</h1>
+  <label>Enter Admin PIN</label>
+  <input type="password" id="pin-input" />
+  <button onclick="checkPin()">Enter</button>
+</div>
+
+<div class="wrap" id="app" style="display:none;">
+  <h1>Mark Order Shipped</h1>
+
+  <div class="card">
+    <label>Customer Email</label>
+    <input type="email" id="search-email" placeholder="jane@example.com" />
+    <button onclick="findOrders()">Find Unshipped Orders</button>
+  </div>
+
+  <div id="results"></div>
+
+  <div class="card" id="ship-card" style="display:none;">
+    <label>Tracking Number</label>
+    <input type="text" id="tracking-input" placeholder="1Z999AA10123456784" />
+    <button id="ship-btn" onclick="markShipped()">Mark Shipped & Send Email</button>
+    <div id="msg"></div>
+  </div>
+</div>
+
+<script>
+  var selectedOrderId = null;
+
+  function checkPin() {
+    var pin = document.getElementById('pin-input').value;
+    sessionStorage.setItem('bio_admin_secret', pin);
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+  }
+
+  function authHeaders() {
+    return { 'x-admin-secret': sessionStorage.getItem('bio_admin_secret') || '' };
+  }
+
+  async function findOrders() {
+    var email = document.getElementById('search-email').value.trim();
+    var resultsEl = document.getElementById('results');
+    resultsEl.innerHTML = '';
+    document.getElementById('ship-card').style.display = 'none';
+    selectedOrderId = null;
+    if (!email) return;
+
+    try {
+      var res = await fetch('/api/lookup-order?email=' + encodeURIComponent(email), { headers: authHeaders() });
+      if (res.status === 401) {
+        resultsEl.innerHTML = '<p style="color:#c0392b;">Wrong PIN — refresh the page and try again.</p>';
+        return;
+      }
+      var data = await res.json();
+      if (!data.orders || !data.orders.length) {
+        resultsEl.innerHTML = '<p style="color:#9a9895;">No unshipped orders found for that email.</p>';
+        return;
+      }
+      data.orders.forEach(function(order) {
+        var div = document.createElement('div');
+        div.className = 'order-item';
+        div.onclick = function() { selectOrder(order.orderId, div); };
+        div.innerHTML =
+          '<p>' + new Date(order.timestamp).toLocaleDateString() + ' — $' + order.total.toFixed(2) + '</p>' +
+          '<p class="products">' + order.items.join(', ') + '</p>';
+        resultsEl.appendChild(div);
+      });
+    } catch (e) {
+      resultsEl.innerHTML = '<p style="color:#c0392b;">Something went wrong. Try again.</p>';
+    }
+  }
+
+  function selectOrder(orderId, el) {
+    document.querySelectorAll('.order-item').forEach(function(d) { d.classList.remove('selected'); });
+    el.classList.add('selected');
+    selectedOrderId = orderId;
+    document.getElementById('ship-card').style.display = 'block';
+    document.getElementById('msg').style.display = 'none';
+  }
+
+  async function markShipped() {
+    var tracking = document.getElementById('tracking-input').value.trim();
+    var msgEl = document.getElementById('msg');
+    var btn = document.getElementById('ship-btn');
+    if (!selectedOrderId || !tracking) return;
+
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    try {
+      var res = await fetch('/api/mark-shipped', {
+        method: 'POST',
+        headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders()),
+        body: JSON.stringify({ orderId: selectedOrderId, trackingNumber: tracking })
+      });
+      var data = await res.json();
+      if (data.status === 'ok') {
+        msgEl.textContent = 'Shipped email sent!';
+        msgEl.className = 'ok';
+        document.getElementById('tracking-input').value = '';
+        findOrders(); // refresh list — this order should now disappear
+      } else {
+        msgEl.textContent = 'Error: ' + (data.error || 'Unknown error');
+        msgEl.className = 'err';
+      }
+    } catch (e) {
+      msgEl.textContent = 'Something went wrong. Try again.';
+      msgEl.className = 'err';
+    }
+    btn.disabled = false;
+    btn.textContent = 'Mark Shipped & Send Email';
+  }
+</script>
+
+</body>
+</html>
