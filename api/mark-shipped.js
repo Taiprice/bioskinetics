@@ -60,9 +60,7 @@ module.exports = async function handler(req, res) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        // Once bioskinetics.com is verified as a sending domain in Resend, change this to:
-        // 'Bioskinetics <orders@bioskinetics.com>'
-        from: 'Bioskinetics <onboarding@resend.dev>',
+        from: 'Bioskinetics <orders@bioskinetics.com>',
         to: order.email,
         subject: 'Your Bioskinetics Order Has Shipped!',
         html: `
