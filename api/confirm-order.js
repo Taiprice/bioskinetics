@@ -9,7 +9,7 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
-  const { sessionId, email, address, promoApplied, cart } = req.body;
+  const { sessionId, name, email, address, promoApplied, cart } = req.body;
 
   if (!sessionId) {
     return res.status(400).json({ error: 'Missing sessionId' });
@@ -51,6 +51,7 @@ module.exports = async function handler(req, res) {
         body: JSON.stringify({
           action: 'logOrder',
           orderId: orderId,
+          name: name || '',
           email: email || '',
           address: address || '',
           productName: item.productName || '',
@@ -65,7 +66,7 @@ module.exports = async function handler(req, res) {
     }));
 
     if (email) {
-      await sendOrderReceivedEmail(email, cart, shippingAmount / 100);
+      await sendOrderReceivedEmail(email, name, cart, shippingAmount / 100);
     }
 
     return res.status(200).json({ status: 'ok' });
@@ -74,7 +75,7 @@ module.exports = async function handler(req, res) {
   }
 };
 
-async function sendOrderReceivedEmail(email, cart, shippingAmount) {
+async function sendOrderReceivedEmail(email, name, cart, shippingAmount) {
   const subtotal = cart.reduce(function(sum, item) { return sum + parseFloat(item.amount || 0); }, 0);
   const total = subtotal + shippingAmount;
 
@@ -111,7 +112,7 @@ async function sendOrderReceivedEmail(email, cart, shippingAmount) {
               <p style="font-family:'Playfair Display',Georgia,serif;color:#fade4b;font-size:20px;font-weight:700;margin:0;">Bioskinetics</p>
             </div>
             <div style="padding:2rem 1.5rem;">
-              <h2 style="font-family:'Playfair Display',Georgia,serif;color:#b2a254;font-size:26px;margin:0 0 0.5rem;">Thank You For Your Order!</h2>
+              <h2 style="font-family:'Playfair Display',Georgia,serif;color:#b2a254;font-size:26px;margin:0 0 0.5rem;">Thank You, ${(name || '').split(' ')[0] || 'Friend'}!</h2>
               <p style="font-size:15px;line-height:1.6;color:#5f5e5a;">We're so excited to get your custom formula ready. Here's a summary of what you ordered:</p>
               <table style="width:100%;border-collapse:collapse;margin-top:1rem;">
                 ${itemsHtml}
