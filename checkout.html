@@ -219,13 +219,14 @@ sessionStorage.setItem('bio_shipping_seen', '1');
 <div id="co-step-1">
 <div class="co-card">
 <h3>Shipping Information</h3>
-<div class="form-grid" style="margin-bottom:14px;">
-<div class="field"><label>First Name *</label><input type="text" id="co-fname" placeholder="Jane" /></div>
-<div class="field"><label>Last Name *</label><input type="text" id="co-lname" placeholder="Smith" /></div>
+<div class="form-grid full" style="margin-bottom:14px;">
+<div class="field"><label>Full Name *</label><input type="text" id="co-name" placeholder="Jane Smith" /></div>
 </div>
 <div class="form-grid full" style="margin-bottom:14px;">
 <div class="field"><label>Email Address *</label><input type="email" id="co-email" placeholder="jane@example.com" /></div>
 </div>
+<p id="co-local-note" style="display:none;font-family:'Jost',sans-serif;font-size:13px;font-weight:300;color:#5f5e5a;line-height:1.6;margin:-8px 0 14px;">This is a local delivery order — we'll hand-deliver it to you, so no shipping address is needed. Just your email above for your order confirmation!</p>
+<div id="co-shipping-fields-2">
 <div class="form-grid full" style="margin-bottom:14px;">
 <div class="field"><label>Address *</label><input type="text" id="co-address" placeholder="123 Main St" /></div>
 </div>
@@ -242,6 +243,7 @@ sessionStorage.setItem('bio_shipping_seen', '1');
 <option value="GB">United Kingdom</option>
 <option value="AU">Australia</option>
 </select>
+</div>
 </div>
 </div>
 </div>
@@ -296,7 +298,7 @@ var bioCartCount = 0;
 var bioCartSubtotal = 0;
 
 document.addEventListener('DOMContentLoaded', function(){
-bioStripe = Stripe('pk_live_51Tor4PFQH0m1BJj2R6YgpBXLk4ESRyUQo6wn8C7Ni546VLuROEB7imM9QirvNNkvF413TivLbsArdcx7z5hh34UM006BKfQLQA');
+bioStripe = Stripe('pk_test_51TyiIvEjSvzSlqHojBnhTWjHqzNG3XtuY4NKDE32a26gWUJh2e1Esqq5LRJ8XeA2PQSOYIz7Af2rJ0ZRlrM4XNxt00SMOx8H9W');
 
 // Hide account bar + email field if signed in; pull email from the account instead
 const sb = supabase.createClient('https://huojeekaztmuarwtnyib.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1b2plZWthenRtdWFyd3RueWliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzODA3OTQsImV4cCI6MjA5NDk1Njc5NH0.XKQnhHYQ0E8pjfgrUFOiIqNo7gakJvpYb0HKMtiP4eQ');
@@ -399,6 +401,10 @@ msg.style.display = 'block';
 input.disabled = true;
 var btn = input.nextElementSibling;
 if (btn) btn.disabled = true;
+
+// Local delivery for friends & family — no shipping address needed, just name + email.
+document.getElementById('co-shipping-fields-2').style.display = 'none';
+document.getElementById('co-local-note').style.display = 'block';
 } else {
 msg.textContent = 'Invalid promo code.';
 msg.style.color = '#c0392b';
@@ -407,8 +413,7 @@ msg.style.display = 'block';
 }
 
 function coProceedToPayment() {
-var fname = document.getElementById('co-fname').value.trim();
-var lname = document.getElementById('co-lname').value.trim();
+var name = document.getElementById('co-name').value.trim();
 var email = bioSignedInEmail || document.getElementById('co-email').value.trim();
 var address = document.getElementById('co-address').value.trim();
 var city = document.getElementById('co-city').value.trim();
@@ -418,7 +423,14 @@ var zip = document.getElementById('co-zip').value.trim();
 var errEl = document.getElementById('co-ship-error');
 errEl.style.display = 'none';
 
-if (!fname || !lname || !email || !address || !city || !state || !zip) {
+if (bioPromoApplied) {
+// Local delivery for friends & family — name + email required, no address collected.
+if (!name || !email) {
+errEl.textContent = 'Please fill in your name and email.';
+errEl.style.display = 'block';
+return;
+}
+} else if (!name || !email || !address || !city || !state || !zip) {
 errEl.textContent = 'Please fill in all required fields.';
 errEl.style.display = 'block';
 return;
@@ -487,8 +499,11 @@ if (old.productName) cart = [old];
 
 var totalAmount = cart.reduce(function(sum, item) { return sum + parseFloat(item.amount || 0); }, 0);
 var productNames = cart.map(function(i) { return i.productName; }).join(', ');
+var shopperName = document.getElementById('co-name') && document.getElementById('co-name').value.trim() || '';
 var shopperEmail = bioSignedInEmail || (document.getElementById('co-email') && document.getElementById('co-email').value.trim()) || '';
-var shopperAddress = [
+var shopperAddress = bioPromoApplied
+? 'Local Pickup / Hand Delivery (Friends & Family)'
+: [
 document.getElementById('co-address') && document.getElementById('co-address').value.trim(),
 document.getElementById('co-city') && document.getElementById('co-city').value.trim(),
 [
@@ -501,6 +516,7 @@ document.getElementById('co-zip') && document.getElementById('co-zip').value.tri
 // on the thank-you page. The embedded checkout does a full-page redirect on completion,
 // so nothing in memory/DOM here survives — localStorage is the only thing that does.
 localStorage.setItem('bioPendingOrder', JSON.stringify({
+name: shopperName,
 email: shopperEmail,
 address: shopperAddress,
 promoApplied: bioPromoApplied,
