@@ -209,8 +209,22 @@
         <span id="ps-modal-badge" style="font-size:13px;letter-spacing:0.12em;text-transform:uppercase;color:#beadc5;background:#f5f0f6;border-radius:999px;padding:4px 12px;"></span>
         <button type="button" onclick="psCloseContainerModal()" style="background:none;border:none;font-size:22px;color:#bbb;cursor:pointer;">&times;</button>
       </div>
-      <div style="padding:1.25rem 1.5rem 1.5rem;">
-        <p style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#beadc5;margin-bottom:6px;">Final Step</p>
+
+      <!-- Step 1 (hair products only): Extras -->
+      <div id="ps-page-extras" style="display:none;padding:1.25rem 1.5rem 1.5rem;">
+        <p style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#beadc5;margin-bottom:6px;">Step 1 of 2</p>
+        <p style="color:#2c2c2a;margin-bottom:0.4rem;">Customize your formula</p>
+        <p style="font-size:14px;color:#aaa;margin-bottom:1rem;">Add as many optional extras as you like.</p>
+        <div id="ps-extras-page-grid"></div>
+        <div style="display:flex;justify-content:space-between;padding-top:1rem;border-top:0.5px solid #f0edf2;margin-top:1.25rem;">
+          <button type="button" onclick="psCloseContainerModal()" style="font-size:14px;color:#bbb;background:none;border:none;cursor:pointer;">Back</button>
+          <button type="button" onclick="psGoToContainerPage()" style="font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#2c2c2a;background:#fade4b;border:none;border-radius:6px;padding:9px 20px;cursor:pointer;">Next</button>
+        </div>
+      </div>
+
+      <!-- Step 2 (or only step for Body Wash): Container -->
+      <div id="ps-page-container" style="padding:1.25rem 1.5rem 1.5rem;">
+        <p id="ps-modal-step-label" style="font-size:12px;letter-spacing:0.14em;text-transform:uppercase;color:#beadc5;margin-bottom:6px;">Final Step</p>
         <p id="ps-modal-panel-title" style="color:#2c2c2a;margin-bottom:0.4rem;">Choose your container</p>
         <p style="font-size:14px;color:#aaa;margin-bottom:0.75rem;">Pick a size and color.</p>
         <p style="font-size:22px;font-weight:700;color:#2c2c2a;margin-bottom:1rem;">Total: <span id="ps-modal-price"></span></p>
@@ -237,6 +251,12 @@
         <p style="font-size:12px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:#beadc5;margin-bottom:8px;">Full Ingredients</p>
         <div id="ps-modal-ingredients" style="margin-bottom:1.25rem;"></div>
 
+        <div id="ps-modal-extras-section" style="display:none;margin-bottom:1.25rem;">
+          <p style="font-size:12px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:#beadc5;margin-bottom:4px;">Optional Extras</p>
+          <p style="font-size:12px;color:#aaa;font-style:italic;margin-bottom:10px;">Add as many as you like.</p>
+          <div id="ps-modal-extras-grid"></div>
+        </div>
+
         <div id="ps-modal-fragrance-section" style="display:none;">
           <p style="font-size:12px;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:#beadc5;margin-bottom:8px;">Fragrance</p>
           <button type="button" onclick="psOpenScentModal()" style="font-family:Georgia,serif;font-size:13px;color:#2c2c2a;background:#faf9f7;border:1.5px solid #e8e3ee;border-radius:8px;padding:8px 14px;cursor:pointer;width:100%;text-align:left;">Choose Your Scent &rarr;</button>
@@ -247,10 +267,20 @@
 
         <p id="ps-selection-warning" style="display:none;font-size:13px;color:#c0392b;background:#fdecea;border:1px solid #f5c2c0;border-radius:6px;padding:10px 14px;margin-bottom:1rem;">Please select a bottle size and color before adding to cart.</p>
         <div style="display:flex;justify-content:space-between;padding-top:1rem;border-top:0.5px solid #f0edf2;margin-top:1.25rem;">
-          <button type="button" onclick="psCloseContainerModal()" style="font-size:14px;color:#bbb;background:none;border:none;cursor:pointer;">Back</button>
+          <button type="button" onclick="psContainerBack()" style="font-size:14px;color:#bbb;background:none;border:none;cursor:pointer;">Back</button>
           <button type="button" onclick="psShowCheckoutModal()" style="font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#2c2c2a;background:#fade4b;border:none;border-radius:6px;padding:9px 20px;cursor:pointer;">Add to Cart</button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Extras Warning Popup -->
+  <div id="ps-extras-warning-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:250;align-items:center;justify-content:center;padding:1rem;">
+    <div style="font-family:Georgia,serif;background:#fff;border-radius:16px;max-width:400px;width:100%;padding:2rem 1.75rem;text-align:center;border:2px solid #c0392b;box-shadow:0 10px 36px rgba(0,0,0,0.3);">
+      <div style="font-size:40px;line-height:1;margin-bottom:0.75rem;">⚠️</div>
+      <p style="font-size:19px;font-weight:700;color:#c0392b;margin-bottom:0.75rem;">Heads Up</p>
+      <p style="font-size:14px;color:#5f5e5a;line-height:1.65;margin-bottom:1.5rem;">The more optional extras you add, the more likely one of them is to irritate your skin. Choose only what you need.</p>
+      <button type="button" onclick="psDismissExtrasWarning()" style="background:#c0392b;color:#fff;border:none;border-radius:8px;padding:12px 32px;font-size:13px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;">I Understand</button>
     </div>
   </div>
 
@@ -303,7 +333,67 @@
     var psSelectedColor = 'Purple';
     var psSelectedSize = '';
     var psSelectedScents = [];
+    var psSelectedExtras = [];
     var psModalCurrentProduct = null;
+    var PS_EXTRAS_BY_PRODUCT = {
+      'Shampoo': [
+        {cat:'💧 Moisture', name:'Aloe Vera Juice', desc:'Hydrates and softens'},
+        {cat:'💪 Protein', name:'Hydrolyzed Rice Protein', desc:'Rebuilds and strengthens'},
+        {cat:'✨ Frizz Control', name:'Dimethicone', desc:'Smooths and tames'},
+        {cat:'🌿 Scalp Health', name:'Niacinamide', desc:'Soothes and balances'},
+        {cat:'⭐ Shine', name:'Argan Oil', desc:'Boosts gloss and luster'}
+      ],
+      'Conditioner': [
+        {cat:'💧 Moisture', name:'Aloe Vera Juice', desc:'Hydrates and softens'},
+        {cat:'💪 Protein', name:'Hydrolyzed Rice Protein', desc:'Rebuilds and strengthens'},
+        {cat:'✨ Frizz Control', name:'Dimethicone', desc:'Smooths and tames'},
+        {cat:'🌿 Scalp Health', name:'Niacinamide', desc:'Soothes and balances'},
+        {cat:'⭐ Shine', name:'Camellia Oil', desc:'Boosts gloss and luster'}
+      ],
+      'Body Wash': [
+        {cat:'💧 Moisture', name:'Aloe Vera Juice', desc:'Hydrates and softens'}
+      ]
+    };
+    function psBuildExtrasSection(product, gridEl) {
+      var usingInline = !gridEl;
+      var section = document.getElementById('ps-modal-extras-section');
+      var grid = gridEl || document.getElementById('ps-modal-extras-grid');
+      var cats = PS_EXTRAS_BY_PRODUCT[product];
+      psSelectedExtras = [];
+      if (!cats || !cats.length) { if (usingInline && section) section.style.display = 'none'; grid.innerHTML = ''; return; }
+      if (usingInline && section) section.style.display = 'block';
+      grid.innerHTML = '';
+      var wrap = document.createElement('div');
+      wrap.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:10px;';
+      cats.forEach(function(c) {
+        var parts = c.cat.split(' ');
+        var emoji = parts[0];
+        var label = parts.slice(1).join(' ');
+        var card = document.createElement('div');
+        card.dataset.cat = c.cat;
+        card.dataset.name = c.name;
+        card.dataset.chosen = '0';
+        card.style.cssText = 'padding:14px 16px;border:1.5px solid #e0dcea;border-radius:12px;background:#faf9f7;cursor:pointer;transition:all 0.15s;min-height:90px;';
+        var emojiEl = document.createElement('div'); emojiEl.style.cssText = 'font-size:22px;margin-bottom:6px;'; emojiEl.textContent = emoji;
+        var labelEl = document.createElement('div'); labelEl.style.cssText = 'font-size:15px;font-weight:600;color:#2c2c2a;margin-bottom:2px;'; labelEl.textContent = label;
+        var descEl = document.createElement('div'); descEl.style.cssText = 'font-size:12px;color:#aaa;'; descEl.textContent = c.desc;
+        card.appendChild(emojiEl); card.appendChild(labelEl); card.appendChild(descEl);
+        card.onclick = function() {
+          var on = card.dataset.chosen === '1';
+          card.dataset.chosen = on ? '0' : '1';
+          card.style.borderColor = on ? '#e0dcea' : '#a8dfc4';
+          card.style.background = on ? '#faf9f7' : '#f0faf5';
+          labelEl.style.color = on ? '#2c2c2a' : '#1D9E75';
+          descEl.textContent = on ? c.desc : c.desc + ' ✓';
+          descEl.style.color = on ? '#aaa' : '#1D9E75';
+          var idx = psSelectedExtras.indexOf(c.name);
+          if (on) { if (idx !== -1) psSelectedExtras.splice(idx, 1); }
+          else { if (idx === -1) psSelectedExtras.push(c.name); }
+        };
+        wrap.appendChild(card);
+      });
+      grid.appendChild(wrap);
+    }
     var PS_COLOR_IMAGES_BY_PRODUCT = {
       'Shampoo': {
         'Red': 'https://raw.githubusercontent.com/Taiprice/bioskinetics/main/16oz_shampoo_bottles/Red.jpg',
@@ -366,6 +456,16 @@
       psSelectedSize = '16oz';
       fragSection.style.display = fragranceAllowed ? 'block' : 'none';
 
+      var isHairProduct = (product === 'Shampoo' || product === 'Conditioner');
+      var extrasInlineSection = document.getElementById('ps-modal-extras-section');
+      if (isHairProduct) {
+        // Extras get their own step before the container page
+        extrasInlineSection.style.display = 'none';
+        psBuildExtrasSection(product, document.getElementById('ps-extras-page-grid'));
+      } else {
+        psBuildExtrasSection(product, document.getElementById('ps-modal-extras-grid'));
+      }
+
       document.getElementById('ps-modal-overlay').style.display = 'flex';
       document.body.style.overflow = 'hidden';
       psBuildColorGrid();
@@ -374,6 +474,33 @@
       var sizeBtn = document.getElementById('ps-size-16oz');
       if (sizeBtn) { sizeBtn.style.borderColor = '#fade4b'; sizeBtn.style.background = '#fdfbe8'; }
       document.getElementById('ps-selection-warning').style.display = 'none';
+
+      if (isHairProduct) {
+        document.getElementById('ps-page-extras').style.display = 'block';
+        document.getElementById('ps-page-container').style.display = 'none';
+        document.getElementById('ps-modal-step-label').textContent = 'Step 2 of 2';
+        document.getElementById('ps-extras-warning-overlay').style.display = 'flex';
+      } else {
+        document.getElementById('ps-page-extras').style.display = 'none';
+        document.getElementById('ps-page-container').style.display = 'block';
+        document.getElementById('ps-modal-step-label').textContent = 'Final Step';
+      }
+    }
+    function psDismissExtrasWarning() {
+      document.getElementById('ps-extras-warning-overlay').style.display = 'none';
+    }
+    function psGoToContainerPage() {
+      document.getElementById('ps-page-extras').style.display = 'none';
+      document.getElementById('ps-page-container').style.display = 'block';
+    }
+    function psBackToExtrasPage() {
+      document.getElementById('ps-page-container').style.display = 'none';
+      document.getElementById('ps-page-extras').style.display = 'block';
+    }
+    function psContainerBack() {
+      var isHairProduct = (psModalCurrentProduct === 'Shampoo' || psModalCurrentProduct === 'Conditioner');
+      if (isHairProduct) psBackToExtrasPage();
+      else psCloseContainerModal();
     }
     var psPreloadedProducts = {};
     function psPreloadColorImages(product) {
@@ -483,7 +610,9 @@
       var amount = parseFloat(String(price).replace('$', ''));
       var baseIngredients = psBuildIngredientList(product, variant);
       var scentStr = psSelectedScents.length ? psSelectedScents.join(', ') : '';
+      var extrasStr = psSelectedExtras.length ? psSelectedExtras.join(', ') : '';
       var fullIngredients = baseIngredients.slice();
+      if (extrasStr) fullIngredients = fullIngredients.concat(psSelectedExtras);
       if (scentStr) fullIngredients.push('Scent: ' + scentStr);
       var existing = JSON.parse(localStorage.getItem('bioCart') || '[]');
       existing.push({
@@ -492,6 +621,7 @@
         variant: variant,
         ingredients: fullIngredients.join(', '),
         baseIngredients: baseIngredients.join(', '),
+        extras: extrasStr,
         scent: scentStr || 'Unscented',
         size: psSelectedSize,
         color: psSelectedColor,
