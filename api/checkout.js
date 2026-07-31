@@ -21,13 +21,6 @@ module.exports = async function handler(req, res) {
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
-      branding_settings: {
-        background_color: '#fafaf8',
-        button_color: '#fade4b',
-        border_style: 'rounded',
-        font_family: 'montserrat',
-        display_name: 'Bioskinetics',
-      },
       line_items: [{
         price_data: {
           currency: 'usd',
