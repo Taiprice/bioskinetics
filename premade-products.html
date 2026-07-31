@@ -386,7 +386,7 @@
         card.dataset.chosen = '0';
         card.style.cssText = 'padding:14px 16px;border:1.5px solid #e0dcea;border-radius:12px;background:#faf9f7;cursor:pointer;transition:all 0.15s;';
         var emojiEl = document.createElement('div'); emojiEl.style.cssText = 'font-size:22px;margin-bottom:6px;'; emojiEl.textContent = emoji;
-        var labelEl = document.createElement('div'); labelEl.style.cssText = 'font-size:15px;font-weight:600;color:#2c2c2a;margin-bottom:2px;'; labelEl.textContent = label + ' (+$' + c.price.toFixed(2) + ')';
+        var labelEl = document.createElement('div'); labelEl.style.cssText = 'font-size:15px;font-weight:600;color:#2c2c2a;margin-bottom:2px;'; labelEl.textContent = label;
         var ingEl = document.createElement('div'); ingEl.style.cssText = 'font-size:12px;font-style:italic;color:#8b7fa0;margin-bottom:6px;'; ingEl.textContent = c.name;
         var descEl = document.createElement('div'); descEl.style.cssText = 'font-size:12px;color:#aaa;margin-bottom:6px;'; descEl.textContent = c.desc;
         var irritEl = document.createElement('div'); irritEl.style.cssText = 'font-size:11px;color:#b0745f;line-height:1.4;padding-top:6px;border-top:0.5px solid #ede8e2;'; irritEl.textContent = c.irritates;
@@ -471,9 +471,9 @@
       psSelectedSize = '16oz';
       fragSection.style.display = fragranceAllowed ? 'block' : 'none';
 
-      var isHairProduct = (product === 'Shampoo' || product === 'Conditioner');
+      var hasExtras = !!(PS_EXTRAS_BY_PRODUCT[product] && PS_EXTRAS_BY_PRODUCT[product].length);
       var extrasInlineSection = document.getElementById('ps-modal-extras-section');
-      if (isHairProduct) {
+      if (hasExtras) {
         // Extras get their own step before the container page
         extrasInlineSection.style.display = 'none';
         psBuildExtrasSection(product, document.getElementById('ps-extras-page-grid'));
@@ -491,7 +491,7 @@
       if (sizeBtn) { sizeBtn.style.borderColor = '#fade4b'; sizeBtn.style.background = '#fdfbe8'; }
       document.getElementById('ps-selection-warning').style.display = 'none';
 
-      if (isHairProduct) {
+      if (hasExtras) {
         document.getElementById('ps-page-extras').style.display = 'block';
         document.getElementById('ps-page-container').style.display = 'none';
         document.getElementById('ps-modal-step-label').textContent = 'Step 2 of 2';
@@ -500,6 +500,7 @@
         document.getElementById('ps-page-extras').style.display = 'none';
         document.getElementById('ps-page-container').style.display = 'block';
         document.getElementById('ps-modal-step-label').textContent = 'Final Step';
+        document.getElementById('ps-extras-warning-overlay').style.display = 'none';
       }
     }
     function psDismissExtrasWarning() {
@@ -514,8 +515,8 @@
       document.getElementById('ps-page-extras').style.display = 'block';
     }
     function psContainerBack() {
-      var isHairProduct = (psModalCurrentProduct === 'Shampoo' || psModalCurrentProduct === 'Conditioner');
-      if (isHairProduct) psBackToExtrasPage();
+      var hasExtras = !!(PS_EXTRAS_BY_PRODUCT[psModalCurrentProduct] && PS_EXTRAS_BY_PRODUCT[psModalCurrentProduct].length);
+      if (hasExtras) psBackToExtrasPage();
       else psCloseContainerModal();
     }
     var psPreloadedProducts = {};
