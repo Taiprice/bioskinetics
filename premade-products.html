@@ -350,9 +350,7 @@
         {cat:'🌿 Scalp Health', name:'Niacinamide', price:2, desc:'Soothes and balances', irritates:'Generally well tolerated, but can cause redness, flushing, stinging, or itching in people with very sensitive or reactive skin.'},
         {cat:'⭐ Shine', name:'Camellia Oil', price:2.5, desc:'Boosts gloss and luster', irritates:'Considered gentle and low-allergenic (biocompatible with skin\'s natural sebum), though mild irritation has been reported in rare cases — patch test recommended.'}
       ],
-      'Body Wash': [
-        {cat:'💧 Moisture', name:'Aloe Vera Juice', price:3, desc:'Hydrates and softens', irritates:'A botanical — in rare cases it can cause redness, itching, or contact dermatitis, even in people with no other known allergies.'}
-      ]
+      'Body Wash': []
     };
     var psModalBasePrice = 0;
     function psUpdateModalPrice() {
@@ -703,10 +701,11 @@
           'Curly Hair': { base: ['Distilled Water','ICE Hair Restore','Medium Chain Triglycerides','Jeecide CAP-5','Glycerin'], vegeKeratin: true }
         }
       },
-      'Body Wash': { name: 'Sensitive Skin Body Wash', desc: 'Low-lather, barrier-friendly daily wash.', prices: { 'Dry Skin': '$22.50', 'Oily Skin': '$22.50' }, defaultPrice: '$22.50', freeFrom: ['Fragrance','Sulfate','Nut'],
+      'Body Wash': { name: 'Sensitive Skin Body Wash', desc: 'Low-lather, barrier-friendly daily wash.', prices: { 'Dry Skin': '$22.50', 'Oily Skin': '$22.50', 'Combination Skin': '$22.50' }, defaultPrice: '$22.50', freeFrom: ['Fragrance','Sulfate','Nut'],
         skinFormulas: {
           'Dry Skin': { base: ['Distilled Water','Jeecide CAP-5','Glycerin'], surfactants: ['SLES','Cocamidopropyl Betaine'], salicylicAcid: false },
-          'Oily Skin': { base: ['Distilled Water','Jeecide CAP-5'], surfactants: ['SLES','Cocamidopropyl Betaine'], salicylicAcid: true }
+          'Oily Skin': { base: ['Distilled Water','Jeecide CAP-5'], surfactants: ['SLES','Cocamidopropyl Betaine'], salicylicAcid: true },
+          'Combination Skin': { base: ['Distilled Water','Jeecide CAP-5','Glycerin'], surfactants: ['SLES','Cocamidopropyl Betaine'], salicylicAcid: true }
         }
       }
     };
@@ -770,7 +769,7 @@
       }
       if (wantsSkinStep) {
         steps.push({ key:'skinType', title:'What\'s your skin type?', sub:'Pick one', multi:false,
-          options: [{val:'Dry Skin',label:'Dry'},{val:'Oily Skin',label:'Oily'}] });
+          options: [{val:'Dry Skin',label:'Dry'},{val:'Oily Skin',label:'Oily'},{val:'Combination Skin',label:'Combination'}] });
       }
       return steps;
     }
