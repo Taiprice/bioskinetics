@@ -337,21 +337,21 @@
     var psModalCurrentProduct = null;
     var PS_EXTRAS_BY_PRODUCT = {
       'Shampoo': [
-        {cat:'💧 Moisture', name:'Aloe Vera Juice', desc:'Hydrates and softens'},
-        {cat:'💪 Protein', name:'Hydrolyzed Rice Protein', desc:'Rebuilds and strengthens'},
-        {cat:'✨ Frizz Control', name:'Dimethicone', desc:'Smooths and tames'},
-        {cat:'🌿 Scalp Health', name:'Niacinamide', desc:'Soothes and balances'},
-        {cat:'⭐ Shine', name:'Argan Oil', desc:'Boosts gloss and luster'}
+        {cat:'💧 Moisture', name:'Aloe Vera Juice', desc:'Hydrates and softens', irritates:'A botanical — in rare cases it can cause redness, itching, or contact dermatitis, even in people with no other known allergies.'},
+        {cat:'💪 Protein', name:'Hydrolyzed Rice Protein', desc:'Rebuilds and strengthens', irritates:'One of the lowest-allergen proteins used in hair care. Reactions are very rare, but avoid if you have a diagnosed rice allergy.'},
+        {cat:'✨ Frizz Control', name:'Dimethicone', desc:'Smooths and tames', irritates:'A silicone that\'s non-allergenic for most people, but can build up on hair and scalp over repeated washes and cause irritation in sensitive cases.'},
+        {cat:'🌿 Scalp Health', name:'Niacinamide', desc:'Soothes and balances', irritates:'Generally well tolerated, but can cause redness, flushing, stinging, or itching in people with very sensitive or reactive skin.'},
+        {cat:'⭐ Shine', name:'Argan Oil', desc:'Boosts gloss and luster', irritates:'If you struggle with nut oils, avoid this — argan oil comes from the kernel of the argan tree (a tree nut) and can trigger breakouts or contact dermatitis in nut-sensitive skin.'}
       ],
       'Conditioner': [
-        {cat:'💧 Moisture', name:'Aloe Vera Juice', desc:'Hydrates and softens'},
-        {cat:'💪 Protein', name:'Hydrolyzed Rice Protein', desc:'Rebuilds and strengthens'},
-        {cat:'✨ Frizz Control', name:'Dimethicone', desc:'Smooths and tames'},
-        {cat:'🌿 Scalp Health', name:'Niacinamide', desc:'Soothes and balances'},
-        {cat:'⭐ Shine', name:'Camellia Oil', desc:'Boosts gloss and luster'}
+        {cat:'💧 Moisture', name:'Aloe Vera Juice', desc:'Hydrates and softens', irritates:'A botanical — in rare cases it can cause redness, itching, or contact dermatitis, even in people with no other known allergies.'},
+        {cat:'💪 Protein', name:'Hydrolyzed Rice Protein', desc:'Rebuilds and strengthens', irritates:'One of the lowest-allergen proteins used in hair care. Reactions are very rare, but avoid if you have a diagnosed rice allergy.'},
+        {cat:'✨ Frizz Control', name:'Dimethicone', desc:'Smooths and tames', irritates:'A silicone that\'s non-allergenic for most people, but can build up on hair and scalp over repeated washes and cause irritation in sensitive cases.'},
+        {cat:'🌿 Scalp Health', name:'Niacinamide', desc:'Soothes and balances', irritates:'Generally well tolerated, but can cause redness, flushing, stinging, or itching in people with very sensitive or reactive skin.'},
+        {cat:'⭐ Shine', name:'Camellia Oil', desc:'Boosts gloss and luster', irritates:'Considered gentle and low-allergenic (biocompatible with skin\'s natural sebum), though mild irritation has been reported in rare cases — patch test recommended.'}
       ],
       'Body Wash': [
-        {cat:'💧 Moisture', name:'Aloe Vera Juice', desc:'Hydrates and softens'}
+        {cat:'💧 Moisture', name:'Aloe Vera Juice', desc:'Hydrates and softens', irritates:'A botanical — in rare cases it can cause redness, itching, or contact dermatitis, even in people with no other known allergies.'}
       ]
     };
     function psBuildExtrasSection(product, gridEl) {
@@ -373,11 +373,13 @@
         card.dataset.cat = c.cat;
         card.dataset.name = c.name;
         card.dataset.chosen = '0';
-        card.style.cssText = 'padding:14px 16px;border:1.5px solid #e0dcea;border-radius:12px;background:#faf9f7;cursor:pointer;transition:all 0.15s;min-height:90px;';
+        card.style.cssText = 'padding:14px 16px;border:1.5px solid #e0dcea;border-radius:12px;background:#faf9f7;cursor:pointer;transition:all 0.15s;';
         var emojiEl = document.createElement('div'); emojiEl.style.cssText = 'font-size:22px;margin-bottom:6px;'; emojiEl.textContent = emoji;
         var labelEl = document.createElement('div'); labelEl.style.cssText = 'font-size:15px;font-weight:600;color:#2c2c2a;margin-bottom:2px;'; labelEl.textContent = label;
-        var descEl = document.createElement('div'); descEl.style.cssText = 'font-size:12px;color:#aaa;'; descEl.textContent = c.desc;
-        card.appendChild(emojiEl); card.appendChild(labelEl); card.appendChild(descEl);
+        var ingEl = document.createElement('div'); ingEl.style.cssText = 'font-size:12px;font-style:italic;color:#8b7fa0;margin-bottom:6px;'; ingEl.textContent = c.name;
+        var descEl = document.createElement('div'); descEl.style.cssText = 'font-size:12px;color:#aaa;margin-bottom:6px;'; descEl.textContent = c.desc;
+        var irritEl = document.createElement('div'); irritEl.style.cssText = 'font-size:11px;color:#b0745f;line-height:1.4;padding-top:6px;border-top:0.5px solid #ede8e2;'; irritEl.textContent = c.irritates;
+        card.appendChild(emojiEl); card.appendChild(labelEl); card.appendChild(ingEl); card.appendChild(descEl); card.appendChild(irritEl);
         card.onclick = function() {
           var on = card.dataset.chosen === '1';
           card.dataset.chosen = on ? '0' : '1';
