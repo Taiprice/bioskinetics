@@ -149,6 +149,12 @@ body { font-family: 'Jost', sans-serif; color: #2c2c2a; background: #fafaf8; min
 .shipping-popup-body strong { font-weight: 600; color: #2c2c2a; }
 .shipping-popup-btn { display: inline-block; background: #fade4b; color: #2c2c2a; font-family: 'Jost', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; border: none; border-radius: 6px; padding: 14px 32px; cursor: pointer; transition: background 0.15s; }
 .shipping-popup-btn:hover { background: #f5d535; }
+/* ── Back to Matches Spotlight ── */
+#co-backtip-overlay { display: none; position: fixed; inset: 0; z-index: 9000; background: transparent; cursor: pointer; }
+.co-backtip-spotlight { position: relative; z-index: 9500; background: #fff; border-radius: 8px; padding: 6px 10px; margin: -6px -10px 0.85rem -10px; box-shadow: 0 0 0 6px #fff, 0 0 0 9999px rgba(0,0,0,0.72); }
+#co-backtip-callout { display: none; position: absolute; top: 100%; left: 0; margin-top: 12px; background: #2c2c2a; color: #fff; padding: 14px 16px; border-radius: 10px; width: 230px; font-family: 'Jost', sans-serif; font-size: 13px; line-height: 1.55; box-shadow: 0 8px 24px rgba(0,0,0,0.3); z-index: 9600; }
+#co-backtip-callout::before { content: ''; position: absolute; top: -8px; left: 20px; border-left: 8px solid transparent; border-right: 8px solid transparent; border-bottom: 8px solid #2c2c2a; }
+#co-backtip-callout button { display: block; margin-top: 12px; background: #fade4b; color: #2c2c2a; border: none; border-radius: 6px; padding: 9px 18px; font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; font-family: 'Jost', sans-serif; }
 </style>
 </head>
 <body>
@@ -264,7 +270,9 @@ sessionStorage.setItem('bio_shipping_seen', '1');
 <div class="checkout-right">
 <div id="co-back-to-matches" style="display:none;margin-bottom:0.85rem;">
 <a href="/premade-products.html?resume=1" style="display:inline-flex;align-items:center;gap:6px;font-family:'Jost',sans-serif;font-size:12px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#5f5e5a;text-decoration:none;">&larr; Back to Your Matches</a>
+<div id="co-backtip-callout">Lost your place? Tap this link anytime to jump back to your matches instead of retaking the survey.<button type="button" onclick="coDismissBackTip()">Got it</button></div>
 </div>
+<div id="co-backtip-overlay" onclick="coDismissBackTip()"></div>
 <div class="co-summary">
 <div class="co-summary-header"><p>Order Summary</p></div>
 <div class="co-summary-body">
@@ -298,7 +306,7 @@ var bioCartCount = 0;
 var bioCartSubtotal = 0;
 
 document.addEventListener('DOMContentLoaded', function(){
-bioStripe = Stripe('pk_test_51TyiIvEjSvzSlqHojBnhTWjHqzNG3XtuY4NKDE32a26gWUJh2e1Esqq5LRJ8XeA2PQSOYIz7Af2rJ0ZRlrM4XNxt00SMOx8H9W');
+bioStripe = Stripe('pk_live_51TyiIeExQYnIe8bZLOexXHSQXhf3XOeL4jji7gxeM3edVxp3Mi20MZYhapePOrQwjVd3xwg7Rt70kIoPpdCQUXyL00227eIGTR');
 
 // Hide account bar + email field if signed in; pull email from the account instead
 const sb = supabase.createClient('https://huojeekaztmuarwtnyib.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh1b2plZWthenRtdWFyd3RueWliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkzODA3OTQsImV4cCI6MjA5NDk1Njc5NH0.XKQnhHYQ0E8pjfgrUFOiIqNo7gakJvpYb0HKMtiP4eQ');
@@ -319,6 +327,9 @@ try {
 if (localStorage.getItem('bio_ps_state')) {
 var backLink = document.getElementById('co-back-to-matches');
 if (backLink) backLink.style.display = 'block';
+if (!localStorage.getItem('bio_co_backtip_shown')) {
+coShowBackTip();
+}
 }
 } catch(e) {}
 
@@ -450,6 +461,27 @@ document.getElementById('co-promo-row').style.display = 'none';
 
 // Launch Stripe embedded checkout
 coLaunchStripe();
+}
+
+function coShowBackTip() {
+var wrap = document.getElementById('co-back-to-matches');
+var callout = document.getElementById('co-backtip-callout');
+var overlay = document.getElementById('co-backtip-overlay');
+if (!wrap || !callout || !overlay) return;
+wrap.classList.add('co-backtip-spotlight');
+callout.style.display = 'block';
+overlay.style.display = 'block';
+document.body.style.overflow = 'hidden';
+try { localStorage.setItem('bio_co_backtip_shown', '1'); } catch(e) {}
+}
+function coDismissBackTip() {
+var wrap = document.getElementById('co-back-to-matches');
+var callout = document.getElementById('co-backtip-callout');
+var overlay = document.getElementById('co-backtip-overlay');
+if (wrap) wrap.classList.remove('co-backtip-spotlight');
+if (callout) callout.style.display = 'none';
+if (overlay) overlay.style.display = 'none';
+document.body.style.overflow = '';
 }
 
 function coBackToShipping() {
