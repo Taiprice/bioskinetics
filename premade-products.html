@@ -337,23 +337,34 @@
     var psModalCurrentProduct = null;
     var PS_EXTRAS_BY_PRODUCT = {
       'Shampoo': [
-        {cat:'💧 Moisture', name:'Aloe Vera Juice', desc:'Hydrates and softens', irritates:'A botanical — in rare cases it can cause redness, itching, or contact dermatitis, even in people with no other known allergies.'},
-        {cat:'💪 Protein', name:'Hydrolyzed Rice Protein', desc:'Rebuilds and strengthens', irritates:'One of the lowest-allergen proteins used in hair care. Reactions are very rare, but avoid if you have a diagnosed rice allergy.'},
-        {cat:'✨ Frizz Control', name:'Dimethicone', desc:'Smooths and tames', irritates:'A silicone that\'s non-allergenic for most people, but can build up on hair and scalp over repeated washes and cause irritation in sensitive cases.'},
-        {cat:'🌿 Scalp Health', name:'Niacinamide', desc:'Soothes and balances', irritates:'Generally well tolerated, but can cause redness, flushing, stinging, or itching in people with very sensitive or reactive skin.'},
-        {cat:'⭐ Shine', name:'Argan Oil', desc:'Boosts gloss and luster', irritates:'If you struggle with nut oils, avoid this — argan oil comes from the kernel of the argan tree (a tree nut) and can trigger breakouts or contact dermatitis in nut-sensitive skin.'}
+        {cat:'💧 Moisture', name:'Aloe Vera Juice', price:3, desc:'Hydrates and softens', irritates:'A botanical — in rare cases it can cause redness, itching, or contact dermatitis, even in people with no other known allergies.'},
+        {cat:'💪 Protein', name:'Hydrolyzed Rice Protein', price:1.5, desc:'Rebuilds and strengthens', irritates:'One of the lowest-allergen proteins used in hair care. Reactions are very rare, but avoid if you have a diagnosed rice allergy.'},
+        {cat:'✨ Frizz Control', name:'Dimethicone', price:1, desc:'Smooths and tames', irritates:'A silicone that\'s non-allergenic for most people, but can build up on hair and scalp over repeated washes and cause irritation in sensitive cases.'},
+        {cat:'🌿 Scalp Health', name:'Niacinamide', price:2, desc:'Soothes and balances', irritates:'Generally well tolerated, but can cause redness, flushing, stinging, or itching in people with very sensitive or reactive skin.'},
+        {cat:'⭐ Shine', name:'Argan Oil', price:3.5, desc:'Boosts gloss and luster', irritates:'If you struggle with nut oils, avoid this — argan oil comes from the kernel of the argan tree (a tree nut) and can trigger breakouts or contact dermatitis in nut-sensitive skin.'}
       ],
       'Conditioner': [
-        {cat:'💧 Moisture', name:'Aloe Vera Juice', desc:'Hydrates and softens', irritates:'A botanical — in rare cases it can cause redness, itching, or contact dermatitis, even in people with no other known allergies.'},
-        {cat:'💪 Protein', name:'Hydrolyzed Rice Protein', desc:'Rebuilds and strengthens', irritates:'One of the lowest-allergen proteins used in hair care. Reactions are very rare, but avoid if you have a diagnosed rice allergy.'},
-        {cat:'✨ Frizz Control', name:'Dimethicone', desc:'Smooths and tames', irritates:'A silicone that\'s non-allergenic for most people, but can build up on hair and scalp over repeated washes and cause irritation in sensitive cases.'},
-        {cat:'🌿 Scalp Health', name:'Niacinamide', desc:'Soothes and balances', irritates:'Generally well tolerated, but can cause redness, flushing, stinging, or itching in people with very sensitive or reactive skin.'},
-        {cat:'⭐ Shine', name:'Camellia Oil', desc:'Boosts gloss and luster', irritates:'Considered gentle and low-allergenic (biocompatible with skin\'s natural sebum), though mild irritation has been reported in rare cases — patch test recommended.'}
+        {cat:'💧 Moisture', name:'Aloe Vera Juice', price:3, desc:'Hydrates and softens', irritates:'A botanical — in rare cases it can cause redness, itching, or contact dermatitis, even in people with no other known allergies.'},
+        {cat:'💪 Protein', name:'Hydrolyzed Rice Protein', price:1.5, desc:'Rebuilds and strengthens', irritates:'One of the lowest-allergen proteins used in hair care. Reactions are very rare, but avoid if you have a diagnosed rice allergy.'},
+        {cat:'✨ Frizz Control', name:'Dimethicone', price:1, desc:'Smooths and tames', irritates:'A silicone that\'s non-allergenic for most people, but can build up on hair and scalp over repeated washes and cause irritation in sensitive cases.'},
+        {cat:'🌿 Scalp Health', name:'Niacinamide', price:2, desc:'Soothes and balances', irritates:'Generally well tolerated, but can cause redness, flushing, stinging, or itching in people with very sensitive or reactive skin.'},
+        {cat:'⭐ Shine', name:'Camellia Oil', price:2.5, desc:'Boosts gloss and luster', irritates:'Considered gentle and low-allergenic (biocompatible with skin\'s natural sebum), though mild irritation has been reported in rare cases — patch test recommended.'}
       ],
       'Body Wash': [
-        {cat:'💧 Moisture', name:'Aloe Vera Juice', desc:'Hydrates and softens', irritates:'A botanical — in rare cases it can cause redness, itching, or contact dermatitis, even in people with no other known allergies.'}
+        {cat:'💧 Moisture', name:'Aloe Vera Juice', price:3, desc:'Hydrates and softens', irritates:'A botanical — in rare cases it can cause redness, itching, or contact dermatitis, even in people with no other known allergies.'}
       ]
     };
+    var psModalBasePrice = 0;
+    function psUpdateModalPrice() {
+      var el = document.getElementById('ps-modal-price');
+      if (!el) return;
+      var extrasTotal = 0;
+      var cats = PS_EXTRAS_BY_PRODUCT[psModalCurrentProduct] || [];
+      cats.forEach(function(c) {
+        if (psSelectedExtras.indexOf(c.name) !== -1) extrasTotal += c.price;
+      });
+      el.textContent = '$' + (psModalBasePrice + extrasTotal).toFixed(2);
+    }
     function psBuildExtrasSection(product, gridEl) {
       var usingInline = !gridEl;
       var section = document.getElementById('ps-modal-extras-section');
@@ -375,7 +386,7 @@
         card.dataset.chosen = '0';
         card.style.cssText = 'padding:14px 16px;border:1.5px solid #e0dcea;border-radius:12px;background:#faf9f7;cursor:pointer;transition:all 0.15s;';
         var emojiEl = document.createElement('div'); emojiEl.style.cssText = 'font-size:22px;margin-bottom:6px;'; emojiEl.textContent = emoji;
-        var labelEl = document.createElement('div'); labelEl.style.cssText = 'font-size:15px;font-weight:600;color:#2c2c2a;margin-bottom:2px;'; labelEl.textContent = label;
+        var labelEl = document.createElement('div'); labelEl.style.cssText = 'font-size:15px;font-weight:600;color:#2c2c2a;margin-bottom:2px;'; labelEl.textContent = label + ' (+$' + c.price.toFixed(2) + ')';
         var ingEl = document.createElement('div'); ingEl.style.cssText = 'font-size:12px;font-style:italic;color:#8b7fa0;margin-bottom:6px;'; ingEl.textContent = c.name;
         var descEl = document.createElement('div'); descEl.style.cssText = 'font-size:12px;color:#aaa;margin-bottom:6px;'; descEl.textContent = c.desc;
         var irritEl = document.createElement('div'); irritEl.style.cssText = 'font-size:11px;color:#b0745f;line-height:1.4;padding-top:6px;border-top:0.5px solid #ede8e2;'; irritEl.textContent = c.irritates;
@@ -391,6 +402,7 @@
           var idx = psSelectedExtras.indexOf(c.name);
           if (on) { if (idx !== -1) psSelectedExtras.splice(idx, 1); }
           else { if (idx === -1) psSelectedExtras.push(c.name); }
+          psUpdateModalPrice();
         };
         wrap.appendChild(card);
       });
@@ -442,7 +454,8 @@
       var variant = (product === 'Shampoo' || product === 'Conditioner') ? psState.hairType : psState.skinType;
       var price = (variant && d.prices[variant]) ? d.prices[variant] : d.defaultPrice;
       document.getElementById('ps-modal-badge').textContent = product.toUpperCase() + (variant ? ' — ' + variant.toUpperCase() : '');
-      document.getElementById('ps-modal-price').textContent = price;
+      psModalBasePrice = parseFloat(String(price).replace('$', ''));
+      psUpdateModalPrice();
       document.getElementById('ps-modal-photo').src = psProductImages[product] || psProductImages['Shampoo'];
 
       var ingredients = psBuildIngredientList(product, variant);
@@ -467,6 +480,7 @@
       } else {
         psBuildExtrasSection(product, document.getElementById('ps-modal-extras-grid'));
       }
+      psUpdateModalPrice();
 
       document.getElementById('ps-modal-overlay').style.display = 'flex';
       document.body.style.overflow = 'hidden';
@@ -609,7 +623,10 @@
       var d = psLiveProducts[product];
       var variant = (product === 'Shampoo' || product === 'Conditioner') ? psState.hairType : psState.skinType;
       var price = (variant && d.prices[variant]) ? d.prices[variant] : d.defaultPrice;
-      var amount = parseFloat(String(price).replace('$', ''));
+      var extrasCats = PS_EXTRAS_BY_PRODUCT[product] || [];
+      var extrasCost = 0;
+      extrasCats.forEach(function(c) { if (psSelectedExtras.indexOf(c.name) !== -1) extrasCost += c.price; });
+      var amount = parseFloat(String(price).replace('$', '')) + extrasCost;
       var baseIngredients = psBuildIngredientList(product, variant);
       var scentStr = psSelectedScents.length ? psSelectedScents.join(', ') : '';
       var extrasStr = psSelectedExtras.length ? psSelectedExtras.join(', ') : '';
@@ -624,6 +641,7 @@
         ingredients: fullIngredients.join(', '),
         baseIngredients: baseIngredients.join(', '),
         extras: extrasStr,
+        extrasCost: extrasCost,
         scent: scentStr || 'Unscented',
         size: psSelectedSize,
         color: psSelectedColor,
